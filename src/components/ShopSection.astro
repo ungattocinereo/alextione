@@ -1,10 +1,20 @@
 ---
-import { siteContent } from "../data/siteContent";
+import { siteContent, shopPageData } from "../data/siteContent";
 
 const { shop } = siteContent;
+
+// Pick featured products for preview: fanzine + one from each category
+const featuredProducts = [
+  { title: shopPageData.fanzine.title, image: shopPageData.fanzine.image, tag: "Fanzine" },
+  { title: shopPageData.categories[0].products[0].title, image: shopPageData.categories[0].products[0].image, tag: "Print" },
+  { title: shopPageData.categories[0].products[7].title, image: shopPageData.categories[0].products[7].image, tag: "Print" },
+  { title: shopPageData.categories[1].products[0].title, image: shopPageData.categories[1].products[0].image, tag: "Poster" },
+  { title: shopPageData.categories[2].products[0].title, image: shopPageData.categories[2].products[0].image, tag: "Pin" },
+  { title: shopPageData.categories[2].products[1].title, image: shopPageData.categories[2].products[1].image, tag: "Pin" },
+];
 ---
 
-<section class="section" id="shop">
+<section class="section section--muted" id="shop">
   <div class="container">
     <div class="section-intro">
       <p class="eyebrow">Shop</p>
@@ -12,20 +22,26 @@ const { shop } = siteContent;
       <p>{shop.intro}</p>
     </div>
 
-    <div class="shop-grid">
-      {
-        shop.items.map((item) => (
-          <a class="shop-item" href={item.href} target="_blank" rel="noreferrer">
-            <span>{item.label}</span>
-            <span class="shop-item__arrow" aria-hidden="true">&rarr;</span>
-          </a>
-        ))
-      }
+    <div class="shop-preview">
+      {featuredProducts.map((product, i) => (
+        <a class="shop-preview__item" href="/shop" style={`--i: ${i}`}>
+          <div class="shop-preview__img">
+            <img src={product.image} alt={product.title} loading="lazy" />
+            <div class="shop-preview__overlay">
+              <span class="shop-preview__cta">View in Shop &rarr;</span>
+            </div>
+          </div>
+          <div class="shop-preview__info">
+            <span class="shop-preview__tag">{product.tag}</span>
+            <h3>{product.title}</h3>
+          </div>
+        </a>
+      ))}
     </div>
 
     <div style="margin-top: 2.5rem;">
-      <a class="btn btn--primary" href={shop.cta.href} target="_blank" rel="noreferrer">
-        {shop.cta.label}
+      <a class="btn btn--primary" href="/shop">
+        Browse Full Shop
       </a>
     </div>
   </div>

@@ -1,5 +1,5 @@
 ---
-import { siteContent } from "../data/siteContent";
+import { siteContent, religionePage } from "../data/siteContent";
 
 const { maradonaProject } = siteContent;
 ---
@@ -8,10 +8,12 @@ const { maradonaProject } = siteContent;
   <div class="container">
     <div class="maradona__grid">
       <div class="maradona__visual">
-        <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,102,204,0.15), transparent 60%);"></div>
+        <img src={religionePage.image} alt="Religione Monoteistica — Maradona tribute in Naples" loading="lazy" />
+        <div class="maradona__visual-overlay"></div>
+        <span class="maradona__watermark">D10S</span>
       </div>
       <div class="maradona__text">
-        <p class="eyebrow" style="color: var(--accent-soft);">Maradona Project</p>
+        <p class="eyebrow">Maradona Project</p>
         <h2>{maradonaProject.title}</h2>
         <p>{maradonaProject.intro}</p>
         <p>{maradonaProject.body}</p>

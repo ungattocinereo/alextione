@@ -5,12 +5,16 @@ const { hero } = siteContent;
 ---
 
 <section class="hero" id="top">
-  <div class="hero__text">
+  <div class="hero__bg">
+    <img src={hero.image} alt="Alessandro Tione" loading="eager" />
+    <div class="hero__overlay"></div>
+  </div>
+
+  <div class="hero__content">
     <span class="hero__kicker">{hero.kicker}</span>
-    <h1>
+    <h1 class="hero__title">
       Discover<br />
-      <span class="accent">Napoli</span><br />
-      through my eyes
+      <span class="hero__accent">Napoli</span>
     </h1>
     <p class="hero__subtitle">{hero.subtitle}</p>
     <div class="hero__actions">
@@ -19,8 +23,12 @@ const { hero } = siteContent;
     </div>
   </div>
 
-  <div class="hero__photo">
-    <img src={hero.image} alt="Alessandro Tione" loading="eager" />
-    <span class="hero__photo-label">{hero.name}</span>
+  <div class="hero__name-tag">
+    <span>{hero.name}</span>
+  </div>
+
+  <div class="hero__scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
   </div>
 </section>

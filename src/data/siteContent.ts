@@ -294,8 +294,8 @@ export const siteContent = {
     subtitle:
       "Licensed tour guide and photographer based in Naples. I show you the city beyond the postcards — hidden corners, vibrant culture, and timeless legends.",
     primaryCta: { label: "Book a Tour", href: "/tours" },
-    secondaryCta: { label: "See Portfolio", href: "/#portfolio" },
-    image: "/og-image.jpg"
+    secondaryCta: { label: "See Portfolio", href: "/photo-art" },
+    image: "/images/hero-alex.webp"
   },
   tours: {
     intro:
@@ -367,7 +367,7 @@ export const siteContent = {
     ],
     ctaPrimary: {
       label: "View Full Portfolio",
-      href: "https://alextione.it/photo-art/"
+      href: "/photo-art"
     },
     ctaSecondary: {
       label: "Book a Photoshoot",
@@ -451,9 +451,9 @@ export const siteContent = {
       { label: "Urban", href: "https://alextione.it/category/urban/" }
     ],
     projectLinks: [
-      { label: "Photo Portfolio", href: "https://alextione.it/photo-art/" },
-      { label: "Merch Shop", href: "https://shop.alextione.it/" },
-      { label: "About Me", href: "https://alextione.it/about/" }
+      { label: "Photo Portfolio", href: "/photo-art" },
+      { label: "Maradona Project", href: "/religione-monoteistica" },
+      { label: "Merch Shop", href: "/shop" }
     ],
     socialLinks: [
       { label: "Instagram", href: "https://www.instagram.com/alextione/" },

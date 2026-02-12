@@ -31,11 +31,14 @@ const { footer } = siteContent;
       <h4>Projects</h4>
       <ul>
         {
-          footer.projectLinks.map((link) => (
-            <li>
-              <a href={link.href} target="_blank" rel="noreferrer">{link.label}</a>
-            </li>
-          ))
+          footer.projectLinks.map((link) => {
+            const isExternal = link.href.startsWith('http');
+            return (
+              <li>
+                <a href={link.href} {...(isExternal ? { target: "_blank", rel: "noreferrer" } : {})}>{link.label}</a>
+              </li>
+            );
+          })
         }
       </ul>
       <div class="footer__socials">

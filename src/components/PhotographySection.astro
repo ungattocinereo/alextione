@@ -1,32 +1,37 @@
 ---
-import { siteContent } from "../data/siteContent";
-
-const { photography } = siteContent;
+const albums = [
+  { id: "football", title: "Football", image: "/images/photo-art/football/football-1.jpg" },
+  { id: "tattoo", title: "Tattoo", image: "/images/photo-art/tattoo/tattoo-1.webp" },
+  { id: "street", title: "Street", image: "/images/photo-art/street/street-1.webp" },
+  { id: "scudetto-2025", title: "Scudetto 2025", image: "/images/photo-art/scudetto-2025/scudetto25-1.jpg" },
+  { id: "scudetto-2023", title: "Scudetto 2023", image: "/images/photo-art/scudetto-2023/scudetto23-1.jpg" },
+];
 ---
 
-<section class="section section--muted" id="portfolio">
+<section class="section section--dark" id="portfolio">
   <div class="container">
     <div class="section-intro">
-      <p class="eyebrow">Photography</p>
-      <h2>The way to see Naples</h2>
-      <p>{photography.intro}</p>
+      <p class="eyebrow">Photo Art</p>
+      <h2>Raw stories through<br />a Neapolitan lens</h2>
+      <p>Football, street life, tattoos, and the unbridled passion of Napoli celebrations — captured without filter.</p>
     </div>
 
-    <div class="portfolio__categories">
-      {
-        photography.categories.map((category) => (
-          <span class="category-pill">{category}</span>
-        ))
-      }
+    <div class="photo-preview">
+      {albums.map((album, i) => (
+        <a class="photo-preview__item" href={`/photo-art#${album.id}`} style={`--i: ${i}`}>
+          <div class="photo-preview__img">
+            <img src={album.image} alt={album.title} loading="lazy" />
+          </div>
+          <div class="photo-preview__label">
+            <span class="photo-preview__number">{String(i + 1).padStart(2, '0')}</span>
+            <span class="photo-preview__title">{album.title}</span>
+          </div>
+        </a>
+      ))}
     </div>
 
-    <div class="portfolio__actions">
-      <a class="btn btn--primary" href={photography.ctaPrimary.href} target="_blank" rel="noreferrer">
-        {photography.ctaPrimary.label}
-      </a>
-      <a class="btn btn--outline" href={photography.ctaSecondary.href} target="_blank" rel="noreferrer">
-        {photography.ctaSecondary.label}
-      </a>
+    <div style="margin-top: 2.5rem;">
+      <a class="btn btn--primary" href="/photo-art">View Full Portfolio</a>
     </div>
   </div>
 </section>
