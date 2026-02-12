@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeaderNav from "../components/HeaderNav.astro";
+import HeroSection from "../components/HeroSection.astro";
+import ToursSection from "../components/ToursSection.astro";
+import PhotographySection from "../components/PhotographySection.astro";
+import MaradonaSection from "../components/MaradonaSection.astro";
+import ShopSection from "../components/ShopSection.astro";
+import AboutSection from "../components/AboutSection.astro";
+import FooterSection from "../components/FooterSection.astro";
+import { siteContent } from "../data/siteContent";
+---
+
+<BaseLayout title={siteContent.seo.title} description={siteContent.seo.description}>
+  <div class="page-shell">
+    <HeaderNav />
+    <main>
+      <HeroSection />
+      <ToursSection />
+      <PhotographySection />
+      <MaradonaSection />
+      <ShopSection />
+      <AboutSection />
+    </main>
+    <FooterSection />
+  </div>
+</BaseLayout>

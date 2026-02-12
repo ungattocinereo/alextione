@@ -1,0 +1,26 @@
+---
+import { siteContent } from "../data/siteContent";
+
+const { hero } = siteContent;
+---
+
+<section class="hero" id="top">
+  <div class="hero__text">
+    <span class="hero__kicker">{hero.kicker}</span>
+    <h1>
+      Discover<br />
+      <span class="accent">Napoli</span><br />
+      through my eyes
+    </h1>
+    <p class="hero__subtitle">{hero.subtitle}</p>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href={hero.primaryCta.href}>{hero.primaryCta.label}</a>
+      <a class="btn btn--outline-light" href={hero.secondaryCta.href}>{hero.secondaryCta.label}</a>
+    </div>
+  </div>
+
+  <div class="hero__photo">
+    <img src={hero.image} alt="Alessandro Tione" loading="eager" />
+    <span class="hero__photo-label">{hero.name}</span>
+  </div>
+</section>

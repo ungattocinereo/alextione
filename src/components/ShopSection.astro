@@ -1,0 +1,32 @@
+---
+import { siteContent } from "../data/siteContent";
+
+const { shop } = siteContent;
+---
+
+<section class="section" id="shop">
+  <div class="container">
+    <div class="section-intro">
+      <p class="eyebrow">Shop</p>
+      <h2>Take Naples home</h2>
+      <p>{shop.intro}</p>
+    </div>
+
+    <div class="shop-grid">
+      {
+        shop.items.map((item) => (
+          <a class="shop-item" href={item.href} target="_blank" rel="noreferrer">
+            <span>{item.label}</span>
+            <span class="shop-item__arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        ))
+      }
+    </div>
+
+    <div style="margin-top: 2.5rem;">
+      <a class="btn btn--primary" href={shop.cta.href} target="_blank" rel="noreferrer">
+        {shop.cta.label}
+      </a>
+    </div>
+  </div>
+</section>

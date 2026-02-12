@@ -1,0 +1,77 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeaderNav from "../components/HeaderNav.astro";
+import FooterSection from "../components/FooterSection.astro";
+import { religionePage } from "../data/siteContent";
+
+const { hero, sections, image, ctaFanzine } = religionePage;
+---
+
+<BaseLayout
+  title={religionePage.seo.title}
+  description={religionePage.seo.description}
+>
+  <div class="page-shell">
+    <HeaderNav />
+    <main>
+      <!-- HERO -->
+      <section class="rm-hero">
+        <div class="rm-hero__content">
+          <p class="eyebrow" style="color: var(--accent-soft);">{hero.kicker}</p>
+          <h1>{hero.title}<br /><span class="accent">{hero.titleAccent}</span></h1>
+        </div>
+      </section>
+
+      <!-- INTRO -->
+      <section class="rm-intro">
+        <div class="container">
+          <div class="rm-intro__grid">
+            <div class="rm-intro__text">
+              <p>{hero.intro}</p>
+              <p>{hero.body}</p>
+              <p>{hero.insight}</p>
+              <p class="rm-intro__provocative">{hero.provocative}</p>
+            </div>
+            <div class="rm-intro__image">
+              <img src={image} alt="Religione Monoteistica — Maradona tribute in Naples" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTIONS -->
+      {sections.map((section, i) => (
+        <section class={`rm-detail ${i % 2 !== 0 ? 'rm-detail--reversed' : ''}`} id={section.id}>
+          <div class="rm-detail__image">
+            <img src={section.image} alt={section.title} loading="lazy" />
+          </div>
+          <div class="rm-detail__content">
+            <h2>{section.title}</h2>
+            {section.paragraphs.map((p) => (
+              <p class="rm-detail__text">{p}</p>
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <!-- CTA BOTTOM -->
+      <section class="section section--dark rm-cta">
+        <div class="container" style="text-align:center; display:grid; gap:1.5rem; justify-items:center;">
+          <h2>Naples is calling.<br />Will you answer?</h2>
+          <p style="color:rgba(255,255,255,0.55); max-width:45ch; font-size:0.95rem;">
+            This city isn't just a destination — it's a story waiting to be lived. Step beyond the postcards and dive into its hidden corners.
+          </p>
+          <div class="rm-cta__actions">
+            <a class="btn btn--primary" href={ctaFanzine.href} target="_blank" rel="noreferrer">
+              {ctaFanzine.label}
+            </a>
+            <button class="btn btn--outline-light" data-contact-open>
+              Send Me a Request
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <FooterSection />
+  </div>
+</BaseLayout>

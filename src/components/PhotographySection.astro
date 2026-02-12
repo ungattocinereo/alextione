@@ -1,0 +1,32 @@
+---
+import { siteContent } from "../data/siteContent";
+
+const { photography } = siteContent;
+---
+
+<section class="section section--muted" id="portfolio">
+  <div class="container">
+    <div class="section-intro">
+      <p class="eyebrow">Photography</p>
+      <h2>The way to see Naples</h2>
+      <p>{photography.intro}</p>
+    </div>
+
+    <div class="portfolio__categories">
+      {
+        photography.categories.map((category) => (
+          <span class="category-pill">{category}</span>
+        ))
+      }
+    </div>
+
+    <div class="portfolio__actions">
+      <a class="btn btn--primary" href={photography.ctaPrimary.href} target="_blank" rel="noreferrer">
+        {photography.ctaPrimary.label}
+      </a>
+      <a class="btn btn--outline" href={photography.ctaSecondary.href} target="_blank" rel="noreferrer">
+        {photography.ctaSecondary.label}
+      </a>
+    </div>
+  </div>
+</section>

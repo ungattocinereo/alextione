@@ -1,0 +1,30 @@
+---
+import { siteContent } from "../data/siteContent";
+
+const { maradonaProject } = siteContent;
+---
+
+<section class="section section--dark" id="maradona">
+  <div class="container">
+    <div class="maradona__grid">
+      <div class="maradona__visual">
+        <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,102,204,0.15), transparent 60%);"></div>
+      </div>
+      <div class="maradona__text">
+        <p class="eyebrow" style="color: var(--accent-soft);">Maradona Project</p>
+        <h2>{maradonaProject.title}</h2>
+        <p>{maradonaProject.intro}</p>
+        <p>{maradonaProject.body}</p>
+        <p class="italic">{maradonaProject.argentina}</p>
+        <div class="maradona__actions">
+          <a class="btn btn--primary" href={maradonaProject.ctaPrimary.href}>
+            {maradonaProject.ctaPrimary.label}
+          </a>
+          <a class="btn btn--outline-light" href={maradonaProject.ctaSecondary.href} target="_blank" rel="noreferrer">
+            {maradonaProject.ctaSecondary.label}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

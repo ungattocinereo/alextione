@@ -1,0 +1,39 @@
+---
+import { siteContent } from "../data/siteContent";
+
+const { tours } = siteContent;
+---
+
+<section class="section" id="tours">
+  <div class="container">
+    <div class="section-intro">
+      <p class="eyebrow">Tours</p>
+      <h2>Discover Naples with me</h2>
+      <p>{tours.intro}</p>
+    </div>
+
+    <div class="tours-grid">
+      {
+        tours.tours.map((tour) => (
+          <a class="tour-card" href={tour.bookingUrl}>
+            <div class="tour-card__img">
+              <img src={tour.image} alt={tour.title} loading="lazy" />
+            </div>
+            <div class="tour-card__body">
+              <span class="tour-card__duration">{tour.duration}</span>
+              <h3>{tour.title}</h3>
+              <p>{tour.description}</p>
+              <span class="tour-card__link">Book now</span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+
+    <div style="margin-top: 2.5rem;">
+      <a class="btn btn--primary" href={tours.cta.href}>
+        {tours.cta.label}
+      </a>
+    </div>
+  </div>
+</section>

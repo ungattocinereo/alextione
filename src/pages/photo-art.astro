@@ -1,0 +1,246 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeaderNav from "../components/HeaderNav.astro";
+import FooterSection from "../components/FooterSection.astro";
+
+const albums = [
+  {
+    id: "football",
+    title: "Football",
+    subtitle: "Photography",
+    description: "The roar of the crowd, the tension before a penalty, the raw joy of a goal — football through an unfiltered lens.",
+    images: [
+      { src: "/images/photo-art/football/football-1.jpg", alt: "Buenos Aires 2024 - Football" },
+      { src: "/images/photo-art/football/football-2.jpg", alt: "Buenos Aires 2024 - Match" },
+      { src: "/images/photo-art/football/football-3.jpg", alt: "September 2023 - Stadium" },
+      { src: "/images/photo-art/football/football-4.jpg", alt: "Football Photography" },
+    ],
+  },
+  {
+    id: "tattoo",
+    title: "Tattoo",
+    subtitle: "Photography",
+    description: "Ink on skin as living art. Portraits that capture the permanence and intimacy of tattoo culture.",
+    images: [
+      { src: "/images/photo-art/tattoo/tattoo-1.webp", alt: "La Plata 2024 - Tattoo" },
+      { src: "/images/photo-art/tattoo/tattoo-2.jpg", alt: "October 2023 - Tattoo Portrait" },
+      { src: "/images/photo-art/tattoo/tattoo-3.jpeg", alt: "Tattoo Detail" },
+      { src: "/images/photo-art/tattoo/tattoo-4.webp", alt: "Tattoo Photography" },
+    ],
+  },
+  {
+    id: "street",
+    title: "Street",
+    subtitle: "Photography",
+    description: "Moments stolen from the chaos of the everyday. Honest, unposed, and deeply human street scenes.",
+    images: [
+      { src: "/images/photo-art/street/street-1.webp", alt: "Paris 2023 - Street" },
+      { src: "/images/photo-art/street/street-2.webp", alt: "Tel Aviv - Street" },
+      { src: "/images/photo-art/street/street-3.jpg", alt: "Berlin 2022 - Street" },
+      { src: "/images/photo-art/street/street-4.jpg", alt: "Street Photography" },
+    ],
+  },
+  {
+    id: "scudetto-2025",
+    title: "Scudetto Napoli",
+    subtitle: "2025",
+    description: "The city explodes. Naples celebrates its Scudetto with fire, smoke, and pure unbridled passion.",
+    images: [
+      { src: "/images/photo-art/scudetto-2025/scudetto25-1.jpg", alt: "Scudetto Napoli 2025" },
+      { src: "/images/photo-art/scudetto-2025/scudetto25-2.jpg", alt: "Scudetto Napoli 2025 - Celebration" },
+      { src: "/images/photo-art/scudetto-2025/scudetto25-3.jpg", alt: "Scudetto Napoli 2025 - Fans" },
+      { src: "/images/photo-art/scudetto-2025/scudetto25-4.jpg", alt: "Scudetto Napoli 2025 - Night" },
+      { src: "/images/photo-art/scudetto-2025/scudetto25-5.jpg", alt: "Scudetto Napoli 2025 - Streets" },
+      { src: "/images/photo-art/scudetto-2025/scudetto25-6.jpg", alt: "Scudetto Napoli 2025 - Party" },
+    ],
+  },
+  {
+    id: "scudetto-2023",
+    title: "Scudetto Napoli",
+    subtitle: "2023",
+    description: "The first Scudetto in 33 years. A city reborn, united in tears of joy and streets painted blue.",
+    images: [
+      { src: "/images/photo-art/scudetto-2023/scudetto23-1.jpg", alt: "Scudetto Napoli 2023" },
+      { src: "/images/photo-art/scudetto-2023/scudetto23-2.jpg", alt: "Scudetto Napoli 2023 - Celebration" },
+      { src: "/images/photo-art/scudetto-2023/scudetto23-3.jpg", alt: "Scudetto Napoli 2023 - Fans" },
+      { src: "/images/photo-art/scudetto-2023/scudetto23-4.jpg", alt: "Scudetto Napoli 2023 - April 2023" },
+      { src: "/images/photo-art/scudetto-2023/scudetto23-5.jpg", alt: "Scudetto Napoli 2023 - May 2023" },
+      { src: "/images/photo-art/scudetto-2023/scudetto23-6.jpg", alt: "Scudetto Napoli 2023 - Party" },
+    ],
+  },
+];
+---
+
+<BaseLayout title="Photo Art — AlexTione" description="Passionate photography across football, street life, tattoos, and Napoli celebrations — raw stories told through a Neapolitan lens.">
+  <div class="page-shell">
+    <HeaderNav />
+
+    <main>
+      <!-- HERO -->
+      <section class="pa-hero">
+        <div class="pa-hero__bg">
+          <img src="/images/photo-art/street/street-1.webp" alt="" loading="eager" />
+          <div class="pa-hero__overlay"></div>
+        </div>
+        <div class="pa-hero__content">
+          <span class="pa-hero__kicker">Portfolio</span>
+          <h1 class="pa-hero__title">
+            Photo<br /><span class="pa-hero__accent">Art</span>
+          </h1>
+          <p class="pa-hero__subtitle">Raw stories told through a Neapolitan lens</p>
+          <nav class="pa-hero__nav" aria-label="Album navigation">
+            {albums.map((album, i) => (
+              <a href={`#${album.id}`} class="pa-hero__nav-link" style={`--delay: ${i * 0.08}s`}>
+                {album.title} {album.subtitle}
+              </a>
+            ))}
+          </nav>
+        </div>
+        <div class="pa-hero__scroll-hint">
+          <span>Scroll</span>
+          <svg width="14" height="24" viewBox="0 0 14 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <line x1="7" y1="2" x2="7" y2="20" />
+            <polyline points="2,16 7,22 12,16" />
+          </svg>
+        </div>
+      </section>
+
+      <!-- ALBUMS -->
+      {albums.map((album, albumIndex) => (
+        <section class={`pa-album ${albumIndex % 2 !== 0 ? 'pa-album--dark' : ''}`} id={album.id}>
+          <div class="pa-album__header">
+            <div class="pa-album__number">{String(albumIndex + 1).padStart(2, '0')}</div>
+            <div class="pa-album__titles">
+              <h2 class="pa-album__title">{album.title}</h2>
+              <span class="pa-album__subtitle">{album.subtitle}</span>
+            </div>
+            <p class="pa-album__desc">{album.description}</p>
+          </div>
+
+          <div class={`pa-gallery ${album.images.length > 4 ? 'pa-gallery--six' : 'pa-gallery--four'}`}>
+            {album.images.map((img, imgIndex) => (
+              <figure
+                class="pa-gallery__item"
+                data-lightbox-trigger
+                data-album={album.id}
+                data-index={imgIndex}
+                style={`--stagger: ${imgIndex * 0.06}s`}
+              >
+                <img src={img.src} alt={img.alt} loading="lazy" />
+                <div class="pa-gallery__item-overlay">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </div>
+              </figure>
+            ))}
+          </div>
+        </section>
+      ))}
+    </main>
+
+    <!-- LIGHTBOX -->
+    <div class="pa-lightbox" data-lightbox aria-hidden="true">
+      <div class="pa-lightbox__backdrop" data-lightbox-close></div>
+      <button class="pa-lightbox__close" data-lightbox-close aria-label="Close">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <button class="pa-lightbox__nav pa-lightbox__nav--prev" data-lightbox-prev aria-label="Previous">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15,18 9,12 15,6"/></svg>
+      </button>
+      <div class="pa-lightbox__stage">
+        <img class="pa-lightbox__img" src="" alt="" />
+      </div>
+      <button class="pa-lightbox__nav pa-lightbox__nav--next" data-lightbox-next aria-label="Next">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9,6 15,12 9,18"/></svg>
+      </button>
+      <div class="pa-lightbox__counter">
+        <span data-lightbox-current>1</span> / <span data-lightbox-total>4</span>
+      </div>
+    </div>
+
+    <FooterSection />
+  </div>
+
+  <script>
+    // ── Lightbox ──
+    const lightbox = document.querySelector('[data-lightbox]') as HTMLElement;
+    const lightboxImg = lightbox?.querySelector('.pa-lightbox__img') as HTMLImageElement;
+    const currentEl = lightbox?.querySelector('[data-lightbox-current]') as HTMLElement;
+    const totalEl = lightbox?.querySelector('[data-lightbox-total]') as HTMLElement;
+
+    let currentAlbum: HTMLElement[] = [];
+    let currentIndex = 0;
+
+    function openLightbox(albumId: string, index: number) {
+      const items = document.querySelectorAll(`[data-album="${albumId}"] img`) as NodeListOf<HTMLImageElement>;
+      currentAlbum = Array.from(items);
+      currentIndex = index;
+      updateLightbox();
+      lightbox.classList.add('is-open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('is-open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function updateLightbox() {
+      if (!currentAlbum[currentIndex]) return;
+      lightboxImg.src = currentAlbum[currentIndex].src;
+      lightboxImg.alt = currentAlbum[currentIndex].alt;
+      currentEl.textContent = String(currentIndex + 1);
+      totalEl.textContent = String(currentAlbum.length);
+    }
+
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % currentAlbum.length;
+      updateLightbox();
+    }
+
+    function prevSlide() {
+      currentIndex = (currentIndex - 1 + currentAlbum.length) % currentAlbum.length;
+      updateLightbox();
+    }
+
+    document.querySelectorAll('[data-lightbox-trigger]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const album = (el as HTMLElement).dataset.album!;
+        const index = parseInt((el as HTMLElement).dataset.index!, 10);
+        openLightbox(album, index);
+      });
+    });
+
+    document.querySelectorAll('[data-lightbox-close]').forEach((el) => {
+      el.addEventListener('click', closeLightbox);
+    });
+
+    document.querySelector('[data-lightbox-next]')?.addEventListener('click', nextSlide);
+    document.querySelector('[data-lightbox-prev]')?.addEventListener('click', prevSlide);
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('is-open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    // ── Scroll Reveal ──
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+    );
+
+    document.querySelectorAll('.pa-gallery__item, .pa-album__header').forEach((el) => {
+      observer.observe(el);
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,142 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  url?: string;
+  type?: string;
+}
+
+const siteUrl = "https://alextione.it";
+const {
+  title,
+  description,
+  image = "/og-image.jpg",
+  url,
+  type = "website",
+} = Astro.props;
+
+const canonicalUrl = url ? new URL(url, siteUrl).href : new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = image.startsWith("http") ? image : new URL(image, siteUrl).href;
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="author" content="Alessandro Tione" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Favicon: all formats -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
+    <meta name="msapplication-TileColor" content="#0a0a0a" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="696" />
+    <meta property="og:image:height" content="696" />
+    <meta property="og:image:alt" content="Alessandro Tione — Fotografo e guida turistica a Napoli" />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:site_name" content="AlexTione" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content="Alessandro Tione — Fotografo e guida turistica a Napoli" />
+
+    <!-- Google structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Alessandro Tione",
+      "alternateName": "AlexTione",
+      "url": siteUrl,
+      "image": ogImageUrl,
+      "jobTitle": "Fotografo e guida turistica",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Napoli",
+        "addressCountry": "IT"
+      },
+      "sameAs": [
+        "https://www.instagram.com/alextione",
+        "https://www.tiktok.com/@alextione"
+      ]
+    })} />
+  </head>
+  <body>
+    <slot />
+    <script>
+      // Header scroll
+      const header = document.querySelector('.site-header');
+      if (header) {
+        const onScroll = () => {
+          header.classList.toggle('scrolled', window.scrollY > 80);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      }
+
+      // Nav overlay
+      const navOverlay = document.querySelector('[data-nav-overlay]');
+      document.querySelectorAll('[data-nav-open]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          navOverlay?.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+      document.querySelectorAll('[data-nav-close]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          navOverlay?.classList.remove('is-open');
+          document.body.style.overflow = '';
+        });
+      });
+
+      // Contact modal
+      const contactModal = document.querySelector('[data-contact-modal]');
+      document.querySelectorAll('[data-contact-open]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          contactModal?.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+      document.querySelectorAll('[data-contact-close]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          contactModal?.classList.remove('is-open');
+          document.body.style.overflow = '';
+        });
+      });
+
+      // Close on Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          navOverlay?.classList.remove('is-open');
+          contactModal?.classList.remove('is-open');
+          document.body.style.overflow = '';
+        }
+      });
+    </script>
+  </body>
+</html>

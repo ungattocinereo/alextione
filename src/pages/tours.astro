@@ -1,0 +1,77 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeaderNav from "../components/HeaderNav.astro";
+import FooterSection from "../components/FooterSection.astro";
+import { tourDetails } from "../data/siteContent";
+---
+
+<BaseLayout
+  title="Napoli Svelata — Tours with Alex Tione"
+  description="Explore all walking tours in Naples with Alessandro Tione. Maradona, Street Art, Street Food, Rione Sanità, Quartieri Spagnoli, and Highlights tours."
+>
+  <div class="page-shell">
+    <HeaderNav />
+    <main>
+      <!-- HERO -->
+      <section class="tours-hero">
+        <div class="tours-hero__content">
+          <p class="eyebrow">Walking Tours</p>
+          <h1>Napoli<br /><span class="accent">Svelata</span></h1>
+          <p class="tours-hero__subtitle">
+            Naples lives in its streets, alleys, and hidden places. Join me on a walk that goes beyond the surface — with stories, culture, and local flavor you won't find in any guidebook.
+          </p>
+        </div>
+      </section>
+
+      <!-- TOUR DETAILS -->
+      {tourDetails.map((tour, i) => (
+        <section class={`tour-detail ${i % 2 !== 0 ? 'tour-detail--reversed' : ''}`} id={tour.slug}>
+          <div class="tour-detail__image">
+            <img src={tour.image} alt={tour.title} loading="lazy" />
+          </div>
+          <div class="tour-detail__content">
+            <span class="tour-detail__badge">{tour.duration} &middot; {tour.price}</span>
+            <h2>{tour.title}</h2>
+            <p class="tour-detail__subtitle">{tour.subtitle}</p>
+            {tour.paragraphs.map((p) => (
+              <p class="tour-detail__text">{p}</p>
+            ))}
+            <div class="tour-detail__meta">
+              <div class="tour-detail__meta-item">
+                <span class="tour-detail__meta-label">Language</span>
+                <span>{tour.language}</span>
+              </div>
+              <div class="tour-detail__meta-item">
+                <span class="tour-detail__meta-label">Min. group</span>
+                <span>{tour.minGroup}</span>
+              </div>
+              <div class="tour-detail__meta-item">
+                <span class="tour-detail__meta-label">Start</span>
+                <span>{tour.start}</span>
+              </div>
+            </div>
+            <div class="tour-detail__actions">
+              <button class="btn btn--primary btn--book-tour" data-contact-open>
+                Book This Tour
+              </button>
+            </div>
+          </div>
+        </section>
+      ))}
+
+      <!-- CTA BOTTOM -->
+      <section class="section section--dark tours-cta">
+        <div class="container" style="text-align:center; display:grid; gap:1.5rem; justify-items:center;">
+          <h2>Naples is calling.<br />Will you answer?</h2>
+          <p style="color:rgba(255,255,255,0.55); max-width:45ch; font-size:0.95rem;">
+            This city isn't just a destination — it's a story waiting to be lived. Step beyond the postcards and dive into its hidden corners.
+          </p>
+          <button class="btn btn--outline-light" data-contact-open>
+            Send Me a Request
+          </button>
+        </div>
+      </section>
+    </main>
+    <FooterSection />
+  </div>
+</BaseLayout>
