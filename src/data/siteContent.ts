@@ -276,9 +276,10 @@ export const religionePage = {
 
 export const siteContent = {
   seo: {
-    title: "Discover Naples with Alex Tione – Tour Guide & Photographer",
+    title: "Alessandro Tione — Tour Guide & Photographer in Naples",
     description:
-      "Explore Naples with Alessandro Tione, a licensed tour guide and photographer. Discover the city's history, art, and immersive tours."
+      "Licensed tour guide and photographer based in Naples. Walking tours through hidden alleys, street art, Maradona tributes, and authentic Neapolitan street food. Book your private tour or explore fine-art photography inspired by the soul of Napoli.",
+    image: "/images/hero-alex.webp"
   },
   navigation: [
     { label: "Tours", href: "/tours" },

@@ -5,6 +5,8 @@ interface Props {
   title: string;
   description: string;
   image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   url?: string;
   type?: string;
 }
@@ -13,17 +15,20 @@ const siteUrl = "https://alextione.it";
 const {
   title,
   description,
-  image = "/og-image.jpg",
+  image = "/images/hero-alex.webp",
+  imageWidth = 1500,
+  imageHeight = 1200,
   url,
   type = "website",
 } = Astro.props;
 
 const canonicalUrl = url ? new URL(url, siteUrl).href : new URL(Astro.url.pathname, siteUrl).href;
 const ogImageUrl = image.startsWith("http") ? image : new URL(image, siteUrl).href;
+const ogImageType = ogImageUrl.endsWith(".webp") ? "image/webp" : ogImageUrl.endsWith(".png") ? "image/png" : "image/jpeg";
 ---
 
 <!doctype html>
-<html lang="it">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -52,19 +57,23 @@ const ogImageUrl = image.startsWith("http") ? image : new URL(image, siteUrl).hr
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:width" content="696" />
-    <meta property="og:image:height" content="696" />
-    <meta property="og:image:alt" content="Alessandro Tione — Fotografo e guida turistica a Napoli" />
-    <meta property="og:locale" content="it_IT" />
+    <meta property="og:image:type" content={ogImageType} />
+    <meta property="og:image:width" content={String(imageWidth)} />
+    <meta property="og:image:height" content={String(imageHeight)} />
+    <meta property="og:image:alt" content="Alessandro Tione — Tour guide and photographer in Naples, Italy" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="it_IT" />
     <meta property="og:site_name" content="AlexTione" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@tionealessandro" />
+    <meta name="twitter:creator" content="@tionealessandro" />
     <meta name="twitter:url" content={canonicalUrl} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
-    <meta name="twitter:image:alt" content="Alessandro Tione — Fotografo e guida turistica a Napoli" />
+    <meta name="twitter:image:alt" content="Alessandro Tione — Tour guide and photographer in Naples, Italy" />
 
     <!-- Google structured data -->
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -73,16 +82,20 @@ const ogImageUrl = image.startsWith("http") ? image : new URL(image, siteUrl).hr
       "name": "Alessandro Tione",
       "alternateName": "AlexTione",
       "url": siteUrl,
-      "image": ogImageUrl,
-      "jobTitle": "Fotografo e guida turistica",
+      "image": new URL("/images/hero-alex.webp", siteUrl).href,
+      "jobTitle": ["Tour Guide", "Photographer"],
+      "description": "Licensed tour guide and photographer based in Naples, Italy. Walking tours, street photography, and the Religione Monoteistica project.",
       "address": {
         "@type": "PostalAddress",
-        "addressLocality": "Napoli",
+        "addressLocality": "Naples",
+        "addressRegion": "Campania",
         "addressCountry": "IT"
       },
       "sameAs": [
         "https://www.instagram.com/alextione",
-        "https://www.tiktok.com/@alextione"
+        "https://www.tiktok.com/@alextione",
+        "https://x.com/tionealessandro",
+        "https://www.linkedin.com/in/alessandro-tione-935838147"
       ]
     })} />
   </head>
