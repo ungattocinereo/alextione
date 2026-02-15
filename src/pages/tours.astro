@@ -24,40 +24,42 @@ import { tourDetails } from "../data/siteContent";
       </section>
 
       <!-- TOUR DETAILS -->
-      {tourDetails.map((tour, i) => (
-        <section class={`tour-detail ${i % 2 !== 0 ? 'tour-detail--reversed' : ''}`} id={tour.slug}>
-          <div class="tour-detail__image">
-            <img src={tour.image} alt={tour.title} loading="lazy" />
-          </div>
-          <div class="tour-detail__content">
-            <span class="tour-detail__badge">{tour.duration} &middot; {tour.price}</span>
-            <h2>{tour.title}</h2>
-            <p class="tour-detail__subtitle">{tour.subtitle}</p>
-            {tour.paragraphs.map((p) => (
-              <p class="tour-detail__text">{p}</p>
-            ))}
-            <div class="tour-detail__meta">
-              <div class="tour-detail__meta-item">
-                <span class="tour-detail__meta-label">Language</span>
-                <span>{tour.language}</span>
+      <section class="tours-list" aria-label="Tour details">
+        {tourDetails.map((tour) => (
+          <article class="tour-detail" id={tour.slug}>
+            <div class="tour-detail__image">
+              <img src={tour.image} alt={tour.title} loading="lazy" />
+            </div>
+            <div class="tour-detail__content">
+              <span class="tour-detail__badge">{tour.duration} &middot; {tour.price}</span>
+              <h2>{tour.title}</h2>
+              <p class="tour-detail__subtitle">{tour.subtitle}</p>
+              {tour.paragraphs.map((p) => (
+                <p class="tour-detail__text">{p}</p>
+              ))}
+              <div class="tour-detail__meta" aria-label={`Tour info for ${tour.title}`}>
+                <div class="tour-detail__meta-item">
+                  <span class="tour-detail__meta-label">Language</span>
+                  <span class="tour-detail__meta-value">{tour.language}</span>
+                </div>
+                <div class="tour-detail__meta-item">
+                  <span class="tour-detail__meta-label">Min. group</span>
+                  <span class="tour-detail__meta-value">{tour.minGroup}</span>
+                </div>
+                <div class="tour-detail__meta-item">
+                  <span class="tour-detail__meta-label">Start</span>
+                  <span class="tour-detail__meta-value">{tour.start}</span>
+                </div>
               </div>
-              <div class="tour-detail__meta-item">
-                <span class="tour-detail__meta-label">Min. group</span>
-                <span>{tour.minGroup}</span>
-              </div>
-              <div class="tour-detail__meta-item">
-                <span class="tour-detail__meta-label">Start</span>
-                <span>{tour.start}</span>
+              <div class="tour-detail__actions">
+                <button class="btn btn--primary btn--book-tour" data-contact-open>
+                  Book This Tour
+                </button>
               </div>
             </div>
-            <div class="tour-detail__actions">
-              <button class="btn btn--primary btn--book-tour" data-contact-open>
-                Book This Tour
-              </button>
-            </div>
-          </div>
-        </section>
-      ))}
+          </article>
+        ))}
+      </section>
 
       <!-- CTA BOTTOM -->
       <section class="section section--dark tours-cta">

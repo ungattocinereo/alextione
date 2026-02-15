@@ -2,32 +2,76 @@
 import { siteContent } from "../data/siteContent";
 
 const { footer } = siteContent;
+const toursFirstColumn = footer.quickLinks.slice(0, 3);
+const toursSecondColumn = footer.quickLinks.slice(3);
 ---
 
 <footer class="site-footer">
-  <div class="footer__top">
-    <div class="footer__tagline">
-      <h2>{footer.tagline}</h2>
-      <div class="footer__contact">
-        <a href={`mailto:${footer.email}`}>{footer.email}</a>
-        <a href={`tel:${footer.phone.replace(/\s/g, '')}`}>{footer.phone}</a>
+  <div class="footer__inner">
+    <!-- Brand column: logo + contacts + socials -->
+    <div class="footer__brand">
+      <a href="/" class="footer__logo-link" aria-label="AlexTione Home">
+        <img src="/logo.svg" alt="AlexTione" class="footer__logo" />
+      </a>
+      <p class="footer__tagline-text">{footer.tagline}</p>
+      <div class="footer__socials">
+        {
+          footer.socialLinks.map((link) => {
+            const isExternal = link.href.startsWith('http');
+            const socialClass = link.label === "Instagram" ? "footer__social-link--instagram"
+              : link.label === "LinkedIn" ? "footer__social-link--linkedin"
+              : "footer__social-link--twitter";
+            return (
+              <a
+                href={link.href}
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noreferrer" : undefined}
+                aria-label={link.label}
+                class={`footer__social-link ${socialClass}`}
+              >
+                {link.label === "Instagram" && (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                )}
+                {link.label === "LinkedIn" && (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                )}
+                {link.label === "X / Twitter" && (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                )}
+              </a>
+            );
+          })
+        }
       </div>
     </div>
 
-    <div class="footer__col">
+    <!-- Tours column -->
+    <div class="footer__col footer__col--tours">
       <h4>Tours</h4>
-      <ul>
-        {
-          footer.quickLinks.map((link) => (
-            <li>
-              <a href={link.href}>{link.label}</a>
-            </li>
-          ))
-        }
-      </ul>
+      <div class="footer__tours-columns">
+        <ul class="footer__tours-list">
+          {
+            toursFirstColumn.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+        <ul class="footer__tours-list">
+          {
+            toursSecondColumn.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
 
-    <div class="footer__col">
+    <!-- Projects column (moved to former contact slot) -->
+    <div class="footer__col footer__col--projects">
       <h4>Projects</h4>
       <ul>
         {
@@ -41,25 +85,26 @@ const { footer } = siteContent;
           })
         }
       </ul>
-      <div class="footer__socials">
-        <a href="https://www.instagram.com/alextione/" target="_blank" rel="noreferrer">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          <span>Instagram</span>
+    </div>
+
+    <!-- Contact column -->
+    <div class="footer__col">
+      <h4>Contact</h4>
+      <div class="footer__contact">
+        <a href={`mailto:${footer.email}`}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <span>{footer.email}</span>
         </a>
-        <a href="http://linkedin.com/in/alessandro-tione-935838147" target="_blank" rel="noreferrer">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          <span>LinkedIn</span>
-        </a>
-        <a href="https://x.com/tionealessandro" target="_blank" rel="noreferrer">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          <span>X</span>
+        <a href={`tel:${footer.phone.replace(/\s/g, '')}`}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span>{footer.phone}</span>
         </a>
       </div>
     </div>
   </div>
 
   <div class="footer__bottom">
-    <p>&copy; Alessandro Tione 2025. p.IVA 10704951218</p>
-    <p>Design and development <a href="https://cinereo.it" target="_blank" rel="noreferrer">Cinereo</a></p>
+    <p>&copy; Alessandro Tione {new Date().getFullYear()}. p.IVA 10704951218</p>
+    <p>Design & development <a href="https://cinereo.it" target="_blank" rel="noreferrer">Cinereo</a></p>
   </div>
 </footer>

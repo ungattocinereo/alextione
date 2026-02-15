@@ -66,11 +66,14 @@ const { fanzine, categories } = shopPageData;
                   <div class="shop-product__info">
                     <h3>{product.title}</h3>
                     {product.prices && (
-                      <div class="shop-product__prices">
+                      <ul class="shop-product__prices" aria-label="Available sizes and prices">
                         {product.prices.map((p) => (
-                          <span class="shop-product__price">{p.size} — <strong>{p.price}</strong></span>
+                          <li class="shop-product__price">
+                            <span class="shop-product__size">{p.size}</span>
+                            <strong class="shop-product__amount">{p.price}</strong>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     )}
                   </div>
                 </a>

@@ -106,7 +106,7 @@ const ogImageType = ogImageUrl.endsWith(".webp") ? "image/webp" : ogImageUrl.end
       const header = document.querySelector('.site-header');
       if (header) {
         const onScroll = () => {
-          header.classList.toggle('scrolled', window.scrollY > 80);
+          header.classList.toggle('scrolled', window.scrollY > 20);
         };
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();

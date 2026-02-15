@@ -4,45 +4,55 @@ import { siteContent } from "../data/siteContent";
 const { navigation, footer, tours } = siteContent;
 ---
 
-<header class="site-header">
-  <div class="site-header__inner">
-    <!-- LEFT: Hamburger -->
-    <button class="menu-toggle" aria-label="Open menu" data-nav-open>
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+<header class="site-header" id="site-header">
+  <div class="site-header__pill">
+    <div class="site-header__inner">
+      <!-- LEFT: Logo -->
+      <a class="brand" href="/" aria-label="AlexTione Home">
+        <img src="/logo.svg" alt="AlexTione" class="brand__logo" />
+      </a>
 
-    <!-- CENTER: Logo -->
-    <a class="brand" href="/" aria-label="AlexTione Home">
-      <img src="/logo.svg" alt="AlexTione" class="brand__logo" />
-    </a>
+      <!-- CENTER: Inline nav (desktop only) -->
+      <nav class="header-nav" aria-label="Primary">
+        {navigation.map((item) => (
+          <a class="header-nav__link" href={item.href}>{item.label}</a>
+        ))}
+      </nav>
 
-    <!-- RIGHT: Socials + Contact -->
-    <div class="header__right">
-      <div class="header__socials">
-        {
-          footer.socialLinks.map((link) => (
-            <a href={link.href} target="_blank" rel="noreferrer" aria-label={link.label}>
-              {link.label === "Instagram" && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-              )}
-              {link.label === "LinkedIn" && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-              )}
-              {link.label === "X / Twitter" && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              )}
-            </a>
-          ))
-        }
+      <!-- RIGHT: Socials + Divider + Contact -->
+      <div class="header__actions">
+        <div class="header__socials">
+          {
+            footer.socialLinks.map((link) => (
+              <a href={link.href} target="_blank" rel="noreferrer" aria-label={link.label} class="header__social-link">
+                {link.label === "Instagram" && (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                )}
+                {link.label === "LinkedIn" && (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                )}
+                {link.label === "X / Twitter" && (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                )}
+              </a>
+            ))
+          }
+        </div>
+        <span class="header__divider"></span>
+        <button class="header__cta" data-contact-open>Contact</button>
       </div>
-      <button class="btn btn--primary btn--contact" data-contact-open>Contact Me</button>
+
+      <!-- Mobile hamburger -->
+      <button class="menu-toggle" aria-label="Open menu" data-nav-open>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </div>
 </header>
 
-<!-- FULLSCREEN NAV OVERLAY -->
+<!-- FULLSCREEN NAV OVERLAY (mobile) -->
 <div class="nav-overlay" data-nav-overlay>
   <div class="nav-overlay__header">
     <a class="nav-overlay__brand" href="/" data-nav-close>
@@ -100,10 +110,30 @@ const { navigation, footer, tours } = siteContent;
   <div class="contact-modal__backdrop" data-contact-close></div>
   <div class="contact-modal__panel">
     <div class="contact-modal__header">
-      <h2>Send Me a Request</h2>
+      <div class="contact-modal__heading">
+        <span class="contact-modal__eyebrow">Naples, Italy</span>
+        <h2>Plan Your Tour With Alex</h2>
+        <p>Tell me what kind of experience you want and I will get back with a tailored proposal.</p>
+      </div>
       <button class="contact-modal__close" aria-label="Close" data-contact-close>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
+    </div>
+    <div class="contact-modal__quick">
+      <a class="contact-modal__quick-item" href={`mailto:${footer.email}`}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <span>
+          <small>Email</small>
+          <strong>{footer.email}</strong>
+        </span>
+      </a>
+      <a class="contact-modal__quick-item" href={`tel:${footer.phone.replace(/\s/g, '')}`}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>
+          <small>Phone</small>
+          <strong>{footer.phone}</strong>
+        </span>
+      </a>
     </div>
     <form class="contact-form" action={`mailto:${footer.email}`} method="GET">
       <div class="contact-form__row">
@@ -115,7 +145,7 @@ const { navigation, footer, tours } = siteContent;
         </div>
       </div>
       <fieldset class="contact-form__tours">
-        <legend>Please select tours you like to visit</legend>
+        <legend>Select tours you are interested in</legend>
         <div class="contact-form__tour-grid">
           {
             tours.tours.map((tour) => (
