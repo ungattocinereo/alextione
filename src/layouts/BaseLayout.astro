@@ -1,7 +1,7 @@
 ---
 import { structuredData } from "../lib/structuredData";
 import { locale } from "../lib/site";
-const {lang,base} = locale(Astro.url.pathname);
+const {lang,base,t} = locale(Astro.url.pathname);
 import "../styles/global.css";
 import "../styles/walks.css";
 
@@ -15,8 +15,21 @@ const { title, description } = Astro.props;
 const path = Astro.url.pathname.replace(/\/?$/, "/");
 const canonicalUrl = new URL(path, siteUrl).href;
 const card = base.split("/").filter(Boolean).at(-1) || "home";
-const ogImageUrl = new URL(`/share/${lang}/${card}.jpg`, siteUrl).href;
-const imageAlt = title;
+const ogImageUrl = new URL(`/share/${lang}/${card}.jpg?v=alex-portrait`, siteUrl).href;
+const imageAlt = t("Portrait of Alessandro Tione among the balconies of Naples", "Ritratto di Alessandro Tione tra i balconi di Napoli");
+const shareTitles: Record<string, string> = {
+  book: t("Naples and Maradona — Alessandro Tione", "Napoli e Maradona — Alessandro Tione"),
+  shop: t("Photographic prints — Alessandro Tione", "Stampe fotografiche — Alessandro Tione"),
+};
+const shareDescriptions: Record<string, string> = {
+  home: t("Walk through Naples with local guide and photographer Alessandro Tione. Discover the city's streets, football culture and people.", "Scopri Napoli con Alessandro Tione, guida e fotografo napoletano, tra vicoli, calcio e storie di quartiere."),
+  book: t("Alessandro Tione photographs the shrines, murals and everyday tributes to Diego Maradona in Naples.", "Gli altarini, i murales e gli omaggi quotidiani a Diego Maradona a Napoli nelle fotografie di Alessandro Tione."),
+  shop: t("Discover prints of Naples, football and street life by Alessandro Tione.", "Scopri le stampe di Alessandro Tione dedicate a Napoli, al calcio e alla vita di strada."),
+  privacy: t("How Alessandro Tione handles enquiries and personal data.", "Come Alessandro Tione gestisce le richieste e i dati personali."),
+  legal: t("Professional details and contact information for Alessandro Tione.", "Dati professionali e contatti di Alessandro Tione."),
+};
+const shareTitle = shareTitles[card] ?? title;
+const shareDescription = shareDescriptions[card] ?? description;
 ---
 
 <!doctype html>
@@ -59,8 +72,8 @@ const imageAlt = title;
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={shareTitle} />
+    <meta property="og:description" content={shareDescription} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
@@ -75,8 +88,8 @@ const imageAlt = title;
     <meta name="twitter:site" content="@tionealessandro" />
     <meta name="twitter:creator" content="@tionealessandro" />
     <meta name="twitter:url" content={canonicalUrl} />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={shareTitle} />
+    <meta name="twitter:description" content={shareDescription} />
     <meta name="twitter:image" content={ogImageUrl} />
     <meta name="twitter:image:alt" content={imageAlt} />
 
