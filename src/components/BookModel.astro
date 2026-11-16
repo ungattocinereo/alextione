@@ -1,0 +1,142 @@
+---
+import { locale } from "../lib/site";
+const { t } = locale(Astro.url.pathname);
+const { priority = false, controls = true } = Astro.props;
+---
+<div class="book-studio">
+  <div class="book-stage" data-book-stage>
+    <div class="book-shadow" aria-hidden="true"></div>
+    <div class="book-float">
+      <div class="book-object">
+        <div class="book-back"></div>
+        <div class="book-pages"></div>
+        <div class="book-tail"></div>
+        <div class="book-head"></div>
+        <div class="book-spine" aria-hidden="true"><span>RELIGIONE MONOTEISTICA</span><small>A. TIONE</small></div>
+        <div class="front-board">
+          <img class="book-cover" src="/book/cover.webp" width="820" height="1023" loading={priority ? "eager" : "lazy"} draggable="false"
+            alt={t("Blue cover of Religione Monoteistica by Alessandro Tione, with a street shrine to Maradona in Naples.", "Copertina azzurra di Religione Monoteistica di Alessandro Tione, con un’edicola dedicata a Maradona a Napoli.")} />
+        </div>
+      </div>
+    </div>
+  </div>
+  {controls && <div class="model-tools" hidden>
+    <button type="button" data-turn>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13c0 3 3.6 5 8 5s8-2 8-5-3.6-5-8-5H5m3-3L5 8l3 3"/></svg>
+      {t("Rotate", "Ruota")}
+    </button>
+    <button type="button" data-motion aria-pressed="false" aria-label={t("Pause book animation", "Pausa animazione del libro")}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path class="pause" d="M9 6v12m6-12v12"/><path class="play" d="m9 6 8 6-8 6z"/></svg>
+    </button>
+  </div>}
+</div>
+<style>
+  .book-studio {
+    position: relative; isolation: isolate;
+    background: radial-gradient(ellipse at 61% 28%, #f3fbff 4%, #d4efff 58%, #b3deef 100%);
+    border: 1px solid #c7e8f6;
+  }
+  .book-stage {
+    --width: clamp(195px, 23vw, 315px);
+    --yaw: -34deg; --glint: 66%; --pitch: 13deg;
+    display: grid; place-items: center; position: relative; min-width: 0; perspective: 1100px;
+    height: calc(var(--width) * 1.76); user-select: none;
+  }
+  .book-shadow {
+    position: absolute; width: calc(var(--width) * .86); height: 6.5%; bottom: 4%; border-radius: 50%;
+    background: radial-gradient(ellipse, #0c35587d, #25496940 45%, transparent 73%); filter: blur(7px);
+  }
+  .book-float, .book-object { transform-style: preserve-3d; }
+  .book-float, .book-shadow { animation: hover-book 6s ease-in-out infinite; animation-play-state: paused; }
+  .book-shadow { animation-name: shadow-shift; }
+  .book-stage.in-view:not(.still) :is(.book-float,.book-shadow) { animation-play-state: running; }
+  .book-object {
+    --thick: calc(var(--width) * .225); --half: calc(var(--thick) / 2);
+    position: relative; width: var(--width); aspect-ratio: 23 / 30;
+    transform: rotateX(var(--pitch)) rotateY(var(--yaw)) rotateZ(-6deg);
+    transition: transform .4s cubic-bezier(.2,.75,.25,1);
+  }
+  .front-board, .book-back, .book-pages, .book-tail, .book-head, .book-spine { position: absolute; }
+  .front-board, .book-back { inset: 0; border-radius: 1px 3px 3px 1px; }
+  .front-board { transform: translateZ(var(--half)); overflow: hidden; background: #28658c; box-shadow: 0 1px 0 1px #1a4d6c; }
+  .book-cover { width: 100%; height: 100%; }
+  .front-board::after { content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, #00182726 0%, transparent 2%, #10233326 3.1%, #fff2 3.8%, transparent 5%),
+      radial-gradient(ellipse at var(--glint) 8%, #fff2, transparent 63%);
+  }
+  .book-back { background: #255c7d; transform: translateZ(calc(-1 * var(--half))); box-shadow: 0 1px 0 1px #194967; }
+  .book-pages, .book-spine { top: .5%; height: 99%; width: var(--thick); }
+  .book-pages {
+    left: 99.4%; transform: translateX(-50%) rotateY(90deg);
+    background: linear-gradient(180deg, #fff7 0%, transparent 20%, #78695018 78%, #56483238),
+      repeating-linear-gradient(90deg, #e1ddce 0 1.3px, #cdc6b6 1.3px 2px, #ece8db 2px 4px);
+  }
+  .book-spine { left: 0; top: 0; height: 100%; transform: translateX(-50%) rotateY(-90deg);
+    display: flex; writing-mode: vertical-rl; align-items: center; justify-content: space-between;
+    padding-block: .1rem; padding-inline: 7%; color: #fff4dd;
+    background: linear-gradient(90deg,#194664,#2c76a1 25%,#296d99 67%,#1e587e);
+    font: 600 calc(var(--width) * .048)/1 "Oswald",sans-serif; letter-spacing: .025em;
+  }
+  .book-spine small { font-size: .72em; }
+  .book-head, .book-tail {
+    width: 99.4%; left: 0; height: var(--thick); transform: translateY(-50%) rotateX(90deg);
+    background: repeating-linear-gradient(#bcbaaa 0 1px, #d4d0c1 1px 3px);
+  }
+  .book-head { top: .5%; } .book-tail { top: 99.5%; }
+  .model-tools { display: flex; padding: 0 .8rem .55rem; justify-content: flex-end; align-items: center; gap: 2px; }
+  .model-tools[hidden] { display: none; }
+  .model-tools button { display: inline-flex; align-items: center; justify-content: center; gap: .25rem;
+    min-height: 44px; min-width: 44px; padding: .25rem .5rem; font: 500 .76rem/1 "JetBrains Mono", monospace;
+    background: transparent; border: 0; color: var(--text); cursor: pointer; }
+  .model-tools button:hover { background: #fff8; }
+  .model-tools svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .play, [aria-pressed="true"] .pause { display: none; } [aria-pressed="true"] .play { display: inline; }
+  @keyframes hover-book {
+    0%,100% { transform: translateY(4px) rotateY(-2deg) rotateZ(-1deg); }
+    50% { transform: translateY(-8px) rotateY(4deg) rotateZ(1deg); }
+  }
+  @keyframes shadow-shift { 0%,100% { opacity: .85; transform: scale(1); } 50% { opacity: .55; transform: scale(.87); } }
+  @media (max-width: 700px) {
+    .book-stage { --width: clamp(165px, 48vw, 255px); height: calc(var(--width) * 1.69); }
+    .model-tools { padding: 0 .45rem .2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .book-float,.book-shadow { animation: none; }
+    .book-object { transition: none; }
+    .model-tools [data-motion] { display: none; }
+  }
+</style>
+<script>
+  const pointer = matchMedia("(any-hover: hover) and (any-pointer: fine)");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  for (const studio of document.querySelectorAll<HTMLElement>(".book-studio")) {
+    const stage = studio.querySelector<HTMLElement>("[data-book-stage]")!;
+    const pause = studio.querySelector<HTMLButtonElement>("[data-motion]");
+    let spine = false;
+    let frame = 0;
+    const pose = (x = 0, y = 0) => {
+      stage.style.setProperty("--yaw", ((spine ? 35 : -34) + x * 30) + "deg");
+      stage.style.setProperty("--pitch", (13 - y * 18) + "deg");
+      stage.style.setProperty("--glint", (66 + x * 54) + "%");
+    };
+    const reset = () => { cancelAnimationFrame(frame); pose(); };
+    const toolbar = studio.querySelector<HTMLElement>(".model-tools");
+    if (toolbar) toolbar.hidden = false;
+    studio.querySelector("[data-turn]")?.addEventListener("click", () => { spine = !spine; reset(); });
+    pause?.addEventListener("click", () => {
+      pause.setAttribute("aria-pressed", String(stage.classList.toggle("still")));
+      reset();
+    });
+    stage.addEventListener("pointermove", ({clientX, clientY, pointerType}) => {
+      if (!pointer.matches || reduced.matches || pointerType === "touch" || stage.classList.contains("still")) return;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const bounds = stage.getBoundingClientRect();
+        pose((clientX - bounds.left) / bounds.width - .5, (clientY - bounds.top) / bounds.height - .5);
+      });
+    });
+    stage.addEventListener("pointerleave", reset);
+    reduced.addEventListener("change", reset);
+    new IntersectionObserver(([entry]) => stage.classList.toggle("in-view", entry.isIntersecting)).observe(stage);
+  }
+</script>

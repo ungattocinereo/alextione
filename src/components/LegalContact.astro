@@ -1,0 +1,9 @@
+---
+import { siteContent } from "../data/siteContent";
+const { email, phone } = siteContent.footer;
+---
+<address>
+  Alessandro Tione · P. IVA 10704951218<br />
+  Via Luigi Settembrini 98, 80138 Napoli (NA), Italia<br />
+  <a href={'mailto:' + email}>{email}</a> · <a href={'tel:' + phone.replace(/\s/g, '')}>{phone}</a>
+</address>

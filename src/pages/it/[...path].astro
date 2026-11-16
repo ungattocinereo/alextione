@@ -1,0 +1,52 @@
+---
+import Home from "../index.astro";
+import Catalog from "../tours.astro";
+import Portfolio from "../photo-art.astro";
+import Shop from "../shop.astro";
+import About from "../about.astro";
+import Privacy from "../privacy.astro";
+import Cookies from "../cookies.astro";
+import Legal from "../legal.astro";
+import Book from "../book.astro";
+import Project from "../religione-monoteistica.astro";
+import TourPage from "../../components/TourPage.astro";
+import { tours, type Tour } from "../../lib/site";
+interface Props {
+  tour?: Tour;
+}
+export function getStaticPaths() {
+  return [
+    ...[
+      undefined,
+      "tours",
+      "photo-art",
+      "shop",
+      "book",
+      "privacy",
+      "cookies",
+      "legal",
+      "about",
+      "religione-monoteistica",
+    ].map((path) => ({ params: { path } })),
+    ...tours.map((tour) => ({
+      params: { path: "tour/" + tour.slug },
+      props: { tour },
+    })),
+  ];
+}
+const pages = {
+  home: Home,
+  tours: Catalog,
+  "photo-art": Portfolio,
+  shop: Shop,
+  book: Book,
+  privacy: Privacy,
+  cookies: Cookies,
+  legal: Legal,
+  about: About,
+  "religione-monoteistica": Project,
+};
+const Page = pages[(Astro.params.path || "home") as keyof typeof pages];
+---
+
+{Astro.props.tour ? <TourPage tour={Astro.props.tour} /> : <Page />}

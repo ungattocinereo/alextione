@@ -1,0 +1,192 @@
+{
+  "conditions": {
+    "hours": 2,
+    "price": 39.5,
+    "minGuests": 2,
+    "languages": [
+      "it",
+      "en"
+    ],
+    "privateAvailable": true,
+    "start": [
+      "morning",
+      "afternoon"
+    ]
+  },
+  "tours": [
+    {
+      "slug": "maradona-tour",
+      "cover": {"src": "/tours/maradona-tour/cover.webp", "width": 1080, "height": 864},
+      "image": "/tours/maradona.webp",
+      "gallery": [
+        "/tours/maradona-tour/1.webp",
+        "/tours/maradona-tour/2.webp",
+        "/tours/maradona-tour/3.webp"
+      ],
+      "en": {
+        "title": "Maradona Tour",
+        "navDescription": "Murals and shrines to Diego",
+        "intro": "Naples lives for Maradona. This walk dives into murals and shrines that show why his legend still lives on.",
+        "story": [
+          "Naples is the capital of Italian football culture, a city that lives and breathes the sport in all its nuances. Between 1984 and 1991, it was home to one of the greatest players of all time: Diego Armando Maradona.",
+          "As a testament to the almost sacred status of Diego, tributes and spontaneous gestures of love can be found in shops, workshops, pizzerias, and on the very walls of the city. Neapolitans have dedicated murals, shrines, and hidden altars across the streets of Naples to Maradona.",
+          "On this tour, we will walk through the Historic Center, Forcella, and Quartieri Spagnoli, exploring the most iconic places of Maradonismo and discovering why, after more than 40 years, Diego’s memory still lives on in the hearts of Neapolitans."
+        ]
+      },
+      "it": {
+        "title": "Tour di Maradona",
+        "navDescription": "Murales e altarini per Diego",
+        "intro": "Tra murales, altarini e vecchie fotografie, seguiamo le tracce di Diego nel centro storico, a Forcella e nei Quartieri Spagnoli.",
+        "story": [
+          "Tra il 1984 e il 1991 Napoli è stata la casa di Diego Armando Maradona. A distanza di oltre quarant’anni, basta entrare in una bottega o in una pizzeria per capire cosa abbia lasciato alla città.",
+          "Un ritaglio di giornale, una foto d’epoca, perfino una ciocca di capelli: ogni omaggio racconta un ricordo. Cammineremo dal centro storico a Forcella e nei Quartieri Spagnoli, alla scoperta dei murales, dei piccoli santuari e degli altari che i napoletani continuano a dedicare a Diego."
+        ]
+      }
+    },
+    {
+      "slug": "rione-sanita-tour",
+      "cover": {"src": "/tours/rione-sanita-tour/cover.webp", "width": 1080, "height": 810},
+      "image": "/tours/rione-sanita.jpg",
+      "gallery": [
+        "/tours/rione-sanita-tour/1.webp",
+        "/tours/rione-sanita-tour/2.webp",
+        "/tours/rione-sanita-tour/3.webp"
+      ],
+      "en": {
+        "title": "Rione Sanità Tour",
+        "navDescription": "Palaces and alleys of the Sanità",
+        "intro": "Discover Naples' hidden gem! Join my tour of Rione Sanita — secret alleys, street art, and history in one unforgettable walk.",
+        "story": [
+          "Famous for its catacombs and as the birthplace of the legendary Totò, this place tells a story of past struggles and a recent revival, blending culture and vibrancy.",
+          "With my tour, I will guide you through the lesser-known alleys of Rione Sanità, far from the usual tourist routes. You’ll discover hidden corners, admire the vibrant street art that colors the walls, visit historical sites and noble palaces that tell the story of a strong identity, and, with a bit of luck, meet the locals who bring this neighborhood to life.",
+          "Don’t miss this special experience in the beating heart of Naples. Book your tour now and join me in exploring the hidden treasures of Rione Sanità—an adventure that will truly surprise you!"
+        ]
+      },
+      "it": {
+        "title": "Tour del Rione Sanità",
+        "navDescription": "Vicoli e palazzi della Sanità",
+        "intro": "Vicoli, palazzi nobiliari e arte di strada nel quartiere che ha dato i natali a Totò.",
+        "story": [
+          "Il Rione Sanità è conosciuto per le sue catacombe e per aver dato i natali a Totò. Tra i palazzi e i vicoli si legge anche una storia più recente, fatta di difficoltà e di rinascita.",
+          "Ti porterò nelle strade meno frequentate, tra opere di street art e palazzi nobiliari. Con un po’ di fortuna incontreremo le persone che animano il rione: è attraverso i loro racconti che questo quartiere si lascia conoscere."
+        ]
+      }
+    },
+    {
+      "slug": "highlights-tour",
+      "cover": {"src": "/tours/highlights-tour/cover.webp", "width": 1080, "height": 864},
+      "image": "/tours/highlights.webp",
+      "gallery": [
+        "/tours/highlights-tour/1.webp",
+        "/tours/highlights-tour/2.webp",
+        "/tours/highlights-tour/3.webp"
+      ],
+      "en": {
+        "title": "Highlights Tour",
+        "navDescription": "From old Naples to the royal city",
+        "intro": "Experience Naples in one unforgettable walk! My Highlights Tour covers the historic center, Spanish Quarters, and Royal Naples.",
+        "story": [
+          "With my Highlights Tour, I will take you on a journey to explore Naples’ most stunning landmarks. From the ancient heart of Neapolis to the grandeur of Royal Naples, in an experience that captures the city’s authentic soul.",
+          "We’ll begin our journey in the historic center, the ancient Neapolis, wandering through its narrow streets and discovering the hidden treasures of this UNESCO World Heritage site. From there, we’ll head to the lively Spanish Quarters, a maze of vibrant alleys filled with colors, street art, and authentic local stories. We’ll also explore the bustling Pignasecca market, where the scents, sounds, and flavors of Naples come together.",
+          "Our final stop will take us to Royal Naples, where we’ll admire the grand Galleria Umberto I, the world-renowned Teatro San Carlo, the Royal Palace, and the iconic Piazza del Plebiscito. Book your Highlights Tour now and join me to discover Naples as you’ve never seen it before!"
+        ]
+      },
+      "it": {
+        "title": "Il meglio di Napoli",
+        "navDescription": "Dal centro storico alla Napoli reale",
+        "intro": "Dall’antica Neapolis alla Napoli reale, passando per i Quartieri Spagnoli e il mercato della Pignasecca.",
+        "story": [
+          "Iniziamo nel centro storico, patrimonio UNESCO, tra i vicoli dell’antica Neapolis. Da qui raggiungiamo i Quartieri Spagnoli, dove i colori dei murales e la vita quotidiana si incontrano a ogni angolo.",
+          "Al mercato della Pignasecca ci accompagnano profumi, voci e sapori. L’ultima parte della passeggiata è dedicata alla Napoli reale: la Galleria Umberto I, il Teatro San Carlo, il Palazzo Reale e piazza del Plebiscito."
+        ]
+      }
+    },
+    {
+      "slug": "quartieri-spagnoli-tour",
+      "cover": {"src": "/tours/quartieri-spagnoli-tour/cover.webp", "width": 720, "height": 1080},
+      "image": "/tours/quartieri-spagnoli.webp",
+      "gallery": [
+        "/tours/quartieri-spagnoli-tour/1.webp",
+        "/tours/quartieri-spagnoli-tour/2.webp",
+        "/tours/quartieri-spagnoli-tour/3.webp"
+      ],
+      "en": {
+        "title": "Quartieri Spagnoli Tour",
+        "navDescription": "Everyday life in the Spanish Quarters",
+        "intro": "Explore the heart of Naples! Join my tour of the Spanish Quarters — hidden alleys, street art, and local stories in a vibrant maze.",
+        "story": [
+          "It is a neighborhood that pulses with authenticity, where street art, the aromas of traditional cuisine, and a history of struggle and rebirth come together to tell a powerful story.",
+          "With my tour, I will take you through the lesser-known alleys, away from the usual tourist routes. Together, we will explore hidden gems, admire breathtaking viewpoints, discover historical sites, and, with a bit of luck, meet the locals who make this neighborhood so special.",
+          "Don’t miss the chance to experience a different side of Naples, right in its true heart. Book your tour now and join me in uncovering the secrets of the Spanish Quarters—an unforgettable journey awaits!"
+        ]
+      },
+      "it": {
+        "title": "Tour dei Quartieri Spagnoli",
+        "navDescription": "La vita nei vicoli dei Quartieri",
+        "intro": "Oltre il murale di Maradona, dentro il dedalo di vicoli che si apre a pochi passi da via Toledo.",
+        "story": [
+          "Accanto a via Toledo c’è un quartiere che racconta la sua storia attraverso l’arte di strada, la cucina e i gesti di ogni giorno. Il celebre murale di Maradona è soltanto uno dei tanti angoli da scoprire.",
+          "Seguiremo i vicoli meno battuti, tra scorci panoramici e luoghi storici. Ti racconterò le storie che conosco e, con un po’ di fortuna, incontreremo chi dà vita a queste strade."
+        ]
+      }
+    },
+    {
+      "slug": "street-food-tour",
+      "cover": {"src": "/tours/street-food-tour/cover.webp", "width": 1080, "height": 864},
+      "image": "/tours/street-food.webp",
+      "gallery": [
+        "/tours/street-food-tour/1.webp",
+        "/tours/street-food-tour/2.webp",
+        "/tours/street-food-tour/3.webp"
+      ],
+      "en": {
+        "title": "Street Food Tour",
+        "navDescription": "Fried pizza and sfogliatelle",
+        "intro": "Taste Naples through its street food — from fried pizza to sfogliatella — on a delicious walk through the city's heart!",
+        "story": [
+          "Parthenopean culinary tradition is a tasty journey of ancient and modern recipes. We Neapolitans spend a lot of time on the street, for many it is their office, and it is natural for us to eat on the street ready-made food that you can find in the windows of pizzerias or pastry shops.",
+          "Frittatine di pasta, pizza a portafoglio, fried pizza, crocchè, arancini, and scagliuozzi are just a few of the masterpieces of Neapolitan street food — true explosions of flavor that everyone should try at least once in their life.",
+          "And if you’re more into sweets than savory, Naples has you covered. Its rich pastry tradition offers delights like the sfogliatella, the rum-soaked babà, a slice of pastiera, the flourless caprese cake, and so much more. Join me on a walk through the heart of Naples to discover the incredible flavors of Neapolitan tradition!"
+        ]
+      },
+      "it": {
+        "title": "Street food napoletano",
+        "navDescription": "Pizza fritta e sfogliatelle",
+        "intro": "Dalla pizza a portafoglio alla sfogliatella, una passeggiata tra le vetrine di pizzerie e pasticcerie.",
+        "story": [
+          "A Napoli la strada è anche il luogo dove si mangia. Frittatine di pasta, pizza fritta, crocchè, arancini e scagliuozzi raccontano la tradizione di una città abituata a vivere all’aperto.",
+          "Per chi ama i dolci ci sono le sfogliatelle ricce e frolle, il babà al rum, la pastiera e la torta caprese. Cammineremo nel cuore di Napoli per scoprire le ricette e i sapori che si nascondono dietro queste vetrine."
+        ]
+      }
+    },
+    {
+      "slug": "street-art-tour",
+      "cover": {"src": "/tours/street-art-tour/cover.webp", "width": 810, "height": 1080},
+      "image": "/tours/street-art.webp",
+      "gallery": [
+        "/tours/street-art-tour/1.webp",
+        "/tours/street-art-tour/2.webp",
+        "/tours/street-art-tour/3.webp"
+      ],
+      "en": {
+        "title": "Street Art Tour",
+        "navDescription": "On the walls, from Banksy to Jorit",
+        "intro": "Discover Naples' street art — from Banksy to Jorit — in a vibrant tour through the Spanish Quarters and Historic Center!",
+        "story": [
+          "Taking on many forms—from classic murals to posters, as well as numerous wall writings and stickers. Since the 1980s, Naples has been one of the favorite destinations for street art, with early works by French artists Blek le Rat and Ernest Pignon-Ernest. The local crew KTM, Cyop & Kaf and Jorit also helped shape the city’s streets.",
+          "A special mention goes to the British artist Banksy, who, back in 2005, chose Naples as the location for his first works in Italy. Over the years, the city has welcomed a continuous flow of artists from around the world, turning both its historic center and its outskirts into an open-air canvas for creative expression.",
+          "Join me on a journey through the evolution of street art in Naples, from its early days to the present, as we explore its most iconic works and hidden gems!"
+        ]
+      },
+      "it": {
+        "title": "Street art a Napoli",
+        "navDescription": "Sui muri, da Banksy a Jorit",
+        "intro": "Dai primi interventi degli anni Ottanta alle opere di Banksy e Jorit, leggiamo la città attraverso i suoi muri.",
+        "story": [
+          "Murales, manifesti, scritte e adesivi cambiano il volto dei quartieri. Negli anni Ottanta arrivarono Blek le Rat ed Ernest Pignon-Ernest; sulla scena locale si muovevano la crew KTM e artisti come Cyop & Kaf e Jorit.",
+          "Nel 2005 Banksy scelse Napoli per i suoi primi lavori in Italia. Da allora il centro e le periferie sono diventati una galleria a cielo aperto: durante il tour ne ripercorreremo la storia, tra opere note e interventi più nascosti."
+        ]
+      }
+    }
+  ]
+}

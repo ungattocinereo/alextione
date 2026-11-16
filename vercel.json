@@ -1,0 +1,131 @@
+{
+  "trailingSlash": true,
+  "rewrites": [
+    {
+      "source": "/api/booking/",
+      "destination": "/api/booking"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/maradona-tour/",
+      "destination": "/tour/maradona-tour/",
+      "permanent": true
+    },
+    {
+      "source": "/rione-sanita-tour/",
+      "destination": "/tour/rione-sanita-tour/",
+      "permanent": true
+    },
+    {
+      "source": "/highlights-tour/",
+      "destination": "/tour/highlights-tour/",
+      "permanent": true
+    },
+    {
+      "source": "/quartieri-spagnoli-tour/",
+      "destination": "/tour/quartieri-spagnoli-tour/",
+      "permanent": true
+    },
+    {
+      "source": "/street-food-tour/",
+      "destination": "/tour/street-food-tour/",
+      "permanent": true
+    },
+    {
+      "source": "/street-art-tour/",
+      "destination": "/tour/street-art-tour/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/blog-2/",
+      "destination": "/religione-monoteistica/#buenos-aires",
+      "permanent": true
+    },
+    {
+      "source": "/category/tours/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/category/viaggi/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/category/napoli/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/category/urban/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/category/eventi-e-mostre/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/category/costiera/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/category/food/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/author/cinero/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/project-type/authentic-neighborhood/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/project-type/history-culture/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/project-type/food-culinary/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/project-type/legends-icons/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/footer-main-2/",
+      "destination": "/#footer",
+      "permanent": true
+    },
+    {
+      "source": "/contact/",
+      "destination": "/about/#contact",
+      "permanent": true
+    },
+    {
+      "source": "/tour/",
+      "destination": "/tours/",
+      "permanent": true
+    },
+    {
+      "source": "/sitemap_index.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    }
+  ]
+}

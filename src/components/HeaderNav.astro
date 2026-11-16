@@ -1,172 +1,211 @@
 ---
+import { locale, tours, tourPath } from "../lib/site";
+import LanguageLinks from "./LanguageLinks.astro";
 import { siteContent } from "../data/siteContent";
-
-const { navigation, footer, tours } = siteContent;
+import BookingDialog from "./BookingDialog.astro";
+const { lang, url, t } = locale(Astro.url.pathname);
+const bookLabel = t("My new book", "Il mio nuovo libro");
+const photoLinks = [
+  [bookLabel, "/book/", t("216 pages on Naples and Maradona", "216 pagine su Napoli e Maradona"), "book"],
+  ["Portfolio", "/photo-art/", t("Street life, football and tattoos", "Vita di strada, calcio e tatuaggi"), "portfolio"],
+  ["Religione Monoteistica", "/religione-monoteistica/", t("Photographing Diego’s memory since 2018", "Sulle tracce di Diego dal 2018"), "project"],
+  [t("Prints & shop", "Stampe e shop"), "/shop/", t("Photo prints, pins and fanzines", "Stampe fotografiche, spille e fanzine"), "prints"],
+];
+const mobileLinks = [
+  [t("Tours", "Tour"), "/tours/"],
+  [t("Photography", "Fotografia"), "/photo-art/"],
+  [bookLabel, "/book/"],
+  [t("Maradona Project", "Progetto Maradona"), "/religione-monoteistica/"],
+  ["Shop", "/shop/"],
+  [t("About me", "Chi sono"), "/about/"],
+];
+const contactLabel = t("Contact me", "Contattami");
 ---
 
-<header class="site-header" id="site-header">
-  <div class="site-header__pill">
-    <div class="site-header__inner">
-      <!-- LEFT: Logo -->
-      <a class="brand" href="/" aria-label="AlexTione Home">
-        <img src="/logo.svg" alt="AlexTione" class="brand__logo" />
-      </a>
-
-      <!-- CENTER: Inline nav (desktop only) -->
-      <nav class="header-nav" aria-label="Primary">
-        {navigation.map((item) => (
-          <a class="header-nav__link" href={item.href}>{item.label}</a>
-        ))}
-      </nav>
-
-      <!-- RIGHT: Socials + Divider + Contact -->
-      <div class="header__actions">
-        <div class="header__socials">
-          {
-            footer.socialLinks.map((link) => (
-              <a href={link.href} target="_blank" rel="noreferrer" aria-label={link.label} class="header__social-link">
-                {link.label === "Instagram" && (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                )}
-                {link.label === "LinkedIn" && (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                )}
-                {link.label === "X / Twitter" && (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                )}
-              </a>
-            ))
-          }
-        </div>
-        <span class="header__divider"></span>
-        <button class="header__cta" data-contact-open>Contact</button>
-      </div>
-
-      <!-- Mobile hamburger -->
-      <button class="menu-toggle" aria-label="Open menu" data-nav-open>
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </div>
-</header>
-
-<!-- FULLSCREEN NAV OVERLAY (mobile) -->
-<div class="nav-overlay" data-nav-overlay>
-  <div class="nav-overlay__header">
-    <a class="nav-overlay__brand" href="/" data-nav-close>
-      <img src="/logo.svg" alt="AlexTione" class="brand__logo brand__logo--white" />
+<header class="mast" data-mast>
+  <div class="mast-bar">
+    <a class="mast-logo" href={url("/")} aria-label="Alex Tione">
+      <img src="/logo.svg" alt="Alex Tione" width="82" height="36" />
     </a>
-    <button class="nav-overlay__close" aria-label="Close menu" data-nav-close>
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    <nav
+      id="main-menu"
+      class="mast-links"
+      aria-label={t("Main menu", "Menu principale")}
+    >
+      <details>
+        <summary>
+          Tour{lang === "en" && "s"} <i></i>
+        </summary>
+        <div class="mast-drop">
+          <a class="all-tours" href={url("/tours/")}>
+            <img src="/images/menu/all-tours.webp" alt="" width="44" height="44" loading="lazy" />
+            <span>{t("All walking tours", "Tutti i tour a piedi")} ↗</span>
+            <small>{t("Choose your walk through Naples", "Scegli la tua passeggiata a Napoli")}</small>
+          </a>
+          {tours.map((tour) => (
+            <a href={url(tourPath(tour))}>
+              <img src={`/images/menu/${tour.slug}.webp`} alt="" width="44" height="44" loading="lazy" />
+              <span>{tour[lang].title}</span>
+              <small>{tour[lang].navDescription}</small>
+            </a>
+          ))}
+        </div>
+      </details>
+      <details>
+        <summary>
+          {t("Photography", "Fotografia")} <i></i>
+        </summary>
+        <div class="mast-drop">
+          {photoLinks.map(([label, href, description, preview]) => (
+            <a href={url(href)}>
+              <img class:list={[{ "menu-book-cover": preview === "book" }]} src={`/images/menu/${preview}.webp`} alt="" width="44" height="44" loading="lazy" />
+              <span>{label}</span>
+              <small>{description}</small>
+            </a>
+          ))}
+        </div>
+      </details>
+      <a href={url("/about/")}>{t("About", "Chi sono")}</a>
+      <button class="mast-contact" data-contact-open>
+        {t("Contact", "Contatti")}
+      </button>
+    </nav>
+    <LanguageLinks />
+    <button
+      class="mast-toggle"
+      type="button"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      aria-haspopup="dialog"
+    >
+      <svg
+        aria-hidden="true"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+      >
+        <path d="M3 8h18M3 16h18" />
+      </svg>{" "}
+      Menu
+    </button>
+    <button class="mobile-contact" type="button" data-contact-open>
+      {contactLabel}
     </button>
   </div>
-  <nav class="nav-overlay__body" aria-label="Primary">
-    <ul class="nav-overlay__links">
-      {
-        navigation.map((item) => (
-          <li>
-            <a href={item.href} data-nav-close>{item.label}</a>
-          </li>
-        ))
-      }
-    </ul>
-    <div class="nav-overlay__footer">
-      <div class="nav-overlay__socials">
-        {
-          footer.socialLinks.map((link) => (
-            <a href={link.href} target="_blank" rel="noreferrer">
-              {link.label === "Instagram" && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-              )}
-              {link.label === "LinkedIn" && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-              )}
-              {link.label === "X / Twitter" && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              )}
-              <span>{link.label === "X / Twitter" ? "X" : link.label}</span>
-            </a>
-          ))
-        }
-      </div>
-      <div class="nav-overlay__contact">
-        <a href={`mailto:${footer.email}`}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          <span>{footer.email}</span>
+  <dialog
+    id="mobile-menu"
+    class="mobile-sheet"
+    aria-label={t("Main menu", "Menu principale")}
+  >
+    <div class="mobile-sheet__frame">
+      <div class="mobile-sheet__bar">
+        <button
+          class="sheet-close"
+          autofocus
+          aria-label={t("Close menu", "Chiudi menu")}
+        >
+          <span aria-hidden="true">×</span> Menu
+        </button>
+        <a class="mast-logo" href={url("/")}>
+          <img src="/logo.svg" alt="Alex Tione" width="105" height="20" />
         </a>
-        <a href={`tel:${footer.phone.replace(/\s/g, '')}`}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          <span>{footer.phone}</span>
-        </a>
+        <button class="mobile-contact" data-contact-open>
+          {contactLabel}
+        </button>
       </div>
-    </div>
-  </nav>
-</div>
-
-<!-- CONTACT MODAL -->
-<div class="contact-modal" data-contact-modal>
-  <div class="contact-modal__backdrop" data-contact-close></div>
-  <div class="contact-modal__panel">
-    <div class="contact-modal__header">
-      <div class="contact-modal__heading">
-        <span class="contact-modal__eyebrow">Naples, Italy</span>
-        <h2>Plan Your Tour With Alex</h2>
-        <p>Tell me what kind of experience you want and I will get back with a tailored proposal.</p>
-      </div>
-      <button class="contact-modal__close" aria-label="Close" data-contact-close>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="contact-modal__quick">
-      <a class="contact-modal__quick-item" href={`mailto:${footer.email}`}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-        <span>
-          <small>Email</small>
-          <strong>{footer.email}</strong>
-        </span>
-      </a>
-      <a class="contact-modal__quick-item" href={`tel:${footer.phone.replace(/\s/g, '')}`}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        <span>
-          <small>Phone</small>
-          <strong>{footer.phone}</strong>
-        </span>
-      </a>
-    </div>
-    <form class="contact-form" action={`mailto:${footer.email}`} method="GET">
-      <div class="contact-form__row">
-        <div class="contact-form__field">
-          <input type="text" name="name" placeholder="How can I call you?" required />
-        </div>
-        <div class="contact-form__field">
-          <input type="email" name="email" placeholder="Please enter your email" required />
+      <div class="mobile-sheet__body">
+        <p class="mobile-role">
+          {t(
+            "Tour guide and photographer in Naples",
+            "Guida turistica e fotografo a Napoli",
+          )}
+        </p>
+        <nav class="mobile-sections" aria-label={t("Sections", "Sezioni")}>
+          {mobileLinks.map(([label, href], index) => (
+            <a href={url(href)} style={`--item: ${index}`}>{label}</a>
+          ))}
+        </nav>
+        <div class="mobile-sheet__footer">
+          <LanguageLinks fullNames />
+          <div class="mobile-socials">
+            {siteContent.footer.socialLinks
+              .filter((link) => link.label !== "LinkedIn")
+              .map((link) => (
+                <a href={link.href}>
+                  {link.label === "Instagram" ? "Instagram" : "X"}
+                </a>
+              ))}
+            <a href={"mailto:" + siteContent.footer.email}>Email</a>
+          </div>
+          <small>© Alessandro Tione {new Date().getFullYear()}</small>
         </div>
       </div>
-      <fieldset class="contact-form__tours">
-        <legend>Select tours you are interested in</legend>
-        <div class="contact-form__tour-grid">
-          {
-            tours.tours.map((tour) => (
-              <label class="contact-form__tour-option">
-                <input type="checkbox" name="tours" value={tour.title} />
-                <span>{tour.title}</span>
-              </label>
-            ))
-          }
-        </div>
-      </fieldset>
-      <div class="contact-form__field">
-        <textarea name="message" rows="5" placeholder="Please enter your message (optional)"></textarea>
-      </div>
-      <label class="contact-form__terms">
-        <input type="checkbox" name="terms" required />
-        <span>I agree with the Terms & Conditions.</span>
-      </label>
-      <div class="contact-form__submit">
-        <button type="submit" class="btn btn--primary">&raquo; Send Request</button>
-      </div>
-    </form>
-  </div>
-</div>
+    </div>
+  </dialog>
+</header>
+<BookingDialog />
+<script>
+  import { setupDesktopNavigation } from "../lib/desktopNavigation";
+  const mast = document.querySelector<HTMLElement>("[data-mast]")!;
+  const toggle = mast.querySelector<HTMLButtonElement>(".mast-toggle")!;
+  const closeMenus = setupDesktopNavigation(mast.querySelector<HTMLElement>(".mast-links")!);
+  const sheet = mast.querySelector<HTMLDialogElement>("#mobile-menu")!;
+  const scroll = () => {
+    if (window.scrollY > 36) mast.classList.add("compact");
+    else if (window.scrollY < 20) mast.classList.remove("compact");
+  };
+  scroll();
+  window.addEventListener("scroll", scroll, { passive: true });
+  toggle.addEventListener("click", () => {
+    const button = toggle.getBoundingClientRect();
+    sheet.style.setProperty("--menu-x", (button.left + button.width / 2) + "px");
+    sheet.style.setProperty("--menu-y", (button.top + button.height / 2) + "px");
+    sheet.showModal();
+    toggle.setAttribute("aria-expanded", "true");
+  });
+  sheet
+    .querySelector(".sheet-close")!
+    .addEventListener("click", () => sheet.close());
+  sheet.addEventListener("close", () =>
+    toggle.setAttribute("aria-expanded", "false"),
+  );
+  sheet.addEventListener(
+    "click",
+    (event) => {
+      if ((event.target as Element).closest("a,[data-contact-open]"))
+        sheet.close();
+    },
+    { capture: true },
+  );
+  window
+    .matchMedia("(min-width: 850px)")
+    .addEventListener("change", (event) => {
+      if (event.matches && sheet.open) sheet.close();
+      closeMenus();
+    });
+  window.addEventListener("pageshow", () => {
+    if (sheet.open) sheet.close();
+  });
+  mast
+    .querySelectorAll<HTMLAnchorElement>("[data-language]")
+    .forEach((link) => {
+      const updateUrl = () => {
+        link.search = location.search;
+        link.hash = location.hash;
+      };
+      updateUrl();
+      window.addEventListener("hashchange", updateUrl);
+      link.addEventListener("click", () => {
+        try {
+          localStorage.setItem("alex-language", link.dataset.language!);
+        } catch {}
+        document.cookie =
+          "alex_language=" +
+          link.dataset.language +
+          ";path=/;max-age=31536000;SameSite=Lax";
+      });
+    });
+</script>

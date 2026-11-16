@@ -1,39 +1,57 @@
 ---
-import { siteContent } from "../data/siteContent";
-
-const { tours } = siteContent;
+import { locale, tours, tourPath } from "../lib/site";
+const { lang, t, url, duration, price } = locale(Astro.url.pathname);
+const { catalog = false } = Astro.props;
 ---
 
 <section class="section" id="tours">
   <div class="container">
-    <div class="section-intro">
-      <p class="eyebrow">Tours</p>
-      <h2>Discover Naples with me</h2>
-      <p>{tours.intro}</p>
-    </div>
-
+    {!catalog && (
+      <div class="section-intro">
+        <p class="eyebrow">Tour{lang === "en" && "s"}</p>
+        <h2>{t("Discover Naples with me", "Scopri Napoli con me")}</h2>
+        <p>
+          {t(
+            "Walk with me through the streets, markets and neighbourhoods of Naples.",
+            "Passeggia con me tra le strade, i mercati e i quartieri di Napoli.",
+          )}
+        </p>
+      </div>
+    )}
     <div class="tours-grid">
-      {
-        tours.tours.map((tour) => (
-          <a class="tour-card" href={tour.bookingUrl}>
-            <div class="tour-card__img">
-              <img src={tour.image} alt={tour.title} loading="lazy" />
-            </div>
-            <div class="tour-card__body">
-              <span class="tour-card__duration">{tour.duration}</span>
-              <h3>{tour.title}</h3>
-              <p>{tour.description}</p>
-              <span class="tour-card__link">Learn more &rarr;</span>
-            </div>
-          </a>
-        ))
-      }
+      {tours.map((tour) => (
+        <a
+          id={catalog ? tour.slug : undefined}
+          class="tour-card"
+          href={url(tourPath(tour))}
+        >
+          <div class="tour-card__img" style={`--photo-ratio: ${tour.cover.width / tour.cover.height}`}>
+            <img
+              src={tour.cover.src}
+              width={tour.cover.width}
+              height={tour.cover.height}
+              alt=""
+              loading="lazy"
+            />
+            <span class="tour-card__details">
+              <span class="tour-card__duration">{duration}</span>
+              <span class="tour-card__price">{price}</span>
+            </span>
+          </div>
+          <div class="tour-card__body">
+            <h3>{tour[lang].title}</h3>
+            <p>{tour[lang].intro}</p>
+            <span class="tour-card__link">
+              {t("Explore tour", "Scopri il tour")} ↗
+            </span>
+          </div>
+        </a>
+      ))}
     </div>
-
-    <div style="margin-top: 2.5rem;">
-      <a class="btn btn--primary" href={tours.cta.href}>
-        {tours.cta.label}
+    {!catalog && (
+      <a style="margin-top:2rem" class="btn btn--primary" href={url("/tours/")}>
+        {t("View all tours", "Tutti i tour")}
       </a>
-    </div>
+    )}
   </div>
 </section>

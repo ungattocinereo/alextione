@@ -1,0 +1,63 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeaderNav from "../components/HeaderNav.astro";
+import FooterSection from "../components/FooterSection.astro";
+import { locale } from "../lib/site";
+const { t, url } = locale(Astro.url.pathname);
+const intro = t(
+  "Tour leader and photographer from Naples.",
+  "Accompagnatore turistico e fotografo napoletano.",
+);
+---
+
+<BaseLayout
+  title={t("About Alex — Alessandro Tione", "Chi sono — Alessandro Tione")}
+  description={t("Meet Alessandro Tione, a Neapolitan guide and photographer. Read about his training, his walks and the Maradona project he began in 2018.", "Alessandro Tione racconta la sua formazione, i tour a piedi a Napoli e il progetto fotografico dedicato a Maradona, iniziato nel 2018.")}
+>
+  <HeaderNav />
+  <main>
+    <header class="walk-hero">
+      <img
+        class="walk-photo about-portrait"
+        src="/images/hero-alex.webp"
+        alt="Alessandro Tione"
+      />
+      <div class="walk-heading container">
+        <h1>
+          Alessandro
+          <br />
+          Tione
+        </h1>
+        <p>{intro}</p>
+      </div>
+    </header>
+    <section class="about-story container">
+      <h2>{t("Behind the lens", "Dietro l’obiettivo")}</h2>
+      <p>
+        {t(
+          "My mother gave me my first compact camera with a roll of 24 exposures. Photography has been part of my life ever since. I studied advertising photography at ILAS in 2022 and graduated from the University of Naples Federico II in 2024.",
+          "Mia madre mi regalò la prima macchina fotografica compatta con un rullino da 24 pose. Da allora la fotografia mi accompagna. Nel 2022 ho conseguito il diploma in fotografia pubblicitaria all’ILAS e nel 2024 mi sono laureato all’Università degli Studi di Napoli Federico II.",
+        )}
+      </p>
+      <p>
+        {t(
+          "In 2017 I started NapoliUrbanExplorer, an Instagram page dedicated to Naples. Since 2019 I have written and produced multimedia stories with Escape Vision. My first fanzine, Religione Monoteistica, came out on 7 April 2023.",
+          "Nel 2017 ho aperto NapoliUrbanExplorer, una pagina Instagram dedicata a Napoli. Dal 2019 scrivo e realizzo contenuti multimediali per Escape Vision. Il 7 aprile 2023 è uscita la mia prima fanzine, Religione Monoteistica.",
+        )}
+      </p>
+      <p>
+        {t(
+          "My collaborations include Serie A, Copa90, Rivista11 and NSS Magazine.",
+          "Tra le mie collaborazioni ci sono Serie A, Copa90, Rivista11 e NSS Magazine.",
+        )}
+      </p>
+      <a class="walk-back" href={url("/photo-art/")}>
+        {t("View my portfolio", "Guarda il portfolio")} ↗
+      </a>
+      <button id="contact" class="btn btn--primary" data-contact-open>
+        {t("Contact Alex", "Scrivi ad Alex")} ↗
+      </button>
+    </section>
+  </main>
+  <FooterSection />
+</BaseLayout>

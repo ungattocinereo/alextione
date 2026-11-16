@@ -1,19 +1,32 @@
 ---
+import { locale } from "../lib/site";
+const {lang,t,url} = locale(Astro.url.pathname);
 import { siteContent } from "../data/siteContent";
 
 const { footer } = siteContent;
-const toursFirstColumn = footer.quickLinks.slice(0, 3);
-const toursSecondColumn = footer.quickLinks.slice(3);
+import { tours,tourPath } from "../lib/site";
+const links = tours.map(tour => ({label:tour[lang].title,href:url(tourPath(tour))}));
+const toursFirstColumn = links.slice(0,3);
+const toursSecondColumn = links.slice(3);
 ---
 
-<footer class="site-footer">
+<footer id="footer" class="site-footer">
+  <a class="footer-book" href={url("/book/")}>
+    <img src="/images/menu/book.webp" width="176" height="220" loading="lazy" alt="" />
+    <div>
+      <span>{t("My new photobook", "Il mio nuovo libro fotografico")}</span>
+      <strong>Religione Monoteistica</strong>
+      <small>{t("Book launch · 12 December 2026 · Magazzini Fotografici", "Presentazione · 12 dicembre 2026 · Magazzini Fotografici")}</small>
+    </div>
+    <b aria-hidden="true">→</b>
+  </a>
   <div class="footer__inner">
     <!-- Brand column: logo + contacts + socials -->
     <div class="footer__brand">
-      <a href="/" class="footer__logo-link" aria-label="AlexTione Home">
+      <a href={url("/")} class="footer__logo-link" aria-label="AlexTione Home">
         <img src="/logo.svg" alt="AlexTione" class="footer__logo" />
       </a>
-      <p class="footer__tagline-text">{footer.tagline}</p>
+      <p class="footer__tagline-text">{t(footer.tagline,'Napoli ti chiama. Rispondi?')}</p>
       <div class="footer__socials">
         {
           footer.socialLinks.map((link) => {
@@ -47,7 +60,7 @@ const toursSecondColumn = footer.quickLinks.slice(3);
 
     <!-- Tours column -->
     <div class="footer__col footer__col--tours">
-      <h4>Tours</h4>
+      <h4>{t('Tours','Tour')}</h4>
       <div class="footer__tours-columns">
         <ul class="footer__tours-list">
           {
@@ -72,14 +85,14 @@ const toursSecondColumn = footer.quickLinks.slice(3);
 
     <!-- Projects column (moved to former contact slot) -->
     <div class="footer__col footer__col--projects">
-      <h4>Projects</h4>
+      <h4>{t('Projects','Progetti')}</h4>
       <ul>
         {
           footer.projectLinks.map((link) => {
             const isExternal = link.href.startsWith('http');
             return (
               <li>
-                <a href={link.href} {...(isExternal ? { target: "_blank", rel: "noreferrer" } : {})}>{link.label}</a>
+                <a href={url(link.href+"/")} {...(isExternal ? { target: "_blank", rel: "noreferrer" } : {})}>{lang === 'it' ? ({'Photo Portfolio':'Portfolio','Maradona Project':'Progetto Maradona','Merch Shop':'Shop'}[link.label]) : link.label}</a>
               </li>
             );
           })
@@ -89,7 +102,7 @@ const toursSecondColumn = footer.quickLinks.slice(3);
 
     <!-- Contact column -->
     <div class="footer__col">
-      <h4>Contact</h4>
+      <h4>{t('Contact','Contatti')}</h4>
       <div class="footer__contact">
         <a href={`mailto:${footer.email}`}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -105,6 +118,30 @@ const toursSecondColumn = footer.quickLinks.slice(3);
 
   <div class="footer__bottom">
     <p>&copy; Alessandro Tione {new Date().getFullYear()}. p.IVA 10704951218</p>
-    <p>Design & development <a href="https://cinereo.it" target="_blank" rel="noreferrer">Cinereo</a></p>
+    <nav class="footer-notices" aria-label={t("Legal information", "Informazioni legali")}>
+      <a href={url("/privacy/")}>Privacy</a>
+      <a href={url("/cookies/")}>{t("Cookies", "Cookie")}</a>
+      <a href={url("/legal/")}>{t("Legal notice", "Note legali")}</a>
+    </nav>
+    <p>{t('Design & development','Design e sviluppo')} <a href="https://cinereo.it" target="_blank" rel="noreferrer">Cinereo</a></p>
   </div>
 </footer>
+
+<style>
+  .footer-book {
+    width: var(--container); margin: 0 auto clamp(2rem, 4vw, 3.5rem);
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center; gap: clamp(.8rem, 2vw, 1.6rem);
+    padding: clamp(1rem, 2vw, 1.5rem);
+    background: var(--accent); color: white;
+  }
+  .footer-book img { width: clamp(44px, 6vw, 72px); height: auto; transform: rotate(-4deg); box-shadow: 2px 4px 7px #00306d55; }
+  .footer-book span, .footer-book small { display: block; font-size: .8rem; line-height: 1.45; }
+  .footer-book strong { display: block; font: 550 clamp(1.35rem, 3vw, 2.25rem)/1.15 Oswald, sans-serif; margin: .18rem 0 .35rem; }
+  .footer-book b { font-size: 1.6rem; }
+  .footer-book:hover strong { text-decoration: underline; text-underline-offset: .12em; }
+  .footer-book:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+  .footer__bottom { flex-wrap: wrap; gap: .75rem 1.25rem; }
+  .footer-notices { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 1rem; }
+  .footer-notices a { display: inline-flex; align-items: center; min-height: 32px; }
+</style>

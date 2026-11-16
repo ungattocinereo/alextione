@@ -1,36 +1,41 @@
 ---
+import { structuredData } from "../lib/structuredData";
+import { locale } from "../lib/site";
+const {lang,base} = locale(Astro.url.pathname);
 import "../styles/global.css";
+import "../styles/walks.css";
 
 interface Props {
   title: string;
   description: string;
-  image?: string;
-  imageWidth?: number;
-  imageHeight?: number;
-  url?: string;
-  type?: string;
 }
 
-const siteUrl = "https://alextione.it";
-const {
-  title,
-  description,
-  image = "/images/hero-alex.webp",
-  imageWidth = 1500,
-  imageHeight = 1200,
-  url,
-  type = "website",
-} = Astro.props;
-
-const canonicalUrl = url ? new URL(url, siteUrl).href : new URL(Astro.url.pathname, siteUrl).href;
-const ogImageUrl = image.startsWith("http") ? image : new URL(image, siteUrl).href;
-const ogImageType = ogImageUrl.endsWith(".webp") ? "image/webp" : ogImageUrl.endsWith(".png") ? "image/png" : "image/jpeg";
+const siteUrl = Astro.site!;
+const { title, description } = Astro.props;
+const path = Astro.url.pathname.replace(/\/?$/, "/");
+const canonicalUrl = new URL(path, siteUrl).href;
+const card = base.split("/").filter(Boolean).at(-1) || "home";
+const ogImageUrl = new URL(`/share/${lang}/${card}.jpg`, siteUrl).href;
+const imageAlt = title;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/oswald.woff2" crossorigin />
+    <link rel="alternate" hreflang="en" href={new URL(base,siteUrl).href}/>
+    <link rel="alternate" hreflang="it" href={new URL('/it'+base,siteUrl).href}/>
+    <link rel="alternate" hreflang="x-default" href={new URL(base,siteUrl).href}/>
+    <script is:inline>
+      (() => {
+        if (document.documentElement.lang === 'it') return;
+        let saved = document.cookie.match(/(?:^|; )alex_language=(en|it)(?:;|$)/)?.[1];
+        try { saved = localStorage.getItem('alex-language') || saved; } catch {}
+        const prefersItalian = (navigator.languages?.length ? navigator.languages : [navigator.language]).some(l => /^it(?:-|$)/i.test(l));
+        if (saved === 'it' || (!saved && prefersItalian)) location.replace('/it' + location.pathname + location.search + location.hash);
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO -->
@@ -38,7 +43,7 @@ const ogImageType = ogImageUrl.endsWith(".webp") ? "image/webp" : ogImageUrl.end
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
     <meta name="author" content="Alessandro Tione" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
 
     <!-- Favicon: all formats -->
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
@@ -52,17 +57,17 @@ const ogImageType = ogImageUrl.endsWith(".webp") ? "image/webp" : ogImageUrl.end
     <meta name="theme-color" content="#0a0a0a" />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content={type} />
+    <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:type" content={ogImageType} />
-    <meta property="og:image:width" content={String(imageWidth)} />
-    <meta property="og:image:height" content={String(imageHeight)} />
-    <meta property="og:image:alt" content="Alessandro Tione — Tour guide and photographer in Naples, Italy" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:locale:alternate" content="it_IT" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:locale" content={lang==="it"?"it_IT":"en_US"} />
+    <meta property="og:locale:alternate" content={lang==="it"?"en_US":"it_IT"} />
     <meta property="og:site_name" content="AlexTione" />
 
     <!-- Twitter -->
@@ -73,83 +78,12 @@ const ogImageType = ogImageUrl.endsWith(".webp") ? "image/webp" : ogImageUrl.end
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
-    <meta name="twitter:image:alt" content="Alessandro Tione — Tour guide and photographer in Naples, Italy" />
+    <meta name="twitter:image:alt" content={imageAlt} />
 
     <!-- Google structured data -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Alessandro Tione",
-      "alternateName": "AlexTione",
-      "url": siteUrl,
-      "image": new URL("/images/hero-alex.webp", siteUrl).href,
-      "jobTitle": ["Tour Guide", "Photographer"],
-      "description": "Licensed tour guide and photographer based in Naples, Italy. Walking tours, street photography, and the Religione Monoteistica project.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Naples",
-        "addressRegion": "Campania",
-        "addressCountry": "IT"
-      },
-      "sameAs": [
-        "https://www.instagram.com/alextione",
-        "https://www.tiktok.com/@alextione",
-        "https://x.com/tionealessandro",
-        "https://www.linkedin.com/in/alessandro-tione-935838147"
-      ]
-    })} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData(siteUrl, path, title, description, ogImageUrl)).replace(/</g, "\\u003c")} />
   </head>
   <body>
     <slot />
-    <script>
-      // Header scroll
-      const header = document.querySelector('.site-header');
-      if (header) {
-        const onScroll = () => {
-          header.classList.toggle('scrolled', window.scrollY > 20);
-        };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-      }
-
-      // Nav overlay
-      const navOverlay = document.querySelector('[data-nav-overlay]');
-      document.querySelectorAll('[data-nav-open]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          navOverlay?.classList.add('is-open');
-          document.body.style.overflow = 'hidden';
-        });
-      });
-      document.querySelectorAll('[data-nav-close]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          navOverlay?.classList.remove('is-open');
-          document.body.style.overflow = '';
-        });
-      });
-
-      // Contact modal
-      const contactModal = document.querySelector('[data-contact-modal]');
-      document.querySelectorAll('[data-contact-open]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          contactModal?.classList.add('is-open');
-          document.body.style.overflow = 'hidden';
-        });
-      });
-      document.querySelectorAll('[data-contact-close]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          contactModal?.classList.remove('is-open');
-          document.body.style.overflow = '';
-        });
-      });
-
-      // Close on Escape
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          navOverlay?.classList.remove('is-open');
-          contactModal?.classList.remove('is-open');
-          document.body.style.overflow = '';
-        }
-      });
-    </script>
   </body>
 </html>

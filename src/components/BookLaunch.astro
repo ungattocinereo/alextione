@@ -1,0 +1,90 @@
+---
+import { locale } from "../lib/site";
+const { t, lang } = locale(Astro.url.pathname);
+const { detail = false } = Astro.props;
+import { bookLaunch as launch } from "../lib/structuredData";
+const format = (options: Intl.DateTimeFormatOptions) =>
+  new Intl.DateTimeFormat(lang === "it" ? "it-IT" : "en-GB", {timeZone: "Europe/Rome", ...options}).format(new Date(launch));
+const units = [t("Days", "Giorni"), t("Hours", "Ore"), t("Min", "Min"), t("Sec", "Sec")];
+---
+<aside class="launch" id="presentation" aria-label={t("NEW Book launch", "Presentazione del nuovo libro")}>
+  <picture aria-hidden="true">
+    <source media="(max-width: 600px)" srcset="/book/launch-poster-small.webp" />
+    <img src="/book/launch-poster.webp" alt="" width="960" height="640" loading={detail ? "eager" : "lazy"} />
+  </picture>
+  <div class="launch-content container">
+    <div class="launch-info">
+      <time datetime={launch}>{format({day: "numeric", month: "long", year: "numeric"})} <b aria-hidden="true">/</b> {format({hour: "2-digit", minute: "2-digit", hour12: false})}</time>
+      <p class="launch-title">{t("NEW Book launch", "Presentazione del nuovo libro")}</p>
+      <p class="launch-venue">Magazzini Fotografici <span>·</span> {t("Naples", "Napoli")}</p>
+    </div>
+    <div class="launch-clock" data-countdown={launch} data-started={t("The countdown has ended.", "Il conto alla rovescia è terminato.")} hidden>
+      <p>{t("Time until the launch", "Alla presentazione")}</p>
+      <div class="clock-units" role="timer" aria-live="off">
+        {units.map(unit => <span><strong>00</strong><small>{unit}</small></span>)}
+      </div>
+    </div>
+  </div>
+</aside>
+<style>
+  .launch { color: var(--text-light); background: var(--accent); position: relative; isolation: isolate; scroll-margin-top: var(--mast-height); }
+  picture { position: absolute; inset: 0 0 0 auto; width: 51%; z-index: -1; overflow: hidden; isolation: isolate; background: var(--accent-soft); }
+  picture img { width: 100%; height: 100%; object-fit: cover; object-position: 75% 50%; mix-blend-mode: luminosity; }
+  picture::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--accent) 4%, transparent 62%); }
+  .launch-content { display: grid; grid-template-columns: minmax(16rem, 1.1fr) minmax(10rem, .7fr) .9fr; align-items: center; gap: 2rem; padding-block: clamp(1.7rem, 3.5vw, 3.4rem); }
+  time, .launch-clock p, small { font: 500 .78rem/1.4 "JetBrains Mono", monospace; }
+  time { display: inline-block; color: var(--text-light); }
+  time b { padding: 0 .35em; font-weight: 400; color: #c0e9ff; }
+  .launch-title { font: 550 clamp(1.85rem, 3.4vw, 3.45rem)/1.07 "Oswald", sans-serif; letter-spacing: -.035em; text-wrap: balance; margin: .4rem 0; }
+  .launch-venue { font-weight: 600; font-size: clamp(.94rem, 1.5vw, 1.18rem); }
+  .launch-venue span { padding-inline: .12em; color: #c0e9ff; }
+  .launch-clock { align-self: center; justify-self: start; border-left: 1px solid #99cbef; padding: .3rem 0 .35rem clamp(1rem, 2vw, 2rem); white-space: nowrap; }
+  .launch-clock p { color: var(--text-light); margin-bottom: .45rem; }
+  .clock-units { display: flex; gap: clamp(.65rem, 1.25vw, 1.2rem); }
+  .clock-units span { display: grid; gap: .15rem; }
+  .clock-units strong { font: 500 clamp(1.65rem, 2.6vw, 2.6rem)/1 "Oswald", sans-serif; font-variant-numeric: tabular-nums; }
+  small { font-size: .68rem; color: var(--text-light); }
+  @media (scripting: enabled) { .launch-clock[hidden] { display: block; visibility: hidden; } }
+  .launch-clock [hidden] { display: none; }
+  @media (max-width: 900px) {
+    .launch-content { grid-template-columns: minmax(0, 1fr); gap: 1.1rem; }
+    .launch-clock { border: 0; padding: 0; }
+    .clock-units strong { font-size: 1.55rem; }
+    .launch-clock p { font-size: .68rem; }
+    .launch-info { max-width: 60%; }
+  }
+  @media (max-width: 540px) {
+    picture { width: 55%; }
+    picture::after { background: linear-gradient(90deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 92%, transparent) 37%, transparent 100%); }
+    .launch-content { padding-block: 1.4rem; }
+    .launch-info { max-width: 84%; }
+    .launch-title { max-width: 11em; }
+  }
+</style>
+<script>
+  const clock = document.querySelector<HTMLElement>("[data-countdown]")!;
+  const launch = Date.parse(clock.dataset.countdown!);
+  const digits = clock.querySelectorAll("strong");
+  let timer: number;
+  function updateClock() {
+    window.clearTimeout(timer);
+    if (document.hidden) return;
+    const remaining = launch - Date.now();
+    clock.hidden = false;
+    if (remaining <= 0) {
+      clock.querySelector("p")!.textContent = clock.dataset.started!;
+      clock.querySelector<HTMLElement>(".clock-units")!.hidden = true;
+      return;
+    }
+    const seconds = Math.ceil(remaining / 1000);
+    const values = [Math.floor(seconds / 86400), Math.floor(seconds / 3600) % 24, Math.floor(seconds / 60) % 60, seconds % 60];
+    digits.forEach((digit, i) => {
+      const value = String(values[i]).padStart(2, "0");
+      if (digit.textContent !== value) digit.textContent = value;
+    });
+    timer = window.setTimeout(updateClock, remaining % 1000 || 1000);
+  }
+  updateClock();
+  document.addEventListener("visibilitychange", updateClock);
+  window.addEventListener("pageshow", updateClock);
+</script>

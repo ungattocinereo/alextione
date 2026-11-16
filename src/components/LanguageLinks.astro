@@ -1,0 +1,23 @@
+---
+import { locale } from "../lib/site";
+const { lang, base, t } = locale(Astro.url.pathname);
+const { fullNames = false } = Astro.props;
+---
+
+<div class="language" role="group" aria-label={t("Language", "Lingua")}>
+  {(["en", "it"] as const).map((code) => {
+    const name = code === "it" ? "Italiano" : "English";
+    return (
+      <a
+        href={(code === "it" ? "/it" : "") + base}
+        data-language={code}
+        lang={code}
+        hreflang={code}
+        aria-label={name}
+        aria-current={code === lang ? "true" : undefined}
+      >
+        {fullNames ? name : code.toUpperCase()}
+      </a>
+    );
+  })}
+</div>

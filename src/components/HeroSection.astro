@@ -1,34 +1,38 @@
 ---
 import { siteContent } from "../data/siteContent";
+import { locale } from "../lib/site";
 
+const { t, url } = locale(Astro.url.pathname);
 const { hero } = siteContent;
 ---
 
-<section class="hero" id="top">
-  <div class="hero__bg">
-    <img src={hero.image} alt="Alessandro Tione" loading="eager" />
-    <div class="hero__overlay"></div>
-  </div>
-
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <img class="hero__portrait" src={hero.image} alt={hero.name}
+    width="1500" height="1200" loading="eager" fetchpriority="high" />
   <div class="hero__content">
-    <span class="hero__kicker">{hero.kicker}</span>
-    <h1 class="hero__title">
-      Discover<br />
-      <span class="hero__accent">Napoli</span>
+    <h1 class="hero__title" id="hero-title">
+      {t("Discover Napoli", "Scopri Napoli")}
+      <span>{t("through my eyes", "con i miei occhi")}</span>
     </h1>
-    <p class="hero__subtitle">{hero.subtitle}</p>
-    <div class="hero__actions">
-      <a class="btn btn--primary" href={hero.primaryCta.href}>{hero.primaryCta.label}</a>
-      <a class="btn btn--outline-light" href={hero.secondaryCta.href}>{hero.secondaryCta.label}</a>
+    <div class="hero__footer">
+      <div class="hero__credit">
+        <picture aria-hidden="true">
+          <source media="(prefers-reduced-motion: reduce)" srcset="/images/hero-camera-still.webp" />
+          <img src="/images/hero-camera.webp" alt="" width="60" height="60" />
+        </picture>
+        <div>
+          <p class="hero__name">{hero.name}</p>
+          <p class="hero__role">{t("Tour guide and photographer", "Guida turistica e fotografo")}</p>
+        </div>
+      </div>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href={url(hero.primaryCta.href)}>
+          {t(hero.primaryCta.label, "Scopri i tour")}
+        </a>
+        <a class="hero__portfolio" href={url(hero.secondaryCta.href)}>
+          {t(hero.secondaryCta.label, "Guarda il portfolio")} <span aria-hidden="true">↗</span>
+        </a>
+      </div>
     </div>
-  </div>
-
-  <div class="hero__name-tag">
-    <span>{hero.name}</span>
-  </div>
-
-  <div class="hero__scroll-hint">
-    <span>Scroll</span>
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
   </div>
 </section>

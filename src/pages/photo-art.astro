@@ -3,6 +3,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import HeaderNav from "../components/HeaderNav.astro";
 import FooterSection from "../components/FooterSection.astro";
 
+import { locale } from "../lib/site";
+const {lang,t} = locale(Astro.url.pathname);
 const albums = [
   {
     id: "football",
@@ -69,9 +71,18 @@ const albums = [
     ],
   },
 ];
+const italianAlbums = [
+  ['Calcio','Fotografia','La voce della curva, la tensione prima di un rigore e la gioia del gol, a bordo campo.'],
+  ['Tatuaggi','Fotografia','Ritratti di segni sulla pelle: storie personali, gesti e memoria.'],
+  ['Vita di strada','Fotografia','Scene di vita quotidiana, persone e incontri senza posa nelle strade di città diverse.'],
+  ['Scudetto Napoli','2025','Fumo, fuochi e passione. Napoli scende in strada per festeggiare lo scudetto.'],
+  ['Scudetto Napoli','2023','Il primo scudetto dopo trentatré anni. Una città unita, tra lacrime di gioia e strade dipinte d’azzurro.']
+];
+const labels:Record<string,string> = {Football:'Calcio',Match:'Partita',Stadium:'Stadio',September:'Settembre',Tattoo:'Tatuaggio',October:'Ottobre',Portrait:'Ritratto',Photography:'Fotografia',Detail:'Dettaglio',Paris:'Parigi',Street:'Strada',Berlin:'Berlino',Celebration:'Festa',Fans:'Tifosi',Night:'Notte',Streets:'Strade',Party:'Festa',April:'Aprile',May:'Maggio'};
+const localized = albums.map((a,i) => lang === 'en' ? a : {...a,title:italianAlbums[i][0],subtitle:italianAlbums[i][1],description:italianAlbums[i][2],images:a.images.map(img=>({...img,alt:img.alt.replace(/\b[A-Za-z]+\b/g,word=>labels[word] ?? word)}))});
 ---
 
-<BaseLayout title="Photo Art — AlexTione" description="Passionate photography across football, street life, tattoos, and Napoli celebrations — raw stories told through a Neapolitan lens.">
+<BaseLayout title={t("Naples photography portfolio — Alessandro Tione", "Portfolio fotografico di Napoli — Alessandro Tione")} description={t("Football, tattoos and street photography by Alessandro Tione.","Calcio, tatuaggi e fotografia di strada di Alessandro Tione.")}>
   <div class="page-shell">
     <HeaderNav />
 
@@ -87,29 +98,21 @@ const albums = [
           <h1 class="pa-hero__title">
             Photo<br /><span class="pa-hero__accent">Art</span>
           </h1>
-          <p class="pa-hero__subtitle">Raw stories told through a Neapolitan lens</p>
-          <nav class="pa-hero__nav" aria-label="Album navigation">
-            {albums.map((album, i) => (
+          <p class="pa-hero__subtitle">{t('Football, tattoos and street photography','Calcio, tatuaggi e fotografia di strada')}</p>
+          <nav class="pa-hero__nav" aria-label={t("Album navigation","Album fotografici")}>
+            {localized.map((album, i) => (
               <a href={`#${album.id}`} class="pa-hero__nav-link" style={`--delay: ${i * 0.08}s`}>
                 {album.title} {album.subtitle}
               </a>
             ))}
           </nav>
         </div>
-        <div class="pa-hero__scroll-hint">
-          <span>Scroll</span>
-          <svg width="14" height="24" viewBox="0 0 14 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <line x1="7" y1="2" x2="7" y2="20" />
-            <polyline points="2,16 7,22 12,16" />
-          </svg>
-        </div>
       </section>
 
       <!-- ALBUMS -->
-      {albums.map((album, albumIndex) => (
+      {localized.map((album, albumIndex) => (
         <section class={`pa-album ${albumIndex % 2 !== 0 ? 'pa-album--dark' : ''}`} id={album.id}>
           <div class="pa-album__header">
-            <div class="pa-album__number">{String(albumIndex + 1).padStart(2, '0')}</div>
             <div class="pa-album__titles">
               <h2 class="pa-album__title">{album.title}</h2>
               <span class="pa-album__subtitle">{album.subtitle}</span>
@@ -119,18 +122,18 @@ const albums = [
 
           <div class={`pa-gallery ${album.images.length > 4 ? 'pa-gallery--six' : 'pa-gallery--four'}`}>
             {album.images.map((img, imgIndex) => (
-              <figure
+              <button type="button"
                 class="pa-gallery__item"
                 data-lightbox-trigger
                 data-album={album.id}
                 data-index={imgIndex}
                 style={`--stagger: ${imgIndex * 0.06}s`}
               >
-                <img src={img.src} alt={img.alt} loading="lazy" />
+                <img src={img.src.replace('/photo-art/', '/previews/').replace(/\.[^.]+$/,'.webp')} alt={img.alt} data-full={img.src} loading="lazy" />
                 <div class="pa-gallery__item-overlay">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
                 </div>
-              </figure>
+              </button>
             ))}
           </div>
         </section>
@@ -140,16 +143,16 @@ const albums = [
     <!-- LIGHTBOX -->
     <div class="pa-lightbox" data-lightbox aria-hidden="true">
       <div class="pa-lightbox__backdrop" data-lightbox-close></div>
-      <button class="pa-lightbox__close" data-lightbox-close aria-label="Close">
+      <button class="pa-lightbox__close" data-lightbox-close aria-label={t("Close","Chiudi")}>
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
-      <button class="pa-lightbox__nav pa-lightbox__nav--prev" data-lightbox-prev aria-label="Previous">
+      <button class="pa-lightbox__nav pa-lightbox__nav--prev" data-lightbox-prev aria-label={t("Previous","Precedente")}>
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15,18 9,12 15,6"/></svg>
       </button>
       <div class="pa-lightbox__stage">
-        <img class="pa-lightbox__img" src="" alt="" />
+        <img class="pa-lightbox__img" alt="" />
       </div>
-      <button class="pa-lightbox__nav pa-lightbox__nav--next" data-lightbox-next aria-label="Next">
+      <button class="pa-lightbox__nav pa-lightbox__nav--next" data-lightbox-next aria-label={t("Next","Successiva")}>
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9,6 15,12 9,18"/></svg>
       </button>
       <div class="pa-lightbox__counter">
@@ -167,7 +170,7 @@ const albums = [
     const currentEl = lightbox?.querySelector('[data-lightbox-current]') as HTMLElement;
     const totalEl = lightbox?.querySelector('[data-lightbox-total]') as HTMLElement;
 
-    let currentAlbum: HTMLElement[] = [];
+    let currentAlbum: HTMLImageElement[] = [];
     let currentIndex = 0;
 
     function openLightbox(albumId: string, index: number) {
@@ -188,7 +191,7 @@ const albums = [
 
     function updateLightbox() {
       if (!currentAlbum[currentIndex]) return;
-      lightboxImg.src = currentAlbum[currentIndex].src;
+      lightboxImg.src = currentAlbum[currentIndex].dataset.full!;
       lightboxImg.alt = currentAlbum[currentIndex].alt;
       currentEl.textContent = String(currentIndex + 1);
       totalEl.textContent = String(currentAlbum.length);
@@ -226,21 +229,5 @@ const albums = [
       if (e.key === 'ArrowLeft') prevSlide();
     });
 
-    // ── Scroll Reveal ──
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
-    );
-
-    document.querySelectorAll('.pa-gallery__item, .pa-album__header').forEach((el) => {
-      observer.observe(el);
-    });
   </script>
 </BaseLayout>

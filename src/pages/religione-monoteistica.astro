@@ -1,15 +1,20 @@
 ---
+import { locale } from "../lib/site";
+const {lang,t} = locale(Astro.url.pathname);
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeaderNav from "../components/HeaderNav.astro";
 import FooterSection from "../components/FooterSection.astro";
 import { religionePage } from "../data/siteContent";
 
-const { hero, sections, image, ctaFanzine } = religionePage;
+import { progetto } from "../data/progetto";
+const { image, ctaFanzine } = religionePage;
+const hero = lang === "it" ? {...religionePage.hero,...progetto.hero} : religionePage.hero;
+const sections = religionePage.sections.map((s,i) => lang==="it" ? {...s,...progetto.sections[i]} : s);
 ---
 
 <BaseLayout
-  title={religionePage.seo.title}
-  description={religionePage.seo.description}
+  title={t(religionePage.seo.title,'Religione Monoteistica — Il progetto di Alex Tione')}
+  description={t(religionePage.seo.description,'Il legame tra Napoli e Maradona nelle fotografie di Alessandro Tione, dal 2018 a oggi.')}
 >
   <div class="page-shell">
     <HeaderNav />
@@ -20,6 +25,7 @@ const { hero, sections, image, ctaFanzine } = religionePage;
           <p class="eyebrow">{hero.kicker}</p>
           <h1>{hero.title}<br /><span class="accent">{hero.titleAccent}</span></h1>
         </div>
+        <img class="rm-hero__photo" src={image} alt={t("Maradona tribute in Naples","Omaggio a Maradona a Napoli")} fetchpriority="high" />
       </section>
 
       <!-- INTRO -->
@@ -31,9 +37,6 @@ const { hero, sections, image, ctaFanzine } = religionePage;
               <p>{hero.body}</p>
               <p>{hero.insight}</p>
               <p class="rm-intro__provocative">{hero.provocative}</p>
-            </div>
-            <div class="rm-intro__image">
-              <img src={image} alt="Religione Monoteistica — Maradona tribute in Naples" loading="lazy" />
             </div>
           </div>
         </div>
@@ -54,21 +57,22 @@ const { hero, sections, image, ctaFanzine } = religionePage;
         </section>
       ))}
 
+      <section id="buenos-aires" class="project-news container">
+        <h2>Buenos Aires 2025</h2>
+        <p>{t('Religione Monoteistica was selected for the first International Congress on Diego Armando Maradona, scheduled for 6–8 November 2025 at the Faculty of Social Sciences of the University of Buenos Aires.','Religione Monoteistica è stato selezionato per il primo Congresso internazionale su Diego Armando Maradona, in programma dal 6 all’8 novembre 2025 alla Facoltà di Scienze Sociali dell’Università di Buenos Aires.')}</p>
+      </section>
     </main>
     <div class="footer-gradient-wrap">
       <!-- CTA BOTTOM -->
       <section class="section section--dark rm-cta">
-        <div class="container" style="text-align:center; display:grid; gap:1.5rem; justify-items:center;">
-          <h2>Naples is calling.<br />Will you answer?</h2>
-          <p style="color:rgba(255,255,255,0.55); max-width:45ch; font-size:0.95rem;">
-            This city isn't just a destination — it's a story waiting to be lived. Step beyond the postcards and dive into its hidden corners.
-          </p>
+        <div class="container publication-contact">
+          <h2>{t('The photographic fanzine','La fanzine fotografica')}</h2>
           <div class="rm-cta__actions">
             <a class="btn btn--primary" href={ctaFanzine.href} target="_blank" rel="noreferrer">
-              {ctaFanzine.label}
+              {t(ctaFanzine.label,'Acquista la fanzine')}
             </a>
             <button class="btn btn--outline-light" data-contact-open>
-              Send Me a Request
+              {t("Send me a request","Scrivimi")}
             </button>
           </div>
         </div>

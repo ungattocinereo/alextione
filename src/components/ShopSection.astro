@@ -1,4 +1,6 @@
 ---
+import { locale } from "../lib/site";
+const {lang,t,url} = locale(Astro.url.pathname);
 import { siteContent, shopPageData } from "../data/siteContent";
 
 const { shop } = siteContent;
@@ -18,21 +20,21 @@ const featuredProducts = [
   <div class="container">
     <div class="section-intro">
       <p class="eyebrow">Shop</p>
-      <h2>Take Naples home</h2>
-      <p>{shop.intro}</p>
+      <h2>{t("Take Naples home","Porta Napoli con te")}</h2>
+      <p>{t(shop.intro,'Stampe, poster e piccoli oggetti nati dai miei progetti fotografici.')}</p>
     </div>
 
     <div class="shop-preview">
       {featuredProducts.map((product, i) => (
-        <a class="shop-preview__item" href="/shop" style={`--i: ${i}`}>
+        <a class="shop-preview__item" href={url("/shop/")} style={`--i: ${i}`}>
           <div class="shop-preview__img">
             <img src={product.image} alt={product.title} loading="lazy" />
             <div class="shop-preview__overlay">
-              <span class="shop-preview__cta">View in Shop &rarr;</span>
+              <span class="shop-preview__cta">{t('View in shop','Vedi nello shop')} →</span>
             </div>
           </div>
           <div class="shop-preview__info">
-            <span class="shop-preview__tag">{product.tag}</span>
+            <span class="shop-preview__tag">{lang==='it' ? ({Print:'Stampa',Pin:'Spilla'}[product.tag] ?? product.tag) : product.tag}</span>
             <h3>{product.title}</h3>
           </div>
         </a>
@@ -40,8 +42,8 @@ const featuredProducts = [
     </div>
 
     <div style="margin-top: 2.5rem;">
-      <a class="btn btn--primary" href="/shop">
-        Browse Full Shop
+      <a class="btn btn--primary" href={url("/shop/")}>
+        {t("Browse Full Shop","Esplora lo shop")}
       </a>
     </div>
   </div>

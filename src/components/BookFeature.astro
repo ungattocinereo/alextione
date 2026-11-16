@@ -1,0 +1,53 @@
+---
+import "../styles/book.css";
+import BookLaunch from "./BookLaunch.astro";
+import BookModel from "./BookModel.astro";
+import { locale } from "../lib/site";
+const { t, url } = locale(Astro.url.pathname);
+const { detail = false } = Astro.props;
+const kicker = t("Alessandro Tione’s new photobook", "Il nuovo libro fotografico di Alessandro Tione");
+const lead = t("Since 2018 I’ve photographed tributes to Diego Maradona in Naples, from garage walls to street shrines. Religione Monoteistica brings those photographs together in 216 pages.", "Dal 2018 fotografo gli omaggi a Diego Maradona a Napoli, dai muri delle officine alle edicole di strada. Religione Monoteistica raccoglie queste fotografie in 216 pagine.");
+---
+<section class="publication" aria-labelledby="publication-title">
+  <BookLaunch detail={detail} />
+  {detail ? (
+    <div class="book-poster">
+      <div class="poster-inner container">
+        <header class="poster-heading">
+          <p class="book-kicker">{kicker}</p>
+          <h1 id="publication-title">Religione <span>Monoteistica</span></h1>
+        </header>
+        <div class="poster-scene">
+          <div class="poster-prints" aria-hidden="true">
+            <img class="print-fans" src="/images/previews/scudetto-2023/scudetto23-4.webp" width="547" height="820" alt="" />
+            <div class="poster-filmstrip">
+              <img src="/images/previews/scudetto-2023/scudetto23-5.webp" width="760" height="507" alt="" />
+              <img src="/images/previews/scudetto-2023/scudetto23-1.webp" width="543" height="820" alt="" />
+            </div>
+            <img class="print-portrait" src="/images/previews/scudetto-2023/scudetto23-2.webp" width="543" height="820" alt="" />
+            <img class="print-mural" src="/images/previews/scudetto-2023/scudetto23-6.webp" width="760" height="504" alt="" />
+          </div>
+          <BookModel priority controls={false} />
+        </div>
+        <div class="poster-caption">
+          <p>{lead}</p>
+          <a class="poster-request" href="#request">{t("Request a copy", "Richiedi una copia")} <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+    </div>
+  ) : (
+  <div class="book-feature container">
+    <BookModel />
+    <div class="feature-copy">
+      <p class="book-kicker">{kicker}</p>
+      <h2 id="publication-title">Religione<br/><span>Monoteistica</span></h2>
+    </div>
+    <div class="feature-body">
+      <p class="book-lead">{lead}</p>
+      <a class="book-link" href={url("/book/")}>
+        {t("Discover the book", "Scopri il libro")} <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+  )}
+</section>

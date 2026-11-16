@@ -1,4 +1,6 @@
 ---
+import { locale } from "../lib/site";
+const {t,url} = locale(Astro.url.pathname);
 import { siteContent, religionePage } from "../data/siteContent";
 
 const { maradonaProject } = siteContent;
@@ -9,21 +11,19 @@ const { maradonaProject } = siteContent;
     <div class="maradona__grid">
       <div class="maradona__visual">
         <img src={religionePage.image} alt="Religione Monoteistica — Maradona tribute in Naples" loading="lazy" />
-        <div class="maradona__visual-overlay"></div>
-        <span class="maradona__watermark">D10S</span>
       </div>
       <div class="maradona__text">
-        <p class="eyebrow">Maradona Project</p>
+        <p class="eyebrow">{t('Maradona Project','Progetto Maradona')}</p>
         <h2>{maradonaProject.title}</h2>
-        <p>{maradonaProject.intro}</p>
-        <p>{maradonaProject.body}</p>
-        <p class="italic">{maradonaProject.argentina}</p>
+        <p>{t(maradonaProject.intro,'Il 12 dicembre 2018 ho cominciato a fotografare la devozione dei napoletani per Maradona. Non l’ho mai visto giocare: l’ho conosciuto nei ricordi di chi ha vissuto quegli anni.')}</p>
+        <p>{t(maradonaProject.body,'La sua immagine è ancora nelle botteghe, sui muri e nelle pizzerie. Il 7 aprile 2023 ho pubblicato Religione Monoteistica, una fanzine che raccoglie questi omaggi spontanei.')}</p>
+        <p class="italic">{t(maradonaProject.argentina,'Nel 2024 sono arrivato in Argentina per raccogliere altre storie di chi ha conosciuto Diego.')}</p>
         <div class="maradona__actions">
-          <a class="btn btn--primary" href={maradonaProject.ctaPrimary.href}>
-            {maradonaProject.ctaPrimary.label}
+          <a class="btn btn--primary" href={url("/religione-monoteistica/")}>
+            {t(maradonaProject.ctaPrimary.label,'Scopri il progetto')}
           </a>
           <a class="btn btn--outline-light" href={maradonaProject.ctaSecondary.href} target="_blank" rel="noreferrer">
-            {maradonaProject.ctaSecondary.label}
+            {t(maradonaProject.ctaSecondary.label,'Acquista la fanzine')}
           </a>
         </div>
       </div>

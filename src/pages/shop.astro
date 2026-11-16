@@ -1,15 +1,18 @@
 ---
+import { locale } from "../lib/site";
+const {lang,t} = locale(Astro.url.pathname);
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeaderNav from "../components/HeaderNav.astro";
 import FooterSection from "../components/FooterSection.astro";
 import { shopPageData } from "../data/siteContent";
 
+const categoryName = (name:string) => lang === 'it' ? ({'Print Photography':'Stampe fotografiche',Pins:'Spille'}[name] ?? name) : name;
 const { fanzine, categories } = shopPageData;
 ---
 
 <BaseLayout
-  title="Shop — AlexTione"
-  description="Shop prints, posters, pins, and the Religione Monoteistica fanzine by Alessandro Tione. Naples photography and Maradona-inspired art."
+  title={t("Photography prints, pins and fanzines — Alex Tione", "Stampe fotografiche, spille e fanzine — Alex Tione")}
+  description={t('Photography prints, pins and fanzines by Alessandro Tione.','Stampe fotografiche, spille e fanzine di Alessandro Tione.')}
 >
   <div class="page-shell">
     <HeaderNav />
@@ -22,9 +25,9 @@ const { fanzine, categories } = shopPageData;
         <div class="shop-hero__content">
           <p class="eyebrow">Fanzine</p>
           <h1>Religione<br /><span class="accent">Monoteistica</span></h1>
-          <p class="shop-hero__desc">{fanzine.description}</p>
+          <p class="shop-hero__desc">{t(fanzine.description,'Il titolo è una provocazione: Napoli è tutt’altro che monoteista, ma quando si parla di calcio, nel cuore dei napoletani c’è un solo dio, Diego Armando Maradona.')}</p>
           <a class="btn btn--primary" href={fanzine.vintedUrl} target="_blank" rel="noreferrer">
-            Buy on Vinted &rarr;
+            {t('Buy on Vinted','Acquista su Vinted')} ↗
           </a>
         </div>
       </section>
@@ -35,7 +38,7 @@ const { fanzine, categories } = shopPageData;
           <div class="shop-nav__links">
             {categories.map((cat) => (
               <a class="shop-nav__link" href={`#${cat.title.toLowerCase().replace(/\s+/g, '-')}`}>
-                {cat.title}
+                {categoryName(cat.title)}
               </a>
             ))}
           </div>
@@ -50,8 +53,8 @@ const { fanzine, categories } = shopPageData;
         >
           <div class="container">
             <div class="shop-category__header">
-              <h2>{category.title}</h2>
-              <p class="shop-category__subtitle">{category.subtitle}</p>
+              <h2>{categoryName(category.title)}</h2>
+              <p class="shop-category__subtitle">{t(category.subtitle,category.title==='Pins'?'Per ordini fuori Europa, scrivimi direttamente.':'Per ordini fuori Europa, scrivimi direttamente. Cornice esclusa.')}</p>
             </div>
 
             <div class={`shop-products ${category.products.length <= 6 ? 'shop-products--few' : ''}`}>
@@ -60,13 +63,13 @@ const { fanzine, categories } = shopPageData;
                   <div class="shop-product__image">
                     <img src={product.image} alt={product.title} loading="lazy" />
                     <div class="shop-product__overlay">
-                      <span class="shop-product__buy-label">Buy on Vinted &rarr;</span>
+                      <span class="shop-product__buy-label">{t('Buy on Vinted','Acquista su Vinted')} ↗</span>
                     </div>
                   </div>
                   <div class="shop-product__info">
                     <h3>{product.title}</h3>
                     {product.prices && (
-                      <ul class="shop-product__prices" aria-label="Available sizes and prices">
+                      <ul class="shop-product__prices" aria-label={t('Available sizes and prices','Formati e prezzi')}>
                         {product.prices.map((p) => (
                           <li class="shop-product__price">
                             <span class="shop-product__size">{p.size}</span>
@@ -87,13 +90,10 @@ const { fanzine, categories } = shopPageData;
     <div class="footer-gradient-wrap">
       <!-- CTA BOTTOM -->
       <section class="section section--dark tours-cta">
-        <div class="container" style="text-align:center; display:grid; gap:1.5rem; justify-items:center;">
-          <h2>Naples is calling.<br />Will you answer?</h2>
-          <p style="color:rgba(255,255,255,0.55); max-width:45ch; font-size:0.95rem;">
-            This city isn't just a destination — it's a story waiting to be lived. Step beyond the postcards and dive into its hidden corners.
-          </p>
+        <div class="container publication-contact">
+          <h2>{t('Orders and shipping','Ordini e spedizioni')}</h2>
           <button class="btn btn--outline-light" data-contact-open>
-            Send Me a Request
+            {t("Send me a request","Scrivimi")}
           </button>
         </div>
       </section>

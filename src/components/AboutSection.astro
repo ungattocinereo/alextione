@@ -1,4 +1,6 @@
 ---
+import { locale } from "../lib/site";
+const {lang,t} = locale(Astro.url.pathname);
 import { siteContent } from "../data/siteContent";
 
 const { aboutMe } = siteContent;
@@ -7,25 +9,25 @@ const { aboutMe } = siteContent;
 <section class="section section--muted" id="about">
   <div class="container">
     <div class="section-intro">
-      <p class="eyebrow">About Me</p>
-      <h2>{aboutMe.title}</h2>
+      <p class="eyebrow">{t("About Me","Chi sono")}</p>
+      <h2>{t(aboutMe.title,'Sono Alex, guida turistica e fotografo a Napoli')}</h2>
     </div>
 
     <div class="about__grid">
       <div class="about__bio">
         {
-          aboutMe.paragraphs.map((paragraph) => <p>{paragraph}</p>)
+          (lang==='en' ? aboutMe.paragraphs : ['Sono nato a Napoli. Gli anni trascorsi all’estero mi hanno dato un altro sguardo sulla mia città e il desiderio di raccontarla.','Nelle mie passeggiate e nelle fotografie si incontrano storia, cultura urbana e persone.','Mi interessa mostrare la bellezza e la complessità di Napoli, lontano dagli stereotipi.']).map((paragraph) => <p>{paragraph}</p>)
         }
       </div>
       <div class="about__card">
-        <h3>Quick Facts</h3>
+        <h3>{t("Quick Facts","In breve")}</h3>
         <ul>
           {
-            aboutMe.highlights.map((highlight) => <li>{highlight}</li>)
+            (lang==='en' ? aboutMe.highlights : ['Lingue di lavoro: italiano, inglese, spagnolo','Guida turistica abilitata in Campania','Tour e servizi fotografici durante tutto l’anno']).map((highlight) => <li>{highlight}</li>)
           }
         </ul>
         <a href={aboutMe.guideCard.href} target="_blank" rel="noreferrer">
-          {aboutMe.guideCard.label}
+          {t(aboutMe.guideCard.label,'Consulta la scheda ufficiale')}
         </a>
       </div>
     </div>

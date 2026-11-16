@@ -1,0 +1,45 @@
+---
+import { locale } from "../lib/site";
+const { t } = locale(Astro.url.pathname);
+---
+<figure class="book-film">
+  <video width="480" height="480" loop muted playsinline controls preload="none" poster="/book/film-poster.webp"
+    aria-label={t("Alex turns the pages of Religione Monoteistica", "Alex sfoglia Religione Monoteistica")}>
+    <source src="/book/leaf-through.mp4" type="video/mp4" />
+  </video>
+</figure>
+<style>
+  .book-film { margin: 0; background: #284462; aspect-ratio: 1; }
+  video { display: block; width: 100%; height: 100%; }
+</style>
+<script>
+  const video = document.querySelector<HTMLVideoElement>(".book-film video")!;
+  const motion = matchMedia("(prefers-reduced-motion: reduce)");
+  let visible = false;
+  let userPaused = false;
+  let automaticPause = false;
+  function syncPlayback() {
+    if (!visible || document.hidden) {
+      if (!video.paused) {
+        automaticPause = true;
+        video.pause();
+      }
+    } else if (!motion.matches && !userPaused) {
+      video.play().catch(() => {});
+    }
+  }
+  video.addEventListener("pause", () => {
+    if (!automaticPause) userPaused = true;
+    automaticPause = false;
+  });
+  video.addEventListener("play", () => { userPaused = false; });
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting && entry.intersectionRatio >= .2;
+    syncPlayback();
+  }, {threshold: [0, .2]}).observe(video);
+  document.addEventListener("visibilitychange", syncPlayback);
+  motion.addEventListener("change", () => {
+    if (motion.matches) video.pause();
+    else syncPlayback();
+  });
+</script>

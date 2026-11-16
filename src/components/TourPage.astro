@@ -1,0 +1,163 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeaderNav from "./HeaderNav.astro";
+import FooterSection from "./FooterSection.astro";
+import { locale, conditions, type Tour, tourPath, tours } from "../lib/site";
+const { tour } = Astro.props as { tour: Tour };
+const { lang, t, url, price, duration } = locale(Astro.url.pathname);
+const { title, intro, story } = tour[lang];
+const next =
+  tours[
+    (tours.findIndex((item) => item.slug === tour.slug) + 1) % tours.length
+  ];
+const icons = [
+  "M12 7v5l3 2 M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0",
+  "M20 7h-8a5 5 0 0 0 0 10h8 M6 10h10 M6 14h9",
+  "M3 5h13v10H8l-4 4v-4H3z M18 9h3v10h-4l-3 3v-4",
+  "M15 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0 M5 20a7 7 0 0 1 14 0",
+  "M3 19h18 M6 16a6 6 0 0 1 12 0 M12 3v3 M4 8l2 2 M20 8l-2 2",
+];
+const facts = [
+  [t("Duration", "Durata"), duration],
+  [t("Price", "Prezzo"), price],
+  [
+    t("Languages", "Lingue"),
+    conditions.languages
+      .map((code) =>
+        new Intl.DisplayNames([lang], { type: "language" }).of(code),
+      )
+      .join(" / "),
+  ],
+  [
+    t("Minimum group", "Gruppo minimo"),
+    conditions.minGuests + t(" guests", " persone"),
+  ],
+  [
+    t("Departs daily", "Partenza giornaliera"),
+    conditions.start
+      .map((s) =>
+        s === "morning"
+          ? t("Morning", "Mattina")
+          : t("Afternoon", "Pomeriggio"),
+      )
+      .join(" / "),
+  ],
+];
+---
+
+<BaseLayout
+  title={title + t(" in Naples — Alex Tione", " a Napoli — Alex Tione")}
+  description={intro}
+>
+  <HeaderNav />
+  <main>
+    <header class="walk-hero">
+      <img class="walk-photo" src={tour.image} alt="" fetchpriority="high" />
+      <div class="walk-heading container">
+        <a class="walk-back" href={url("/tours/")}>
+          ← {t("Walking tours", "Tour a piedi")}
+        </a>
+        <h1>{title}</h1>
+        <p>{intro}</p>
+        <button
+          class="btn btn--primary"
+          data-contact-open
+          data-tour={tour.slug}
+        >
+          {t("Request availability", "Richiedi disponibilità")} ↗
+        </button>
+      </div>
+    </header>
+    <div class="walk-body container">
+      <article>
+        <h2>{t("The walk", "La passeggiata")}</h2>
+        {story.map((p) => (
+          <p>{p}</p>
+        ))}
+      </article>
+      <aside class="walk-facts">
+        <h2>{t("Tour details", "Il tour in breve")}</h2>
+        <dl>
+          {facts.map(([label, value], i) => (
+            <div>
+              <dt>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d={icons[i]} />
+                </svg>
+                {label}
+              </dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
+        </dl>
+        {conditions.privateAvailable && (
+          <p>
+            {t(
+              "Private tours available on request.",
+              "Tour privati disponibili su richiesta.",
+            )}
+          </p>
+        )}
+        <button
+          class="btn btn--primary"
+          data-contact-open
+          data-tour={tour.slug}
+        >
+          {t("Ask Alex", "Scrivi ad Alex")} ↗
+        </button>
+      </aside>
+    </div>
+    <section
+      class="walk-gallery container"
+      aria-label={t("Photographs by Alex", "Fotografie di Alex")}
+    >
+      {tour.gallery.map((src, i) => (
+        <figure>
+          <img
+            src={src}
+            loading="lazy"
+            alt={title + " · " + t("photograph", "fotografia") + " " + (i + 1)}
+          />
+        </figure>
+      ))}
+    </section>
+    {tour.slug === "street-food-tour" && (
+      <figure class="walk-quote container">
+        <blockquote lang="en">
+          “Thank you so much for a brilliant tour.”
+        </blockquote>
+        <figcaption>
+          Anrew Milch · Street Food Tour · {t("May", "maggio")} 2025
+        </figcaption>
+      </figure>
+    )}
+    {tour.slug === "maradona-tour" && (
+      <div class="walk-related container">
+        <a href={url("/religione-monoteistica/")}>
+          {t(
+            "Discover my photographic project",
+            "Scopri il mio progetto fotografico",
+          )}{" "}
+          · Religione Monoteistica ↗
+        </a>
+      </div>
+    )}
+    <div class="walk-next">
+      <a class="container" href={url(tourPath(next))}>
+        <span>{t("Next walk", "La prossima passeggiata")}</span>
+        <strong>{next[lang].title} ↗</strong>
+      </a>
+    </div>
+  </main>
+  <FooterSection />
+</BaseLayout>

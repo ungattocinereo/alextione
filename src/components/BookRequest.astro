@@ -1,0 +1,170 @@
+---
+import { locale } from "../lib/site";
+import PrivacyAcknowledgment from "./PrivacyAcknowledgment.astro";
+import { siteContent } from "../data/siteContent";
+const phonePattern = /(?=(?:\D*\d){6,15}\D*$)\+?[\d \(\)\-]+/.source;
+const { lang, t } = locale(Astro.url.pathname);
+---
+<section class="book-order" id="request" aria-labelledby="order-heading">
+  <div class="order-grid container">
+    <div class="order-intro">
+      <h2 id="order-heading">{t("Request a copy", "Richiedi una copia")}</h2>
+      <p>{t("I’ll confirm how many copies are available and arrange pickup or shipping with you.", "Ti confermerò quante copie sono disponibili e concorderemo il ritiro o la spedizione.")}</p>
+
+    </div>
+    <div class="order-fields">
+      <form class="book-form" action="/api/booking/" method="post"
+        data-sending={t("Sending…", "Invio…")}
+        data-error={t("Your request couldn’t be sent. Please try again.", "La richiesta non è partita. Riprova.")}
+        data-preview={t("Request saved in the local preview. No email was sent.", "Richiesta salvata nell’anteprima locale. Nessuna email inviata.")}
+        data-success={t("I’ve received your request. I’ll get back to you about your copy.", "Ho ricevuto la tua richiesta. Ti risponderò per concordare la consegna.")}>
+        <input type="hidden" name="kind" value="book" />
+        <input type="hidden" name="language" value={lang} />
+        <fieldset>
+          <label>{t("When would you like the book?", "Quando vorresti il libro?")}
+            <select name="timing">
+              <option value="asap">{t("As soon as possible", "Il prima possibile")}</option>
+              <option value="date">{t("By a specific date", "Entro una data precisa")}</option>
+            </select>
+          </label>
+          <div class="form-pair" data-when hidden>
+            <label>{t("Date", "Data")}<input name="date" type="date" required disabled /></label>
+            <label>{t("Time (optional)", "Ora (facoltativa)")}<input name="time" type="time" disabled /></label>
+          </div>
+          <div class="form-pair">
+            <label>{t("Number of copies", "Numero di copie")}<input type="number" inputmode="numeric" name="copies" min="1" step="1" value="1" required /></label>
+            <label>{t("Delivery method", "Modalità di consegna")}
+              <select name="delivery"><option value="pickup">{t("Pick up in Naples", "Ritiro a Napoli")}</option><option value="shipping">{t("Shipping", "Spedizione")}</option></select>
+            </label>
+          </div>
+          <label data-destination hidden>{t("Delivery town and country", "Città e paese di spedizione")}<input name="destination" maxlength="160" required disabled /></label>
+          <label>{t("Your name", "Il tuo nome")}<input name="name" maxlength="100" autocomplete="name" required /></label>
+          <div class="form-pair">
+            <label>{t("Reply to me via", "Rispondimi via")}
+              <select name="contact"><option value="email">Email</option><option value="whatsapp">WhatsApp</option></select>
+            </label>
+            <label data-email>Email<input type="email" spellcheck="false" name="email" autocomplete="email" maxlength="254" required /></label>
+            <label data-phone hidden>{t("WhatsApp number", "Numero WhatsApp")}<input type="tel" name="phone" autocomplete="tel" placeholder="+39 …" pattern={phonePattern} maxlength="30" required disabled /></label>
+          </div>
+          <PrivacyAcknowledgment className="book-consent" />
+        </fieldset>
+        <button type="submit" class="order-submit"><span data-submit-label>{t("Send request", "Invia richiesta")}</span><span class="send-arrow" aria-hidden="true">→</span></button>
+        <p class="order-status" role="status" tabindex="-1"></p>
+        <p class="order-fallback" hidden>{t("Or email Alex at", "Puoi anche scrivere ad Alex a")} <a href={'mailto:'+siteContent.footer.email}>{siteContent.footer.email}</a>.</p>
+        <noscript><p>{t("To request the book by email, write to", "Per richiedere il libro via email, scrivi a")} <a href={'mailto:'+siteContent.footer.email}>{siteContent.footer.email}</a>.</p></noscript>
+      </form>
+    </div>
+    <img class="order-jacket" src="/book/original-cover-spread.webp" alt={t("The book laid flat, with the handwritten back cover on the left and the cover photograph on the right", "La copertina distesa, con la scritta in corsivo sul retro a sinistra e la fotografia di copertina a destra")} width="2350" height="1420" loading="lazy"/>
+  </div>
+</section>
+<script>
+  const form = document.querySelector<HTMLFormElement>(".book-form")!;
+  const input = (name: string) => form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement;
+  const status = form.querySelector<HTMLElement>(".order-status")!;
+  const submit = form.querySelector<HTMLButtonElement>("[type=submit]")!;
+  const submitLabel = submit.querySelector<HTMLElement>("[data-submit-label]")!;
+  const readyLabel = submitLabel.textContent;
+  const fallback = form.querySelector<HTMLElement>(".order-fallback")!;
+  function toggle(selector: string, show: boolean) {
+    const group = form.querySelector<HTMLElement>(selector)!;
+    group.hidden = !show;
+    group.querySelectorAll("input").forEach(field => { field.disabled = !show; });
+  }
+  function update() {
+    toggle("[data-when]", input("timing").value === "date");
+    toggle("[data-destination]", input("delivery").value === "shipping");
+    toggle("[data-email]", input("contact").value === "email");
+    toggle("[data-phone]", input("contact").value === "whatsapp");
+    (input("date") as HTMLInputElement).min = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Rome" }).format(new Date());
+  }
+  form.addEventListener("change", update);
+  update();
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (submit.disabled) return;
+    const payload = Object.fromEntries(new FormData(form));
+    const fields = form.querySelector("fieldset")!;
+    fields.disabled = submit.disabled = true;
+    form.setAttribute("aria-busy", "true");
+    status.textContent = "";
+    fallback.hidden = true;
+    submitLabel.textContent = form.dataset.sending!;
+    try {
+      const response = await fetch(form.action, {
+        method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error();
+      const result = await response.json();
+      if (!result.ok) throw new Error();
+      status.textContent = result.preview ? form.dataset.preview! : form.dataset.success!;
+      fields.hidden = submit.hidden = true;
+    } catch {
+      status.textContent = form.dataset.error!;
+      fallback.hidden = false;
+    } finally {
+      submitLabel.textContent = readyLabel;
+      form.removeAttribute("aria-busy");
+      fields.disabled = submit.disabled = false;
+      status.focus();
+    }
+  });
+</script>
+<style>
+  .book-order { background: #e8eeef; scroll-margin-top: var(--mast-height); }
+  .order-grid {
+    --column-gap: clamp(2rem, 7vw, 7rem);
+    isolation: isolate; display: grid; grid-template-columns: .85fr 1.15fr; grid-template-rows: auto 1fr; column-gap: var(--column-gap); row-gap: 1.4rem;
+    padding-block: clamp(3rem, 7vw, 7rem);
+  }
+  .order-intro p { margin-top: 1.2rem; max-width: 42ch; }
+  .order-fields { grid-area: 1 / 2 / 3 / 3; position: relative; z-index: 1; min-width: 0; }
+  .order-jacket {
+    display: block; grid-area: 2 / 1; width: calc(100% + var(--column-gap) + 3rem); max-width: none;
+    align-self: start; height: auto; pointer-events: none;
+    filter: drop-shadow(0 3px 3px rgb(13 35 58 / 14%)) drop-shadow(0 14px 16px rgb(13 35 58 / 15%));
+  }
+  .book-form { background: #fff; border: 1px solid #c9d5db; padding: clamp(1.1rem, 3vw, 2.5rem); }
+  .book-form fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 1rem; }
+  .book-form label { display: grid; row-gap: .375rem; font-size: .88rem; line-height: 1.4; font-weight: 650; }
+  .form-pair > label { grid-row: span 2; grid-template-rows: subgrid; }
+  .book-form input:not([type=checkbox]), .book-form select {
+    box-sizing: border-box; display: block; min-width: 0; width: 100%; height: 48px; min-height: 48px;
+    margin: 0; padding: 0 .75rem; font: inherit; font-size: 1rem; line-height: normal;
+    font-weight: 450; border: 1px solid #98a5aa; border-radius: 3px; background: #fff; color: var(--text);
+  }
+  .book-form select {
+    appearance: none; -webkit-appearance: none; padding-right: 2.5rem;
+    background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%), linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+    background-position: calc(100% - 18px) center, calc(100% - 13px) center;
+    background-size: 5px 5px; background-repeat: no-repeat;
+  }
+  @media (forced-colors: active) { .book-form select { appearance: auto; } }
+  .form-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .9rem; }
+  .order-submit {
+    margin-top: 1.2rem; width: 100%; padding: .85rem 1.1rem; border: 0; background: var(--accent);
+    font: inherit; font-weight: 650; color: white; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+  }
+  .order-submit:hover { background: var(--accent-hover); }
+  .order-submit:disabled { opacity: .65; cursor: progress; }
+  .book-form [hidden] { display: none; }
+  .order-fallback { font-size: .9rem; }
+  .order-fallback a { text-decoration: underline; overflow-wrap: anywhere; }
+  .order-submit:disabled .send-arrow { font-size: 0; width: 1rem; height: 1rem; border: 2px solid #ffffff65; border-top-color: white; border-radius: 50%; animation: sending .8s linear infinite; }
+  @keyframes sending { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .order-submit:disabled .send-arrow { animation: none; } }
+  .book-form :is(input,select,button) { scroll-margin-block: calc(var(--mast-height) + 1rem) 2rem; }
+  .order-status:not(:empty) { margin-top: 1rem; }
+  @media (min-width: 751px) {
+    .order-intro { transform: translateY(clamp(-3.5rem, -3.8vw, -1.75rem)); }
+    .order-jacket { transform: scale(1.3); transform-origin: left bottom; }
+  }
+  @media (max-width: 750px) {
+    .order-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
+    .order-fields { grid-area: auto; }
+    .order-jacket { grid-area: auto; width: 100%; max-width: 34rem; justify-self: center; margin-top: -2.4rem; }
+  }
+  @media (max-width: 480px) {
+    .form-pair { grid-template-columns: 1fr; }
+    .form-pair > label { grid-row: auto; grid-template-rows: auto; }
+  }
+</style>

@@ -1,0 +1,12 @@
+---
+import TourPage from "../../components/TourPage.astro";
+import { tours } from "../../lib/site";
+export function getStaticPaths() {
+  return tours.map((tour) => ({
+    params: { slug: tour.slug },
+    props: { tour },
+  }));
+}
+---
+
+<TourPage tour={Astro.props.tour} />

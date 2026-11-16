@@ -1,4 +1,6 @@
 ---
+import { locale } from "../lib/site";
+const {lang,t,url} = locale(Astro.url.pathname);
 const albums = [
   { id: "football", title: "Football", image: "/images/photo-art/football/football-1.jpg" },
   { id: "tattoo", title: "Tattoo", image: "/images/photo-art/tattoo/tattoo-1.webp" },
@@ -11,27 +13,25 @@ const albums = [
 <section class="section section--dark" id="portfolio">
   <div class="container">
     <div class="section-intro">
-      <p class="eyebrow">Photo Art</p>
-      <h2>Raw stories through<br />a Neapolitan lens</h2>
-      <p>Football, street life, tattoos, and the unbridled passion of Napoli celebrations — captured without filter.</p>
+      <h2>{t("Photographic series","Serie fotografiche")}</h2>
+      <p>{t("Football, street life, tattoos, and the unbridled passion of Napoli celebrations — captured without filter.","Calcio, vita di strada, tatuaggi e la passione di Napoli nei giorni dello scudetto, attraverso il mio obiettivo.")}</p>
     </div>
 
     <div class="photo-preview">
-      {albums.map((album, i) => (
-        <a class="photo-preview__item" href={`/photo-art#${album.id}`} style={`--i: ${i}`}>
+      {albums.map((album) => (
+        <a class="photo-preview__item" href={url("/photo-art/#"+album.id)}>
           <div class="photo-preview__img">
-            <img src={album.image} alt={album.title} loading="lazy" />
+            <img src={album.image.replace('/photo-art/','/previews/').replace(/\.[^.]+$/,'.webp')} alt={lang==='it' ? ({football:'Calcio',tattoo:'Tatuaggi',street:'Vita di strada'}[album.id] ?? album.title) : album.title} loading="lazy" />
           </div>
           <div class="photo-preview__label">
-            <span class="photo-preview__number">{String(i + 1).padStart(2, '0')}</span>
-            <span class="photo-preview__title">{album.title}</span>
+            <span class="photo-preview__title">{lang==='it' ? ({football:'Calcio',tattoo:'Tatuaggi',street:'Vita di strada'}[album.id] ?? album.title) : album.title}</span>
           </div>
         </a>
       ))}
     </div>
 
     <div style="margin-top: 2.5rem;">
-      <a class="btn btn--primary" href="/photo-art">View Full Portfolio</a>
+      <a class="btn btn--primary" href={url("/photo-art/")}>{t("View Full Portfolio","Guarda il portfolio")}</a>
     </div>
   </div>
 </section>

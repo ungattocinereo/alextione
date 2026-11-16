@@ -1,0 +1,17 @@
+---
+import LegalLayout from "../layouts/LegalLayout.astro";
+import LegalContact from "../components/LegalContact.astro";
+import { locale } from "../lib/site";
+const { t } = locale(Astro.url.pathname);
+---
+<LegalLayout title={t("Legal notice", "Note legali")} description={t("Business details for Alessandro Tione and information about tour and book enquiries.", "Dati professionali di Alessandro Tione e informazioni sulle richieste per tour e libri.")}>
+  <h2>{t("Website operator and business contact", "Gestore del sito e recapito professionale")}</h2>
+  <LegalContact />
+  <h2>{t("Tour guide", "Guida turistica")}</h2>
+  <p>{t("Alessandro Tione works as a photographer and a tour guide in Naples, Italy. The Italian Ministry of Tourism publishes the rules governing the profession under Law 190/2023 and provides access to the national register.", "Alessandro Tione è fotografo e guida turistica a Napoli, in Italia. Il Ministero del Turismo pubblica la disciplina della professione prevista dalla legge 190/2023 e mette a disposizione l’elenco nazionale.")} <a href="https://www.ministeroturismo.gov.it/professioni-turistiche/guida-turistica-2/">{t("Professional rules", "Disciplina professionale")}</a> · <a href="https://portaleprofessioni.ministeroturismo.gov.it/guide-list">{t("National register", "Elenco nazionale")}</a>.</p>
+  <h2>{t("Enquiries and purchases", "Richieste e acquisti")}</h2>
+  <p>{t("Submitting a form sends Alex an enquiry. It creates no payment obligation and does not confirm a tour or reserve a copy. Before you commit, Alex will confirm availability, the total price including any delivery costs, timing and the conditions that apply to your request. The website does not collect payment card details.", "Con il modulo invii una richiesta ad Alex. L’invio non comporta pagamenti e non conferma il tour né riserva una copia del libro. Prima di un eventuale accordo, Alex ti comunicherà disponibilità, prezzo complessivo con eventuali spese di spedizione, tempi e condizioni applicabili. Il sito non raccoglie i dati delle carte di pagamento.")}</p>
+  <p>{t("For items linked to Vinted, check the listing, seller, delivery costs and terms on that platform before purchasing.", "Per gli articoli collegati a Vinted, consulta l’inserzione, il venditore, le spese di consegna e le condizioni sulla piattaforma prima dell’acquisto.")}</p>
+  <h2>{t("Photographs and texts", "Fotografie e testi")}</h2>
+  <p>{t("Contact Alex to request permission to reproduce his photographs or texts. Uses permitted by law remain available.", "Per riprodurre fotografie o testi di Alex, puoi chiedergli l’autorizzazione ai recapiti indicati sopra. Restano salvi gli utilizzi consentiti dalla legge.")}</p>
+</LegalLayout>

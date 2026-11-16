@@ -1,0 +1,17 @@
+---
+import { locale } from "../lib/site";
+const { t, url } = locale(Astro.url.pathname);
+const { className } = Astro.props;
+---
+<div class="ack">
+  <label class={className}><input type="checkbox" name="consent" value="yes" required />
+    <span>{t("I have read the privacy notice.", "Ho letto l’informativa privacy.")}</span>
+  </label>
+  <a href={url("/privacy/")} target="_blank" rel="noopener noreferrer"
+    aria-label={t("Read the privacy notice (opens in a new tab)", "Leggi l’informativa privacy (si apre in una nuova scheda)")}>{t("Read the notice", "Leggi l’informativa")}</a>
+</div>
+<style>
+  .ack a { display: inline-block; margin-left: 1.8rem; font-size: .85rem; color: #14547e; text-decoration: underline; text-underline-offset: .16em; }
+  .ack label { display: flex; align-items: center; gap: .6rem; font-size: .88rem; font-weight: 400; cursor: pointer; }
+  .ack input { width: 18px; height: 18px; margin: 0; flex: none; accent-color: #174e74; }
+</style>

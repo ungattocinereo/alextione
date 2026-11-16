@@ -1,0 +1,17 @@
+---
+import LegalLayout from "../layouts/LegalLayout.astro";
+import { locale } from "../lib/site";
+const { t, url } = locale(Astro.url.pathname);
+---
+<LegalLayout title={t("Cookie notice", "Informativa cookie")} description={t("How the language selector saves your preference and how to remove it.", "Come il selettore di lingua salva la tua preferenza e come cancellarla.")}>
+  <h2>{t("Your language choice", "La lingua che scegli")}</h2>
+  <p>{t("When you select English or Italian, alextione.it stores your choice in two places on your device. Both contain only “en” or “it”. On your first visit the site can read the browser language to choose the Italian version.", "Quando scegli italiano o inglese, alextione.it salva la preferenza in due punti del dispositivo. Entrambi contengono solo “it” oppure “en”. Alla prima visita il sito può leggere la lingua del browser per mostrarti la versione italiana.")}</p>
+  <ul>
+    <li><code>alex_language</code> — {t("first-party technical cookie. Expires 365 days after your last language selection.", "cookie tecnico di prima parte. Scade 365 giorni dopo l’ultima selezione della lingua.")}</li>
+    <li><code>alex-language</code> — {t("first-party local storage. It has no preset expiry. A new selection replaces the value, and clearing site data removes it.", "memoria locale di prima parte. Non ha una scadenza prestabilita. Una nuova scelta sostituisce il valore e la cancellazione dei dati del sito lo rimuove.")}</li>
+  </ul>
+  <p>{t("These settings serve the language choice you explicitly request. This site does not install analytics, advertising or profiling trackers. The video and fonts are served directly by the site. External services open only when you follow their links.", "Queste impostazioni servono a ricordare la lingua che richiedi espressamente. Il sito non installa strumenti di analisi, pubblicità o profilazione. Il video e i caratteri tipografici sono ospitati sul sito. I servizi esterni si aprono quando segui i relativi collegamenti.")}</p>
+  <h2>{t("Change or clear your preference", "Modificare o cancellare la preferenza")}</h2>
+  <p>{t("Select EN or IT in the menu to change language. To remove both entries, open the browser’s privacy settings, find alextione.it under site data and clear its stored data.", "Scegli EN o IT nel menu per cambiare lingua. Per eliminare entrambe le voci, apri le impostazioni privacy del browser, cerca alextione.it tra i dati dei siti ed elimina i dati memorizzati.")}</p>
+  <p><a href={url("/privacy/")}>{t("Data controller and privacy rights", "Titolare e diritti privacy")}</a> · <a href="https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/9677876">{t("Garante guidelines on cookies", "Linee guida del Garante sui cookie")}</a>.</p>
+</LegalLayout>
