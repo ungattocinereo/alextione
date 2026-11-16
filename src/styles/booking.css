@@ -55,12 +55,6 @@
   text-transform: uppercase;
   text-wrap: balance;
 }
-.booking-stamp span {
-  display: block;
-  font: 500 .67rem/1.4 "JetBrains Mono", monospace;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
 .booking-page { position: relative; padding: clamp(1.4rem, 3.2vw, 2.3rem); min-width: 0; align-self: center; }
 .booking h2 { color: var(--azzurro-ink); padding-right: 2.25rem; margin: 0 0 1.5rem; font-size: clamp(2.2rem, 4.5vw, 3.2rem); line-height: 1.02; }
 .booking h2 span { color: var(--accent-soft); }
@@ -143,11 +137,9 @@
 .booking-receipt p { max-width: 36ch; overflow-wrap: anywhere; }
 .booking-done { margin-top: 1.45rem; min-height: 44px; padding: .55rem 1.4rem; border: 1px solid var(--rule); background: var(--azzurro-pale); color: var(--azzurro-ink); }
 .booking-stamp {
-  display: grid;
-  place-content: center;
-  justify-items: center;
-  gap: .15rem;
+  display: block;
   width: 82px;
+  height: 82px;
   aspect-ratio: 1;
   border: 4px double currentColor;
   border-radius: 50%;
@@ -155,7 +147,7 @@
   background: var(--azzurro-pale);
   transform: rotate(-9deg);
 }
-.booking-stamp span { font-size: .56rem; letter-spacing: .19em; }
+.booking-stamp text { fill: currentColor; font: 600 11px "JetBrains Mono", monospace; letter-spacing: 2px; }
 
 @media (max-width: 669px) {
   .booking { width: min(480px, calc(100% - 1rem)); max-height: calc(100dvh - 1rem); }
@@ -194,7 +186,7 @@
   .booking-send:disabled .booking-send-icon { animation: booking-spin .8s linear infinite; }
   .booking-receipt:not([hidden]) > :not(.booking-stamp) { animation: booking-rise 440ms 100ms var(--settle) backwards; }
   .booking-receipt:not([hidden]) .booking-stamp { animation: booking-imprint 480ms var(--settle) both; }
-  .booking-receipt:not([hidden]) .booking-stamp path { stroke-dasharray: 1; animation: booking-check 400ms 150ms ease-out both; }
+  .booking-receipt:not([hidden]) .booking-check { stroke-dasharray: 1; animation: booking-check 400ms 150ms ease-out both; }
   @media (hover: hover) {
     .booking-send:enabled:hover { box-shadow: 0 4px 12px #0053a329; }
     .booking-send:enabled:hover .booking-send-icon { transform: translate(3px,-3px); }
