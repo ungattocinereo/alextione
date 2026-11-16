@@ -3,7 +3,7 @@ import { localBooking } from "./scripts/local-booking.mjs";
 import vercel from "./vercel.json" with { type: "json" };
 
 export default defineConfig({
-  site: process.env.SITE_URL || "https://alextione.vercel.app",
+  site: process.env.SITE_URL || "https://alextione.it",
   trailingSlash: "ignore",
   redirects: Object.fromEntries(
     vercel.redirects.map(({ source, destination }) => [source, destination]),

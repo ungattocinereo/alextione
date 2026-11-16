@@ -80,9 +80,12 @@ function readRequest(body) {
 }
 
 async function deliver(data) {
-  const { RESEND_API_KEY, BOOKING_FROM_EMAIL, BOOKING_TO_EMAIL } = process.env;
-  if (!RESEND_API_KEY || !BOOKING_FROM_EMAIL || !BOOKING_TO_EMAIL)
-    throw new Error("Email configuration required");
+  const {
+    MAILGUN_API_KEY,
+    BOOKING_FROM_EMAIL = "Alex Tione <website@alextione.it>",
+    BOOKING_TO_EMAIL = "alessandrotione@escapevision.it",
+  } = process.env;
+  if (!MAILGUN_API_KEY) throw new Error("Mailgun sending key required");
   const isBook = data.kind === "book";
   const title = isBook ? "Book request · Religione Monoteistica" : tours.get(data.tour)?.en.title || "General enquiry";
   const lines = [title, data.name, data.language];
@@ -98,22 +101,29 @@ async function deliver(data) {
     if (data.tour) lines.push(data.date, `Guests: ${data.guests}`);
     lines.push("", data.message);
   }
-  const response = await fetch("https://api.resend.com/emails", {
+  const form = new FormData();
+  form.set("from", BOOKING_FROM_EMAIL);
+  form.set("to", BOOKING_TO_EMAIL);
+  if (data.email) form.set("h:Reply-To", data.email);
+  form.set("subject", `Alex Tione · ${title}`);
+  form.set("text", lines.join("\n"));
+  form.set("o:tracking", "no");
+
+  const response = await fetch("https://api.eu.mailgun.net/v3/alextione.it/messages", {
     method: "POST",
     signal: AbortSignal.timeout(12000),
     headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
-      "Content-Type": "application/json",
+      Authorization: `Basic ${Buffer.from("api:" + MAILGUN_API_KEY).toString("base64")}`,
     },
-    body: JSON.stringify({
-      from: BOOKING_FROM_EMAIL,
-      to: [BOOKING_TO_EMAIL],
-      reply_to: data.email,
-      subject: `Alex Tione · ${title}`,
-      text: lines.join("\n"),
-    }),
+    body: form,
   });
-  if (!response.ok) throw new Error("Email delivery failed");
+  if (!response.ok) {
+    console.error("Mailgun rejected booking notification", response.status);
+    throw new Error("Email delivery failed");
+  }
+  const { id } = await response.json();
+  if (!id) throw new Error("Mailgun did not return a message ID");
+  console.info("Mailgun accepted booking notification", id);
 }
 
 export async function handleBooking(req, res, localInbox) {
