@@ -1,5 +1,7 @@
 import catalog from "../src/data/tours.json" with { type: "json" };
 
+import { bookingEmail } from "../src/lib/bookingEmail.js";
+
 const tours = new Map(catalog.tours.map((tour) => [tour.slug, tour]));
 const clean = (s, max) =>
   typeof s === "string" && s.length <= max ? s.trim() : "";
@@ -79,7 +81,7 @@ function readRequest(body) {
   return { name, email, message, language, tour, guests, date };
 }
 
-async function deliver(data) {
+async function deliver(data, body, headers) {
   const {
     MAILGUN_API_KEY,
     BOOKING_FROM_EMAIL = "Alex Tione <website@alextione.it>",
@@ -89,19 +91,7 @@ async function deliver(data) {
   if (!MAILGUN_API_KEY || !BOOKING_TO_EMAIL) throw new Error("Booking email configuration required");
   const isBook = data.kind === "book";
   const title = isBook ? "Book request · Religione Monoteistica" : tours.get(data.tour)?.en.title || "General enquiry";
-  const lines = [title, data.name, data.language];
-  if (isBook) {
-    lines.push(
-      `Copies: ${data.copies}`,
-      `Requested by: ${data.timing === "asap" ? "As soon as possible" : [data.date, data.time].filter(Boolean).join(" ")}`,
-      `Delivery: ${data.delivery === "pickup" ? "Pick up in Naples" : "Shipping to " + data.destination}`,
-      `Reply via ${data.contact === "email" ? "email: " + data.email : "WhatsApp: " + data.phone}`,
-    );
-  } else {
-    lines.push(data.email);
-    if (data.tour) lines.push(data.date, `Guests: ${data.guests}`);
-    lines.push("", data.message);
-  }
+  const email = bookingEmail(data, title, body, headers);
   const form = new FormData();
   form.set("from", BOOKING_FROM_EMAIL);
   form.append("to", BOOKING_TO_EMAIL);
@@ -114,8 +104,9 @@ async function deliver(data) {
     }));
   }
   if (data.email) form.set("h:Reply-To", data.email);
-  form.set("subject", `Alex Tione · ${title}`);
-  form.set("text", lines.join("\n"));
+  form.set("subject", email.subject);
+  form.set("text", email.text);
+  form.set("html", email.html);
   form.set("o:tracking", "no");
 
   const response = await fetch("https://api.eu.mailgun.net/v3/alextione.it/messages", {
@@ -168,7 +159,7 @@ export async function handleBooking(req, res, localInbox) {
   if (!data) return reply(422, { ok: false });
   try {
     if (localInbox) await localInbox(data);
-    else await deliver(data);
+    else await deliver(data, body, req.headers);
     reply(200, { ok: true, preview: Boolean(localInbox) });
   } catch {
     reply(503, { ok: false });

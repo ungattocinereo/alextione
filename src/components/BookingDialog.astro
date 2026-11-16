@@ -157,6 +157,8 @@ const pageTour = tours.find(tour => tourPath(tour) === base.replace(/\/?$/, "/")
     event.preventDefault();
     if (submit.disabled) return;
     const payload = Object.fromEntries(new FormData(form));
+    payload.pagePath = location.pathname;
+    payload.pageTitle = document.title;
     setBusy(true);
     error.textContent = "";
     try {
