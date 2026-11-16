@@ -6,6 +6,15 @@ const regionNames = new Intl.DisplayNames(["it"], { type: "region", fallback: "n
 const languageNames = new Intl.DisplayNames(["it"], { type: "language", fallback: "none" });
 const requestDate = new Intl.DateTimeFormat("it-IT", { dateStyle: "long", timeZone: "UTC" });
 
+function countryLabel(code) {
+  if (typeof code !== "string" || !/^[A-Z]{2}$/.test(code) || code === "ZZ") return unavailable;
+  const name = regionNames.of(code);
+  if (!name) return unavailable;
+  // Regional indicator letters A–Z form the flag for the two-letter country code.
+  const flag = String.fromCodePoint(...Array.from(code, letter => 0x1f1e6 + letter.charCodeAt(0) - 65));
+  return flag + " " + name;
+}
+
 function browserLanguage(value) {
   if (typeof value !== "string" || !value || value.length > 64) return unavailable;
   try {
@@ -82,7 +91,7 @@ export function bookingEmail(data, title, body, headers) {
     ["Titolo della pagina", typeof body.pageTitle === "string" && body.pageTitle.trim().slice(0, 250) || unavailable],
     ["URL del modulo", pageUrl(body.pagePath) || pageUrl(headers.referer) || unavailable],
     ["Indirizzo IP", isIP(ip) ? ip : unavailable],
-    ["Paese stimato dall’IP", /^[A-Z]{2}$/.test(country) ? regionNames.of(country) || unavailable : unavailable],
+    ["Paese stimato dall’IP", countryLabel(country)],
     ["Lingua del browser", browserLanguage(language)],
     ["Ora locale del visitatore", browserClock(body.timeZone)],
     ["Identificativo del browser", headers["user-agent"]?.slice(0, 1024) || unavailable],
