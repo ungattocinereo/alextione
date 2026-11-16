@@ -91,13 +91,13 @@ async function deliver(data, body, headers) {
   } = process.env;
   if (!MAILGUN_API_KEY || !BOOKING_TO_EMAIL) throw new Error("Booking email configuration required");
   const isBook = data.kind === "book";
-  const title = isBook ? "Book request · Religione Monoteistica" : tours.get(data.tour)?.en.title || "General enquiry";
+  const title = isBook ? "Richiesta del libro · Religione Monoteistica" : tours.get(data.tour)?.it.title || "Richiesta di informazioni";
   const email = bookingEmail(data, title, body, headers);
   const form = new FormData();
   const senderAddress = (BOOKING_FROM_EMAIL.match(/<([^<>]+)>\s*$/)?.[1] || BOOKING_FROM_EMAIL).trim();
   if (!singleAddress.test(senderAddress)) throw new Error("Invalid booking sender address");
   const senderName = data.name.replace(/[\p{Cc}\u202a-\u202e\u2066-\u2069]/gu, "").replace(/["\\]/g, "\\$&");
-  form.set("from", '"' + senderName + ' · с сайта alextione.it" <' + senderAddress + '>');
+  form.set("from", '"' + senderName + ' · dal sito alextione.it" <' + senderAddress + '>');
   form.append("to", BOOKING_TO_EMAIL);
   if (BOOKING_COPY_EMAIL && BOOKING_COPY_EMAIL !== BOOKING_TO_EMAIL) {
     form.append("to", BOOKING_COPY_EMAIL);
