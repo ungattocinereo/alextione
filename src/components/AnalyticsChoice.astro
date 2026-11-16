@@ -1,0 +1,26 @@
+---
+import { locale } from "../lib/site";
+const { t, url } = locale(Astro.url.pathname);
+---
+<aside id="analytics-choice" aria-labelledby="analytics-title" hidden>
+  <strong id="analytics-title">{t("Analytics cookies", "Cookie di analisi")}</strong>
+  <p>{t("May we use Google Analytics to count site visits and enquiries?", "Possiamo usare Google Analytics per contare le visite al sito e le richieste ricevute?")} <a href={url("/cookies/")}>{t("Cookie notice", "Informativa cookie")}</a></p>
+  <div>
+    <button type="button" data-choice="decline">{t("Decline", "Rifiuta")}</button>
+    <button type="button" data-choice="allow">{t("Allow analytics", "Accetta le statistiche")}</button>
+  </div>
+</aside>
+<script>
+  import { initAnalytics } from "../lib/analytics";
+  initAnalytics();
+</script>
+<style>
+  aside { position:fixed; z-index:1000; bottom:max(12px,env(safe-area-inset-bottom)); left:12px; width:min(380px,calc(100% - 24px)); padding:16px 18px; border:1px solid #9cabb2; border-radius:4px; background:#faf8f5; color:#172d3b; box-shadow:0 4px 18px #0002; font:400 14px/1.5 "Inter",sans-serif; }
+  aside[hidden] { display:none; }
+  strong { font-size:16px; }
+  p { margin:4px 0 12px; }
+  a { color:#164f75; text-decoration:underline; }
+  div { display:flex; gap:8px; }
+  button { flex:1; font:inherit; font-weight:600; padding:8px; border:1px solid #526779; border-radius:3px; color:#172d3b; background:#fff; cursor:pointer; }
+  button:focus-visible, a:focus-visible { outline:2px solid #0066cc; outline-offset:2px; }
+</style>

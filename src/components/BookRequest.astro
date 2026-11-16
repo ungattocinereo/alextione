@@ -58,6 +58,7 @@ const { lang, t } = locale(Astro.url.pathname);
   </div>
 </section>
 <script>
+  import { trackLead } from "../lib/analytics";
   import { formContext } from "../lib/formContext";
 
   const form = document.querySelector<HTMLFormElement>(".book-form")!;
@@ -99,6 +100,7 @@ const { lang, t } = locale(Astro.url.pathname);
       if (!response.ok) throw new Error();
       const result = await response.json();
       if (!result.ok) throw new Error();
+      if (result.preview === false) trackLead("book");
       status.textContent = result.preview ? form.dataset.preview! : form.dataset.success!;
       fields.hidden = submit.hidden = true;
     } catch {

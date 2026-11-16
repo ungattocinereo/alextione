@@ -72,6 +72,7 @@ const pageTour = tours.find(tour => tourPath(tour) === base.replace(/\/?$/, "/")
 </dialog>
 
 <script>
+  import { trackLead } from "../lib/analytics";
   import { formContext } from "../lib/formContext";
 
   const dialog = document.querySelector<HTMLDialogElement>("#booking")!;
@@ -169,6 +170,7 @@ const pageTour = tours.find(tour => tourPath(tour) === base.replace(/\/?$/, "/")
       if (!res.ok) throw new Error();
       const result = await res.json();
       if (result.ok !== true) throw new Error();
+      if (result.preview === false) trackLead(payload.tour ? "tour" : "general");
       find("[data-address]").textContent = String(payload.email).trim();
       find("[data-preview]").hidden = !result.preview;
       find("[data-delivered]").hidden = Boolean(result.preview);

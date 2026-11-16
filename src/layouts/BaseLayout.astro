@@ -1,4 +1,5 @@
 ---
+import AnalyticsChoice from "../components/AnalyticsChoice.astro";
 import { structuredData } from "../lib/structuredData";
 import { locale } from "../lib/site";
 const {lang,base,t} = locale(Astro.url.pathname);
@@ -98,5 +99,6 @@ const shareDescription = shareDescriptions[card] ?? description;
   </head>
   <body>
     <slot />
+    <AnalyticsChoice />
   </body>
 </html>
