@@ -101,14 +101,14 @@ export function bookingEmail(data, title, body, headers) {
   return {
     subject: `⚽️ ${data.name} · ${title} · alextione.it`,
     text: [
-      "Richiesta dal sito alextione.it", title, textRows(details),
+      "Dal sito alextione.it", title, textRows(details),
       message && "Messaggio\n" + message, "Informazioni tecniche\n" + textRows(tech),
     ].filter(Boolean).join("\n\n"),
     html: `<!doctype html><html lang="it"><body style="margin:0;background:#f3f6f7;color:#192f40;font-family:Arial,Helvetica,sans-serif">
-      <div style="max-width:580px;margin:16px auto;background:#fff;border:1px solid #d6dfe3;border-top:4px solid #175e7b">
+      <div style="max-width:580px;margin:16px auto;background:#fff;border:1px solid #d6dfe3">
         <div style="padding:24px">
-          <p style="margin:0 0 8px;color:#155878;font-size:13px;font-weight:bold">Richiesta dal sito alextione.it</p>
-          <h1 style="margin:0 0 18px;font-size:24px;line-height:30px">${escapeHtml(title)}</h1>
+          <p style="margin:0 0 8px;color:#155878;font-size:13px;font-weight:bold">Dal sito alextione.it</p>
+          <h1 style="margin:0 0 18px;font-size:28px;line-height:34px">${escapeHtml(title)}</h1>
           ${table(details)}
           ${message ? `<h2 style="margin:22px 0 6px;font-size:16px">Messaggio</h2>
             <p style="margin:0;font-size:16px;line-height:24px;overflow-wrap:anywhere">${escapeHtml(message).replace(/\r\n?|\n/g, "<br>")}</p>` : ""}
