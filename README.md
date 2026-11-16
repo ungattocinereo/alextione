@@ -10,7 +10,7 @@ The six walks, prices, photographs and English and Italian descriptions live in 
 
 Development and local preview save requests to `.local/requests/`, excluded from Git. The form identifies a local submission in its confirmation.
 
-On Vercel, the `/api/booking` function sends the enquiry through Mailgun EU for `alextione.it`. Set `MAILGUN_API_KEY` to a domain sending key in the Vercel environment and redeploy. Notifications go from `website@alextione.it` to `alessandrotione@escapevision.it` unless overridden by `BOOKING_FROM_EMAIL` or `BOOKING_TO_EMAIL`. Email enquiries set Reply-To to the visitor. Use the message ID in the function log to verify a delivered event in Mailgun. The form reports success only after the mail provider accepts the request.
+On Vercel, the `/api/booking` function sends the enquiry through Mailgun EU for `alextione.it`. Set `MAILGUN_API_KEY` to a domain sending key in the Vercel environment and redeploy. Set `BOOKING_TO_EMAIL` to Alex’s inbox and `BOOKING_COPY_EMAIL` for a separate administrator copy. Mailgun addresses each message individually. The sender defaults to `website@alextione.it` and can be overridden with `BOOKING_FROM_EMAIL`. Email enquiries set Reply-To to the visitor. Use the message ID in the function log to verify a delivered event in Mailgun. The form reports success only after the mail provider accepts the request.
 
 Book requests from `/book/` and `/it/book/` use the same inbox. The notification includes the requested timing, number of copies, delivery method and the reader’s email or WhatsApp number for Alex’s reply.
 

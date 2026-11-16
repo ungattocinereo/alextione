@@ -83,9 +83,10 @@ async function deliver(data) {
   const {
     MAILGUN_API_KEY,
     BOOKING_FROM_EMAIL = "Alex Tione <website@alextione.it>",
-    BOOKING_TO_EMAIL = "alessandrotione@escapevision.it",
+    BOOKING_TO_EMAIL,
+    BOOKING_COPY_EMAIL,
   } = process.env;
-  if (!MAILGUN_API_KEY) throw new Error("Mailgun sending key required");
+  if (!MAILGUN_API_KEY || !BOOKING_TO_EMAIL) throw new Error("Booking email configuration required");
   const isBook = data.kind === "book";
   const title = isBook ? "Book request · Religione Monoteistica" : tours.get(data.tour)?.en.title || "General enquiry";
   const lines = [title, data.name, data.language];
@@ -103,7 +104,15 @@ async function deliver(data) {
   }
   const form = new FormData();
   form.set("from", BOOKING_FROM_EMAIL);
-  form.set("to", BOOKING_TO_EMAIL);
+  form.append("to", BOOKING_TO_EMAIL);
+  if (BOOKING_COPY_EMAIL && BOOKING_COPY_EMAIL !== BOOKING_TO_EMAIL) {
+    form.append("to", BOOKING_COPY_EMAIL);
+    // Mailgun uses recipient variables to build a separate To header for each delivery.
+    form.set("recipient-variables", JSON.stringify({
+      [BOOKING_TO_EMAIL]: {},
+      [BOOKING_COPY_EMAIL]: {},
+    }));
+  }
   if (data.email) form.set("h:Reply-To", data.email);
   form.set("subject", `Alex Tione · ${title}`);
   form.set("text", lines.join("\n"));
