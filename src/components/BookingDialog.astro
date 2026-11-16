@@ -72,6 +72,8 @@ const pageTour = tours.find(tour => tourPath(tour) === base.replace(/\/?$/, "/")
 </dialog>
 
 <script>
+  import { formContext } from "../lib/formContext";
+
   const dialog = document.querySelector<HTMLDialogElement>("#booking")!;
   const find = <E extends HTMLElement = HTMLElement>(selector: string) => dialog.querySelector<E>(selector)!;
   const form = find<HTMLFormElement>("form");
@@ -157,8 +159,7 @@ const pageTour = tours.find(tour => tourPath(tour) === base.replace(/\/?$/, "/")
     event.preventDefault();
     if (submit.disabled) return;
     const payload = Object.fromEntries(new FormData(form));
-    payload.pagePath = location.pathname;
-    payload.pageTitle = document.title;
+    Object.assign(payload, formContext());
     setBusy(true);
     error.textContent = "";
     try {

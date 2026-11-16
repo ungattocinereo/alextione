@@ -2,6 +2,19 @@ import { isIP } from "node:net";
 
 const site = "https://alextione.it";
 const unavailable = "Unavailable";
+const regionNames = new Intl.DisplayNames(["en"], { type: "region", fallback: "none" });
+
+function browserClock(timeZone) {
+  if (typeof timeZone !== "string" || !timeZone || timeZone.length > 100) return unavailable;
+  try {
+    const clock = new Intl.DateTimeFormat("en-GB", {
+      timeZone, dateStyle: "medium", timeStyle: "short",
+    });
+    return clock.format(new Date()) + " (" + clock.resolvedOptions().timeZone + ")";
+  } catch {
+    return unavailable;
+  }
+}
 
 function pageUrl(value) {
   if (typeof value !== "string" || !value || value.length > 2048) return "";
@@ -50,10 +63,15 @@ export function bookingEmail(data, title, body, headers) {
   }
 
   const ip = (headers["x-vercel-forwarded-for"] || headers["x-forwarded-for"] || "").split(",")[0].trim();
+  const country = headers["x-vercel-ip-country"];
+  const language = body.browserLanguage || headers["accept-language"]?.split(/[,;]/)[0];
   const tech = [
     ["Page Title", typeof body.pageTitle === "string" && body.pageTitle.trim().slice(0, 250) || unavailable],
     ["Form URL", pageUrl(body.pagePath) || pageUrl(headers.referer) || unavailable],
     ["IP Address", isIP(ip) ? ip : unavailable],
+    ["Approx. country (by IP)", /^[A-Z]{2}$/.test(country) ? regionNames.of(country) || unavailable : unavailable],
+    ["Browser language", typeof language === "string" && /^[a-z\d-]{1,64}$/i.test(language) ? language : unavailable],
+    ["Visitor local time", browserClock(body.timeZone)],
     ["User Agent", headers["user-agent"]?.slice(0, 1024) || unavailable],
   ];
   const textRows = rows => rows.map(([label, value]) => `${label}: ${value}`).join("\n");

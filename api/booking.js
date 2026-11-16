@@ -5,6 +5,7 @@ import { bookingEmail } from "../src/lib/bookingEmail.js";
 const tours = new Map(catalog.tours.map((tour) => [tour.slug, tour]));
 const clean = (s, max) =>
   typeof s === "string" && s.length <= max ? s.trim() : "";
+const singleAddress = /^[^\s@,;:<>"\\\p{Cc}]+@[^\s@,;:<>"\\\p{Cc}]+\.[^\s@,;:<>"\\\p{Cc}]+$/u;
 
 function validDate(date) {
   if (typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return false;
@@ -38,7 +39,7 @@ function readBook(body) {
   }
   if (contact === "email") {
     data.email = clean(body.email, 254);
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return null;
+    if (!singleAddress.test(data.email)) return null;
   } else {
     data.phone = clean(body.phone, 30);
     if (!/^\+?[\d ()-]+$/.test(data.phone) || !/^\d{6,15}$/.test(data.phone.replace(/\D/g, ""))) return null;
@@ -57,7 +58,7 @@ function readRequest(body) {
     body.consent !== "yes" ||
     !name ||
     /[\r\n]/.test(name) ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    !singleAddress.test(email)
   )
     return null;
   if (
@@ -84,7 +85,7 @@ function readRequest(body) {
 async function deliver(data, body, headers) {
   const {
     MAILGUN_API_KEY,
-    BOOKING_FROM_EMAIL = "Alex Tione <website@alextione.it>",
+    BOOKING_FROM_EMAIL = "website@alextione.it",
     BOOKING_TO_EMAIL,
     BOOKING_COPY_EMAIL,
   } = process.env;
@@ -93,7 +94,10 @@ async function deliver(data, body, headers) {
   const title = isBook ? "Book request · Religione Monoteistica" : tours.get(data.tour)?.en.title || "General enquiry";
   const email = bookingEmail(data, title, body, headers);
   const form = new FormData();
-  form.set("from", BOOKING_FROM_EMAIL);
+  const senderAddress = (BOOKING_FROM_EMAIL.match(/<([^<>]+)>\s*$/)?.[1] || BOOKING_FROM_EMAIL).trim();
+  if (!singleAddress.test(senderAddress)) throw new Error("Invalid booking sender address");
+  const senderName = data.name.replace(/[\p{Cc}\u202a-\u202e\u2066-\u2069]/gu, "").replace(/["\\]/g, "\\$&");
+  form.set("from", '"' + senderName + ' · с сайта alextione.it" <' + senderAddress + '>');
   form.append("to", BOOKING_TO_EMAIL);
   if (BOOKING_COPY_EMAIL && BOOKING_COPY_EMAIL !== BOOKING_TO_EMAIL) {
     form.append("to", BOOKING_COPY_EMAIL);
