@@ -88,12 +88,9 @@ const localized = albums.map((a,i) => lang === 'en' ? a : {...a,title:italianAlb
 
     <main>
       <!-- HERO -->
-      <section class="pa-hero">
-        <div class="pa-hero__bg">
-          <img src="/images/photo-art/street/street-1.webp" alt="" loading="eager" />
-          <div class="pa-hero__overlay"></div>
-        </div>
-        <div class="pa-hero__content">
+      <section class="photo-lead">
+        <img class="photo-lead__image" src="/images/photo-art/street/street-1.webp" alt="" fetchpriority="high" />
+        <div class="photo-lead__copy pa-hero__content">
           <span class="pa-hero__kicker">Portfolio</span>
           <h1 class="pa-hero__title">
             Photo<br /><span class="pa-hero__accent">Art</span>

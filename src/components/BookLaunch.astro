@@ -12,7 +12,7 @@ const units = [t("Days", "Giorni"), t("Hours", "Ore"), t("Min", "Min"), t("Sec",
     <source media="(max-width: 600px)" srcset="/book/launch-poster-small.webp" />
     <img src="/book/launch-poster.webp" alt="" width="960" height="640" loading={detail ? "eager" : "lazy"} />
   </picture>
-  <div class="launch-content container">
+  <div class="launch-content">
     <div class="launch-info">
       <time datetime={launch}>{format({day: "numeric", month: "long", year: "numeric"})} <b aria-hidden="true">/</b> {format({hour: "2-digit", minute: "2-digit", hour12: false})}</time>
       <p class="launch-title">{t("NEW Book launch", "Presentazione del nuovo libro")}</p>
@@ -27,11 +27,10 @@ const units = [t("Days", "Giorni"), t("Hours", "Ore"), t("Min", "Min"), t("Sec",
   </div>
 </aside>
 <style>
-  .launch { color: var(--text-light); background: var(--accent); position: relative; isolation: isolate; scroll-margin-top: var(--mast-height); }
-  picture { position: absolute; inset: 0 0 0 auto; width: 51%; z-index: -1; overflow: hidden; isolation: isolate; background: var(--accent-soft); }
-  picture img { width: 100%; height: 100%; object-fit: cover; object-position: 75% 50%; mix-blend-mode: luminosity; }
-  picture::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--accent) 4%, transparent 62%); }
-  .launch-content { display: grid; grid-template-columns: minmax(16rem, 1.1fr) minmax(10rem, .7fr) .9fr; align-items: center; gap: 2rem; padding-block: clamp(1.7rem, 3.5vw, 3.4rem); }
+  .launch { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); color: var(--text-light); background: var(--accent); scroll-margin-top: var(--mast-height); }
+  picture { grid-area: 1 / 2; position: relative; overflow: hidden; background: var(--accent-soft); }
+  picture img { position: absolute; width: 100%; height: 100%; object-fit: cover; object-position: 75% center; mix-blend-mode: luminosity; }
+  .launch-content { grid-area: 1 / 1; display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; padding: clamp(1.5rem, 3vw, 3.4rem) clamp(1.25rem, 4vw, 4rem); }
   time, .launch-clock p, small { font: 500 .78rem/1.4 "JetBrains Mono", monospace; }
   time { display: inline-block; color: var(--text-light); }
   time b { padding: 0 .35em; font-weight: 400; color: #c0e9ff; }
@@ -46,19 +45,10 @@ const units = [t("Days", "Giorni"), t("Hours", "Ore"), t("Min", "Min"), t("Sec",
   small { font-size: .68rem; color: var(--text-light); }
   @media (scripting: enabled) { .launch-clock[hidden] { display: block; visibility: hidden; } }
   .launch-clock [hidden] { display: none; }
-  @media (max-width: 900px) {
-    .launch-content { grid-template-columns: minmax(0, 1fr); gap: 1.1rem; }
-    .launch-clock { border: 0; padding: 0; }
-    .clock-units strong { font-size: 1.55rem; }
-    .launch-clock p { font-size: .68rem; }
-    .launch-info { max-width: 60%; }
-  }
-  @media (max-width: 540px) {
-    picture { width: 55%; }
-    picture::after { background: linear-gradient(90deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 92%, transparent) 37%, transparent 100%); }
-    .launch-content { padding-block: 1.4rem; }
-    .launch-info { max-width: 84%; }
-    .launch-title { max-width: 11em; }
+  @media (max-width: 700px) {
+    .launch { grid-template-columns: 1fr; }
+    picture { grid-area: 2 / 1; height: clamp(8rem, 38vw, 15rem); }
+    .launch-clock { padding: 0; border: 0; }
   }
 </style>
 <script>

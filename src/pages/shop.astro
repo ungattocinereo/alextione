@@ -63,12 +63,10 @@ const { fanzine, categories } = shopPageData;
                 <a class="shop-product" href={product.vintedUrl} target="_blank" rel="noreferrer">
                   <div class="shop-product__image">
                     <img src={product.image} alt={product.title} loading="lazy" />
-                    <div class="shop-product__overlay">
-                      <span class="shop-product__buy-label">{t('Buy on Vinted','Acquista su Vinted')} ↗</span>
-                    </div>
                   </div>
                   <div class="shop-product__info">
                     <h3>{product.title}</h3>
+                    <span class="shop-product__buy-label">{t('Buy on Vinted','Acquista su Vinted')} ↗</span>
                     {product.prices && (
                       <ul class="shop-product__prices" aria-label={t('Available sizes and prices','Formati e prezzi')}>
                         {product.prices.map((p) => (

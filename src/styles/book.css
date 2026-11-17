@@ -71,37 +71,24 @@
   outline-offset: clamp(5px, .65vw, 10px);
   pointer-events: none;
 }
-.poster-prints { position: absolute; inset: 0; pointer-events: none; }
-.poster-prints > img {
+.poster-pitch {
   position: absolute;
-  object-fit: cover;
-  border: clamp(3px, .4vw, 5px) solid white;
-  box-shadow: 0 9px 18px -8px #12345448;
+  inset: 10% 5%;
+  border: 1px solid #95bed4;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent calc(50% - .5px), #95bed4 50%, transparent calc(50% + .5px));
+  pointer-events: none;
 }
-.poster-prints .print-fans {
-  width: 14%; height: 51%; left: 13%; top: 13%;
-  transform: rotate(-8deg);
+.poster-pitch::before, .poster-pitch::after {
+  content: "";
+  position: absolute;
+  top: 26%;
+  bottom: 26%;
+  width: 13%;
+  border: 1px solid #95bed4;
 }
-.poster-prints .print-mural {
-  width: 19%; height: auto; right: 7%; bottom: 14%;
-  transform: rotate(6deg);
-}
-.print-portrait { width: 11%; height: 37%; top: 12%; right: 18%; transform: rotate(-8deg); }
-.poster-filmstrip {
-  --film: #153344;
-  position: absolute; left: 17%; bottom: 13%; width: 16%;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 3px;
-  padding: clamp(6px, .7vw, 9px) 4px;
-  transform: rotate(5deg); background: var(--film);
-  box-shadow: 0 5px 10px -5px #12345466;
-}
-.poster-filmstrip::before, .poster-filmstrip::after {
-  content: ""; position: absolute; inset-inline: 4px; height: 2px;
-  background: repeating-linear-gradient(90deg, #edf6fb 0 4px, transparent 4px 10px);
-}
-.poster-filmstrip::before { top: 2px; }
-.poster-filmstrip::after { bottom: 2px; }
-.poster-filmstrip img { width: 100%; height: auto; aspect-ratio: 1.4; object-fit: cover; object-position: 50% 35%; }
+.poster-pitch::before { left: -1px; }
+.poster-pitch::after { right: -1px; }
 .book-poster .poster-scene .book-studio { width: 42%; border: 0; background: transparent; }
 .book-poster .poster-scene .book-stage { --width: clamp(195px, 20vw, 288px); height: calc(var(--width) * 1.62); }
 @media (prefers-reduced-motion: no-preference) {
@@ -124,21 +111,12 @@
   background: var(--accent); color: white; font-weight: 650;
 }
 .poster-request:hover { background: var(--accent-hover); }
-@media (prefers-reduced-motion: no-preference) {
-  .poster-prints > * { animation: print-appear .85s cubic-bezier(.2,.7,.25,1) backwards; }
-  .poster-prints .print-mural { animation-delay: .12s; }
-  @keyframes print-appear { from { opacity: 0; translate: 0 .8rem; } }
-}
 @media (max-width: 700px) {
   .poster-heading h1 { font-size: clamp(3.5rem, 13vw, 5.4rem); line-height: .99; }
   .poster-heading h1 span { display: block; }
   .poster-scene { margin-top: 1.6rem; }
   .poster-scene::before { height: 81%; }
-  .poster-prints .print-portrait { width: 17%; height: 29%; right: 0; top: 8%; }
-  .poster-filmstrip { width: 27%; left: -3%; bottom: 12%; }
   .book-poster .poster-scene .book-studio { width: 72%; }
   .book-poster .poster-scene .book-stage { --width: clamp(174px, 49vw, 240px); }
-  .poster-prints .print-fans { width: 19%; height: 39%; left: -2%; top: 16%; }
-  .poster-prints .print-mural { width: 22%; right: -3%; bottom: 21%; }
   .poster-caption { flex-direction: column; align-items: flex-start; gap: 1rem; }
 }

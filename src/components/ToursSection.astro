@@ -33,12 +33,12 @@ const { catalog = false } = Astro.props;
               alt=""
               loading="lazy"
             />
+          </div>
+          <div class="tour-card__body">
             <span class="tour-card__details">
               <span class="tour-card__duration">{duration}</span>
               <span class="tour-card__price">{price}</span>
             </span>
-          </div>
-          <div class="tour-card__body">
             <h3>{tour[lang].title}</h3>
             <p>{tour[lang].intro}</p>
             <span class="tour-card__link">

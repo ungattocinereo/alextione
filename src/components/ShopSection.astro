@@ -29,13 +29,11 @@ const featuredProducts = [
         <a class="shop-preview__item" href={url("/shop/")} style={`--i: ${i}`}>
           <div class="shop-preview__img">
             <img src={product.image} alt={product.title} loading="lazy" />
-            <div class="shop-preview__overlay">
-              <span class="shop-preview__cta">{t('View in shop','Vedi nello shop')} →</span>
-            </div>
           </div>
           <div class="shop-preview__info">
             <span class="shop-preview__tag">{lang==='it' ? ({Print:'Stampa',Pin:'Spilla'}[product.tag] ?? product.tag) : product.tag}</span>
             <h3>{product.title}</h3>
+            <span class="shop-preview__cta">{t('View in shop','Vedi nello shop')} →</span>
           </div>
         </a>
       ))}

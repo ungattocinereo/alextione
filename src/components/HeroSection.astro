@@ -6,10 +6,10 @@ const { t, url } = locale(Astro.url.pathname);
 const { hero } = siteContent;
 ---
 
-<section class="hero" id="top" aria-labelledby="hero-title">
-  <img class="hero__portrait" src={hero.image} alt={hero.name}
+<section class="photo-lead" id="top" aria-labelledby="hero-title">
+  <img class="photo-lead__image" src={hero.image} alt={hero.name}
     width="1500" height="1200" loading="eager" fetchpriority="high" />
-  <div class="hero__content">
+  <div class="photo-lead__copy">
     <h1 class="hero__title" id="hero-title">
       {t("Discover Napoli", "Scopri Napoli")}
       <span>{t("through my eyes", "con i miei occhi")}</span>

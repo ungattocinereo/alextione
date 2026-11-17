@@ -51,9 +51,9 @@ const facts = [
 >
   <HeaderNav />
   <main>
-    <header class="walk-hero">
-      <img class="walk-photo" src={tour.image} alt="" fetchpriority="high" />
-      <div class="walk-heading container">
+    <header class="photo-lead">
+      <img class="photo-lead__image" src={tour.image} alt="" fetchpriority="high" />
+      <div class="photo-lead__copy walk-heading">
         <a class="walk-back" href={url("/tours/")}>
           ← {t("Walking tours", "Tour a piedi")}
         </a>

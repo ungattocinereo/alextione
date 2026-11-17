@@ -124,7 +124,7 @@ const { lang, t } = locale(Astro.url.pathname);
   .order-intro p { margin-top: 1.2rem; max-width: 42ch; }
   .order-fields { grid-area: 1 / 2 / 3 / 3; position: relative; z-index: 1; min-width: 0; }
   .order-jacket {
-    display: block; grid-area: 2 / 1; width: calc(100% + var(--column-gap) + 3rem); max-width: none;
+    display: block; grid-area: 2 / 1; width: 100%;
     align-self: start; height: auto; pointer-events: none;
     filter: drop-shadow(0 3px 3px rgb(13 35 58 / 14%)) drop-shadow(0 14px 16px rgb(13 35 58 / 15%));
   }
@@ -161,12 +161,11 @@ const { lang, t } = locale(Astro.url.pathname);
   .order-status:not(:empty) { margin-top: 1rem; }
   @media (min-width: 751px) {
     .order-intro { transform: translateY(clamp(-3.5rem, -3.8vw, -1.75rem)); }
-    .order-jacket { transform: scale(1.3); transform-origin: left bottom; }
   }
   @media (max-width: 750px) {
     .order-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
     .order-fields { grid-area: auto; }
-    .order-jacket { grid-area: auto; width: 100%; max-width: 34rem; justify-self: center; margin-top: -2.4rem; }
+    .order-jacket { grid-area: auto; width: 100%; max-width: 34rem; justify-self: center; }
   }
   @media (max-width: 480px) {
     .form-pair { grid-template-columns: 1fr; }

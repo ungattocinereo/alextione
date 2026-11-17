@@ -444,37 +444,8 @@
 .catalog .tour-card {
   scroll-margin-top: 5.5rem;
 }
-.walk-hero {
-  min-height: 68svh;
-  position: relative;
-  display: grid;
-  align-items: end;
-  isolation: isolate;
-  background: #182028;
-  color: white;
-}
-.walk-photo,
-.walk-hero::after {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -2;
-  object-fit: cover;
-  object-position: center 43%;
-}
-.walk-hero::after {
-  content: "";
-  z-index: -1;
-  background:
-    linear-gradient(0deg, rgba(4, 11, 18, 0.94), rgba(4, 11, 18, 0.18) 82%),
-    linear-gradient(90deg, #09121e65, transparent);
-}
-.walk-heading {
-  padding-block: 4rem 2.75rem;
-}
 .walk-heading h1 {
-  font-size: clamp(3.65rem, 10.4vw, 9.4rem);
+  font-size: clamp(2.9rem, 6.5vw, 7rem);
   line-height: 0.99;
   max-width: 14ch;
   text-wrap: balance;
@@ -626,9 +597,6 @@
   .walk-gallery img {
     aspect-ratio: 4/5;
   }
-  .walk-heading {
-    padding-bottom: 4rem;
-  }
 }
 .pa-gallery__item {
   border: 0;
@@ -663,7 +631,6 @@ body:has(dialog[open]) {
   flex: none;
 }
 @media (max-width: 600px) {
-  .walk-heading,
   .walk-body,
   .walk-gallery,
   .walk-quote,
