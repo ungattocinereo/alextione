@@ -55,40 +55,15 @@
   display: grid;
   place-items: center;
   margin: 1.5rem auto 0;
-  max-width: 68rem;
-}
-.poster-scene::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 86%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: linear-gradient(145deg, #d4edfa, #a6d8f2);
-  outline: 1px solid #c4dfed;
-  outline-offset: clamp(5px, .65vw, 10px);
-  pointer-events: none;
+  width: min(100%, 51rem);
+  aspect-ratio: 1150 / 720;
 }
 .poster-pitch {
   position: absolute;
-  inset: 10% 5%;
-  border: 1px solid #95bed4;
-  border-radius: 2px;
-  background: linear-gradient(90deg, transparent calc(50% - .5px), #95bed4 50%, transparent calc(50% + .5px));
+  inset: 0;
+  background: url("/book/football-pitch.svg") center / contain no-repeat;
   pointer-events: none;
 }
-.poster-pitch::before, .poster-pitch::after {
-  content: "";
-  position: absolute;
-  top: 26%;
-  bottom: 26%;
-  width: 13%;
-  border: 1px solid #95bed4;
-}
-.poster-pitch::before { left: -1px; }
-.poster-pitch::after { right: -1px; }
 .book-poster .poster-scene .book-studio { width: 42%; border: 0; background: transparent; }
 .book-poster .poster-scene .book-stage { --width: clamp(195px, 20vw, 288px); height: calc(var(--width) * 1.62); }
 @media (prefers-reduced-motion: no-preference) {
@@ -115,8 +90,7 @@
   .poster-heading h1 { font-size: clamp(3.5rem, 13vw, 5.4rem); line-height: .99; }
   .poster-heading h1 span { display: block; }
   .poster-scene { margin-top: 1.6rem; }
-  .poster-scene::before { height: 81%; }
   .book-poster .poster-scene .book-studio { width: 72%; }
-  .book-poster .poster-scene .book-stage { --width: clamp(174px, 49vw, 240px); }
+  .book-poster .poster-scene .book-stage { --width: clamp(90px, 30vw, 200px); }
   .poster-caption { flex-direction: column; align-items: flex-start; gap: 1rem; }
 }

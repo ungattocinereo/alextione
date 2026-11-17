@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1150 720" fill="none">
+  <title>Football pitch, 105 × 68 metres</title>
+  <desc>Adapted from “Soccer field - empty.svg” by Nuno Tavares and Earthengine.
+    Source: https://commons.wikimedia.org/wiki/File:Soccer_field_-_empty.svg
+    Original and adaptation: https://creativecommons.org/licenses/by-sa/2.5/
+    Recoloured, with heavier markings, symmetrical goal areas and goal nets.</desc>
+  <defs>
+    <pattern id="grass" width="210" height="680" x="50" y="20" patternUnits="userSpaceOnUse">
+      <rect width="210" height="680" fill="#e1f0f5"/>
+      <rect width="105" height="680" fill="#d8eaf1"/>
+    </pattern>
+    <pattern id="net" width="7" height="7" patternUnits="userSpaceOnUse">
+      <rect width="7" height="7" fill="#f6fbfd"/>
+      <path d="M0 0H7 M0 0V7" stroke="#6b9eb7" stroke-width="1.8"/>
+    </pattern>
+    <!-- Pitch coordinates use ten units per metre. Both ends share the same geometry. -->
+    <g id="goal-end">
+      <rect x="27" y="323.4" width="23" height="73.2" fill="url(#net)" stroke="#386c89"/>
+      <path d="M50 158.4h165v403.2H50 M50 268.4h55v183.2H50"/>
+      <path d="M215 286.875a91.5 91.5 0 0 1 0 146.25"/>
+      <circle cx="160" cy="360" r="4.6" fill="#588da9" stroke="none"/>
+      <path d="M50 30a10 10 0 0 0 10-10 M60 700a10 10 0 0 0-10-10"/>
+    </g>
+  </defs>
+  <g stroke="#588da9" stroke-width="5" stroke-linejoin="round">
+    <rect x="50" y="20" width="1050" height="680" fill="url(#grass)"/>
+    <path d="M575 20v680"/>
+    <circle cx="575" cy="360" r="91.5"/>
+    <circle cx="575" cy="360" r="4.6" fill="#588da9" stroke="none"/>
+    <use href="#goal-end"/>
+    <use href="#goal-end" transform="translate(1150 0) scale(-1 1)"/>
+  </g>
+</svg>
