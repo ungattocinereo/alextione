@@ -86,6 +86,11 @@ a {
   text-decoration: none;
 }
 
+.text-link {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -1376,6 +1381,10 @@ main {
 }
 
 .pa-album--dark .pa-album__subtitle { color: #c6c5c2; }
+
+.pa-portfolio-link {
+  margin-top: 1.5rem;
+}
 
 .pa-album__desc {
   font-family: "Inter", sans-serif;

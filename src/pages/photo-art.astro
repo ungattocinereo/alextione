@@ -136,8 +136,19 @@ const localized = albums.map((a,i) => lang === 'en' ? a : {...a,title:italianAlb
               </button>
             ))}
           </div>
+          {album.id === "football" && (
+            <p class="container pa-portfolio-link">
+              <a class="text-link" href="https://alextioneportfolio.my.canva.site/">{t("View my football portfolio", "Guarda il mio portfolio di calcio")} ↗</a>
+            </p>
+          )}
         </section>
       ))}
+      <section class="section section--dark">
+        <div class="container publication-contact">
+          <h2>{t("Have a shoot in mind?", "Hai in mente un servizio fotografico?")}</h2>
+          <button class="btn btn--outline-light" data-contact-open>{t("Tell me about it", "Parliamone")} ↗</button>
+        </div>
+      </section>
     </main>
 
     <!-- LIGHTBOX -->

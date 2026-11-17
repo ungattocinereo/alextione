@@ -15,7 +15,7 @@ export const progetto = {
       paragraphs: [
         "Il 12 dicembre 2018 mi sono promesso di raccontare una delle più belle storie d’amore che il calcio abbia regalato al mondo: quella tra Diego e Napoli.",
         "Non ho visto il Pibe de Oro correre in campo, ma ho potuto sentire ciò che ha lasciato nel cuore della gente. Il momento più bello è ascoltare chi ha vissuto quegli anni e cogliere le emozioni che affiorano nei suoi occhi.",
-        "I piccoli omaggi che incontro per strada sono parte della storia e della cultura di Napoli. In questi anni le persone e i loro racconti mi hanno accompagnato fino alla mia prima pubblicazione indipendente.",
+        "I piccoli omaggi che incontro per strada sono parte della storia e della cultura di Napoli. In questi anni le persone che ho incontrato e le loro storie mi hanno accompagnato. È stato un viaggio nel cuore di Partenope. Come una madre, mi ha guidato passo dopo passo fino alla mia prima pubblicazione indipendente.",
         "Il 7 aprile 2023 ho pubblicato la fanzine Religione Monoteistica, un libro fotografico sugli omaggi spontanei dei napoletani a Maradona.",
       ],
     },

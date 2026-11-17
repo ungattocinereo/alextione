@@ -4,13 +4,13 @@ export type ShopProduct = {
   title: string;
   image: string;
   prices?: { size: string; price: string }[];
-  paperNote?: string;
   vintedUrl: string;
 };
 
 export type ShopCategory = {
   title: string;
   subtitle: string;
+  paperNote?: { en: string; it: string };
   products: ShopProduct[];
 };
 
@@ -34,28 +34,29 @@ export const shopPageData: ShopPageData = {
   categories: [
     {
       title: "Print Photography",
+      paperNote: { en: "Printed on 250 g/m² semi-gloss paper.", it: "Stampe su carta semilucida da 250 g/m²." },
       subtitle: "For orders outside of Europe, please contact me directly. Frame is not included.",
       products: [
-        { title: "Curva B Napoli", image: "/images/archive/curva-b.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Presente, Passato & Futuro", image: "/images/archive/passato-presente-e-futuro.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "La Banda De Fierro", image: "/images/archive/la-banda-de-fierro.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Scudetto & San Gennaro", image: "/images/archive/san-gennaro-e-scudetto.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Tre", image: "/images/archive/numero-tre.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Quattro", image: "/images/archive/4.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Barbonciro", image: "/images/archive/barbonciro.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "La Mano di D10", image: "/images/archive/e-stata-la-mano-di-d10.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Meccanico", image: "/images/archive/meccanico.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Macelleria", image: "/images/archive/macelleria-qs.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Via Anticaglia", image: "/images/archive/via-anticaglia.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Tattoo 10", image: "/images/archive/tattoo-10.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Dios Humano", image: "/images/archive/dios-humano.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Para Siempre Diego", image: "/images/archive/para-siempre-diego.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "La Storia", image: "/images/archive/la-storia.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Grazie Diego", image: "/images/archive/grazie-diego.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Garage NA", image: "/images/archive/garage.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Fruttivendolo", image: "/images/archive/fruttivendolo-qs.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Edicola Sanit\u00E0", image: "/images/archive/edicola-sanita.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
-        { title: "Condottiero", image: "/images/archive/condottiero.webp", paperNote: "The print will be made on semi-gloss 250g/m\u00B2 paper.", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED }
+        { title: "Curva B Napoli", image: "/images/archive/curva-b.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Presente, Passato & Futuro", image: "/images/archive/passato-presente-e-futuro.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "La Banda De Fierro", image: "/images/archive/la-banda-de-fierro.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Scudetto & San Gennaro", image: "/images/archive/san-gennaro-e-scudetto.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Tre", image: "/images/archive/numero-tre.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Quattro", image: "/images/archive/4.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Barbonciro", image: "/images/archive/barbonciro.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "La Mano di D10", image: "/images/archive/e-stata-la-mano-di-d10.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Meccanico", image: "/images/archive/meccanico.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Macelleria", image: "/images/archive/macelleria-qs.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Via Anticaglia", image: "/images/archive/via-anticaglia.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Tattoo 10", image: "/images/archive/tattoo-10.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Dios Humano", image: "/images/archive/dios-humano.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Para Siempre Diego", image: "/images/archive/para-siempre-diego.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "La Storia", image: "/images/archive/la-storia.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Grazie Diego", image: "/images/archive/grazie-diego.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Garage NA", image: "/images/archive/garage.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Fruttivendolo", image: "/images/archive/fruttivendolo-qs.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Edicola Sanit\u00E0", image: "/images/archive/edicola-sanita.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED },
+        { title: "Condottiero", image: "/images/archive/condottiero.webp", prices: [{ size: "20x30cm", price: "25\u20AC" }, { size: "30x40cm", price: "35\u20AC" }, { size: "50x70cm", price: "45\u20AC" }], vintedUrl: VINTED }
       ]
     },
     {

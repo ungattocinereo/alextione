@@ -54,6 +54,7 @@ const { fanzine, categories } = shopPageData;
           <div class="container">
             <div class="shop-category__header">
               <h2>{categoryName(category.title)}</h2>
+              {category.paperNote && <p class="shop-category__subtitle">{category.paperNote[lang]}</p>}
               <p class="shop-category__subtitle">{t(category.subtitle,category.title==='Pins'?'Per ordini fuori Europa, scrivimi direttamente.':'Per ordini fuori Europa, scrivimi direttamente. Cornice esclusa.')}</p>
             </div>
 
