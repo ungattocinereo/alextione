@@ -286,6 +286,34 @@ main {
 .hero__portfolio:focus-visible { text-decoration: underline; text-underline-offset: .3em; }
 .hero__actions a:focus-visible { outline: 2px solid white; outline-offset: 4px; }
 
+@media (min-width: 741px) {
+  .home-hero {
+    grid-template: "hero" minmax(max(36rem, calc(100svh - var(--mast-height))), auto) / minmax(0, 1fr);
+    isolation: isolate;
+    background: #28231f;
+  }
+  .home-hero > .photo-lead__image {
+    grid-area: hero;
+    z-index: -2;
+    object-position: 48% top;
+  }
+  .home-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(0deg, #100e0ded 0%, #17130e88 28%, transparent 66%);
+  }
+  .home-hero > .photo-lead__copy {
+    grid-area: hero;
+    align-self: end;
+    width: var(--container);
+    margin-inline: auto;
+    padding: 2.5rem 0 max(clamp(1.5rem, 3.5vw, 3rem), env(safe-area-inset-bottom));
+  }
+  .home-hero .hero__title { font-size: clamp(3.05rem, 7.2vw, 6.84rem); }
+}
+
 @media (max-width: 680px) {
   .hero__title { font-size: clamp(2.35rem, 12.4vw, 4.2rem); }
   .hero__footer { flex-direction: column; align-items: flex-start; }
