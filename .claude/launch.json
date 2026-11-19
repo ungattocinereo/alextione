@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "alextione-dev", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--", "--port", "4390"], "port": 4390 }
+  ]
+}

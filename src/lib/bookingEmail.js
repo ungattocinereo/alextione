@@ -70,7 +70,8 @@ function table(rows, small = false) {
 export function bookingEmail(data, title, body, headers) {
   const details = [
     ["Nome", data.name],
-    data.email ? ["Email", data.email] : ["WhatsApp", data.phone],
+    ...(data.email ? [["Email", data.email]] : []),
+    ...(data.phone ? [[data.kind === "collaboration" ? "Telefono" : "WhatsApp", data.phone]] : []),
     ["Lingua del modulo", data.language === "it" ? "Italiano" : "Inglese"],
   ];
   const date = data.date && requestDate.format(new Date(data.date + "T12:00:00Z"));

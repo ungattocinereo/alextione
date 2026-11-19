@@ -1,37 +1,271 @@
 ---
 import { locale } from "../lib/site";
-const {lang,t,url} = locale(Astro.url.pathname);
-const albums = [
-  { id: "football", title: "Football", image: "/images/photo-art/football/football-1.jpg" },
-  { id: "tattoo", title: "Tattoo", image: "/images/photo-art/tattoo/tattoo-1.webp" },
-  { id: "street", title: "Street", image: "/images/photo-art/street/street-1.webp" },
-  { id: "scudetto-2025", title: "Scudetto 2025", image: "/images/photo-art/scudetto-2025/scudetto25-1.jpg" },
-  { id: "scudetto-2023", title: "Scudetto 2023", image: "/images/photo-art/scudetto-2023/scudetto23-1.jpg" },
+const { t, url } = locale(Astro.url.pathname);
+
+const photos = [
+  { src: "/images/home/portfolio-01.webp", width: 671, en: "Napoli shirt with a sacred-heart pendant and a tricolour scudetto badge", it: "Maglia del Napoli con ciondolo a forma di cuore sacro e scudetto tricolore" },
+  { src: "/images/home/portfolio-02.webp", width: 600, en: "A boy holds a toy plane on his head in front of a Maradona mural", it: "Un bambino tiene un aereo giocattolo sulla testa davanti a un murale di Maradona" },
+  { src: "/images/home/portfolio-03.webp", width: 600, en: "Fans embrace in the stands under a banner reading Il mito continua", it: "Tifosi si abbracciano in curva sotto lo striscione Il mito continua" },
+  { src: "/images/home/portfolio-04.webp", width: 601, en: "A shirtless young fan shouts from the terraces in Buenos Aires", it: "Un giovane tifoso a torso nudo urla dagli spalti a Buenos Aires" },
+  { src: "/images/home/portfolio-05.webp", width: 601, en: "A man with a sky-blue and white painted beard in a Racing shirt", it: "Un uomo con la barba dipinta di celeste e bianco e la maglia del Racing" },
+  { src: "/images/home/portfolio-06.webp", width: 600, en: "An elderly man holds a framed portrait of Maradona at his window", it: "Un anziano mostra un ritratto incorniciato di Maradona alla finestra" },
+  { src: "/images/home/portfolio-07.webp", width: 601, en: "A young couple in Napoli shirts kiss inside the stadium", it: "Una giovane coppia con la maglia del Napoli si bacia allo stadio" },
+  { src: "/images/home/portfolio-08.webp", width: 601, en: "A smiling young fan wearing a black face mask like Osimhen", it: "Un giovane tifoso sorridente con la maschera nera come Osimhen" },
+  { src: "/images/home/portfolio-09.webp", width: 601, en: "Black-and-white photo of an arm tattooed with the letters NA", it: "Foto in bianco e nero di un braccio tatuato con le lettere NA" },
+  { src: "/images/home/portfolio-10.webp", width: 601, en: "A child on a man's shoulders, their shirts reading Futuro and Passato", it: "Un bambino sulle spalle di un uomo, sulle maglie Futuro e Passato" },
 ];
 ---
 
-<section class="section section--dark" id="portfolio">
+<section class="section home-portfolio" id="portfolio">
   <div class="container">
-    <div class="section-intro">
-      <h2>{t("Photographic series","Serie fotografiche")}</h2>
-      <p>{t("Football, street life, tattoos, and the unbridled passion of Napoli celebrations — captured without filter.","Calcio, vita di strada, tatuaggi e la passione di Napoli nei giorni dello scudetto, attraverso il mio obiettivo.")}</p>
-    </div>
+    <h2 class="home-portfolio__title">Portfolio</h2>
+  </div>
 
-    <div class="photo-preview">
-      {albums.map((album) => (
-        <a class="photo-preview__item" href={url("/photo-art/#"+album.id)}>
-          <div class="photo-preview__img">
-            <img src={album.image.replace('/photo-art/','/previews/').replace(/\.[^.]+$/,'.webp')} alt={lang==='it' ? ({football:'Calcio',tattoo:'Tatuaggi',street:'Vita di strada'}[album.id] ?? album.title) : album.title} loading="lazy" />
-          </div>
-          <div class="photo-preview__label">
-            <span class="photo-preview__title">{lang==='it' ? ({football:'Calcio',tattoo:'Tatuaggi',street:'Vita di strada'}[album.id] ?? album.title) : album.title}</span>
-          </div>
-        </a>
+  <div class="home-portfolio__strip" data-strip>
+    <ul
+      class="home-portfolio__track"
+      role="list"
+      tabindex="0"
+      aria-label={t("Portfolio photographs, scroll sideways", "Fotografie del portfolio, scorri in orizzontale")}
+      data-strip-track
+    >
+      {photos.map((photo) => (
+        <li class="home-portfolio__item">
+          <a href={url("/photo-art/")} draggable="false">
+            <img
+              src={photo.src}
+              width={photo.width}
+              height="900"
+              alt={t(photo.en, photo.it)}
+              loading="lazy"
+              decoding="async"
+              draggable="false"
+            />
+          </a>
+        </li>
       ))}
-    </div>
+    </ul>
+  </div>
 
-    <div style="margin-top: 2.5rem;">
-      <a class="btn btn--primary" href={url("/photo-art/")}>{t("View Full Portfolio","Guarda il portfolio")}</a>
+  <div class="container home-portfolio__footer">
+    <a class="btn btn--primary" href={url("/photo-art/")}>{t("View full portfolio", "Guarda il portfolio")}</a>
+    <div class="home-portfolio__nav" data-strip-nav hidden>
+      <button type="button" class="home-portfolio__btn" data-strip-prev aria-label={t("Previous photos", "Foto precedenti")}>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+      <button type="button" class="home-portfolio__btn" data-strip-next aria-label={t("Next photos", "Foto successive")}>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
     </div>
   </div>
 </section>
+
+<script>
+  const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  document.querySelectorAll<HTMLElement>("[data-strip]").forEach((strip) => {
+    const section = strip.closest("section");
+    const track = strip.querySelector<HTMLElement>("[data-strip-track]");
+    const nav = section?.querySelector<HTMLElement>("[data-strip-nav]");
+    const prev = section?.querySelector<HTMLButtonElement>("[data-strip-prev]");
+    const next = section?.querySelector<HTMLButtonElement>("[data-strip-next]");
+    if (!track || !nav || !prev || !next) return;
+
+    nav.hidden = false;
+    const step = () => Math.max(track.clientWidth * 0.8, 240);
+    const go = (dir: number) =>
+      track.scrollBy({ left: dir * step(), behavior: reduceMotion() ? "auto" : "smooth" });
+    prev.addEventListener("click", () => go(-1));
+    next.addEventListener("click", () => go(1));
+
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth - 2;
+      prev.disabled = track.scrollLeft <= 2;
+      next.disabled = track.scrollLeft >= max;
+    };
+    track.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+
+    // Mouse drag to scroll (touch and trackpads scroll natively).
+    let startX = 0;
+    let startLeft = 0;
+    let dragging = false;
+    let moved = false;
+    track.addEventListener("pointerdown", (e) => {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      dragging = true;
+      moved = false;
+      startX = e.clientX;
+      startLeft = track.scrollLeft;
+    });
+    track.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 5) {
+        moved = true;
+        track.classList.add("is-dragging");
+        track.setPointerCapture(e.pointerId);
+      }
+      if (moved) track.scrollLeft = startLeft - dx;
+    });
+    const end = () => {
+      if (!dragging) return;
+      dragging = false;
+      track.classList.remove("is-dragging");
+    };
+    track.addEventListener("pointerup", end);
+    track.addEventListener("pointercancel", end);
+    // Swallow the click that ends a drag so it does not open the link.
+    track.addEventListener(
+      "click",
+      (e) => {
+        if (moved) {
+          e.preventDefault();
+          e.stopPropagation();
+          moved = false;
+        }
+      },
+      true,
+    );
+  });
+</script>
+
+<style>
+  .home-portfolio {
+    --navy: #172a4d;
+    background: #fff;
+    color: var(--navy);
+    overflow: hidden;
+  }
+
+  .home-portfolio__title {
+    display: block;
+    color: var(--navy);
+    font-family: "Oswald", sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: -0.01em;
+    line-height: 0.85;
+    /* "PORTFOLIO" in Oswald 700 is ~4.45em wide: fill the container. */
+    font-size: min(calc(var(--container) / 4.55), 17rem);
+    margin: 0 0 clamp(1.5rem, 3.5vw, 3rem);
+  }
+
+  .home-portfolio__strip {
+    background: linear-gradient(to bottom, #f0f0f0 0, #fff 75%);
+    padding-block: clamp(1rem, 2.5vw, 1.75rem) 0.25rem;
+  }
+
+  .home-portfolio__track {
+    --edge: calc((100vw - var(--container)) / 2);
+    list-style: none;
+    margin: 0;
+    display: flex;
+    gap: clamp(0.75rem, 1.6vw, 1.25rem);
+    padding: 0 var(--edge) 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--edge);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(23, 42, 77, 0.35) transparent;
+    cursor: grab;
+  }
+  .home-portfolio__track.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    user-select: none;
+  }
+  .home-portfolio__track.is-dragging a {
+    pointer-events: none;
+  }
+  .home-portfolio__track:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: -3px;
+  }
+
+  .home-portfolio__item {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  .home-portfolio__item a {
+    display: block;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .home-portfolio__item img {
+    display: block;
+    height: clamp(22rem, 38vw, 33rem);
+    width: auto;
+    background: #ddd;
+    -webkit-user-drag: none;
+  }
+  .home-portfolio__item a:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .home-portfolio__item img {
+      transition: transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1), filter 300ms;
+    }
+    .home-portfolio__item a:is(:hover, :focus-visible) img {
+      transform: scale(1.03);
+    }
+  }
+
+  .home-portfolio__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .home-portfolio__nav {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .home-portfolio__nav[hidden] {
+    display: none;
+  }
+  .home-portfolio__btn {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 1.5px solid var(--navy);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--navy);
+    cursor: pointer;
+    transition: background-color 160ms, color 160ms, opacity 160ms;
+  }
+  .home-portfolio__btn:hover:not(:disabled) {
+    background: var(--navy);
+    color: #fff;
+  }
+  .home-portfolio__btn:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .home-portfolio__btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  /* Phones and tablets: swipe; no arrow buttons. */
+  @media (max-width: 767px), (hover: none) {
+    .home-portfolio__nav:not([hidden]) {
+      display: none;
+    }
+    .home-portfolio__track {
+      cursor: auto;
+    }
+  }
+  @media (max-width: 640px) {
+    .home-portfolio__item img {
+      height: min(26rem, 95vw);
+    }
+  }
+</style>

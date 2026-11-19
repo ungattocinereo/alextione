@@ -13,7 +13,7 @@ const photoLinks = [
 ];
 const mobileLinks = [
   [t("Tours", "Tour"), "/tours/"],
-  [t("Photography", "Fotografia"), "/photo-art/"],
+  [t("Portfolio", "Portfolio"), "/photo-art/"],
   [bookLabel, "/book/"],
   [t("Maradona Project", "Progetto Maradona"), "/religione-monoteistica/"],
   ["Shop", "/shop/"],
@@ -65,6 +65,7 @@ const contactLabel = t("Contact me", "Contattami");
           ))}
         </div>
       </details>
+      <a href={url("/shop/")}>{t("Shop", "Shop")}</a>
       <a href={url("/about/")}>{t("About", "Chi sono")}</a>
       <button class="mast-contact" data-contact-open>
         {t("Contact", "Contatti")}

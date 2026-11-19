@@ -2,12 +2,68 @@
 import { locale, tours, tourPath } from "../lib/site";
 const { lang, t, url, duration, price } = locale(Astro.url.pathname);
 const { catalog = false } = Astro.props;
+
+// Tall 1:2 crops from the original site, used on the homepage cards only.
+const homeCardImage: Record<string, string> = {
+  "maradona-tour": "/images/archive/maradona-tour-hero-500x1000.webp",
+  "rione-sanita-tour": "/images/archive/rione-sa-tour-hero-500x1000.webp",
+  "highlights-tour": "/images/archive/highlights-tour-hero-500x1000.webp",
+  "quartieri-spagnoli-tour": "/images/archive/spagnoli-tour-hero-500x1000.webp",
+  "street-food-tour": "/images/archive/street-food-sa-tour-hero-500x1000.webp",
+  "street-art-tour": "/images/archive/street-art-tour-hero-500x1000.webp",
+};
 ---
 
-<section class="section" id="tours">
-  <div class="container">
-    {!catalog && (
-      <div class="section-intro">
+{catalog ? (
+  <section class="section" id="tours">
+    <div class="container">
+      <div class="tours-grid">
+        {tours.map((tour) => (
+          <a
+            id={tour.slug}
+            class="tour-card"
+            href={url(tourPath(tour))}
+          >
+            <div class="tour-card__img" style={`--photo-ratio: ${tour.cover.width / tour.cover.height}`}>
+              <img
+                src={tour.cover.src}
+                width={tour.cover.width}
+                height={tour.cover.height}
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tour-card__body">
+              <span class="tour-card__details">
+                <span class="tour-card__duration">{duration}</span>
+                <span class="tour-card__price">{price}</span>
+              </span>
+              <h3>{tour[lang].title}</h3>
+              <p>{tour[lang].intro}</p>
+              <span class="tour-card__link">
+                {t("Explore tour", "Scopri il tour")} ↗
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+) : (
+  <section class="section home-tours" id="tours">
+    <img
+      class="home-tours__bg"
+      src="/images/home/naples-panorama.webp"
+      srcset="/images/home/naples-panorama-1000.webp 1000w, /images/home/naples-panorama.webp 2000w"
+      sizes="100vw"
+      width="2000"
+      height="1333"
+      alt=""
+      loading="lazy"
+      decoding="async"
+    />
+    <div class="container home-tours__inner">
+      <div class="section-intro home-tours__intro">
         <p class="eyebrow">Tour{lang === "en" && "s"}</p>
         <h2>{t("Discover Naples with me", "Scopri Napoli con me")}</h2>
         <p>
@@ -17,41 +73,212 @@ const { catalog = false } = Astro.props;
           )}
         </p>
       </div>
-    )}
-    <div class="tours-grid">
-      {tours.map((tour) => (
-        <a
-          id={catalog ? tour.slug : undefined}
-          class="tour-card"
-          href={url(tourPath(tour))}
-        >
-          <div class="tour-card__img" style={`--photo-ratio: ${tour.cover.width / tour.cover.height}`}>
-            <img
-              src={tour.cover.src}
-              width={tour.cover.width}
-              height={tour.cover.height}
-              alt=""
-              loading="lazy"
-            />
-          </div>
-          <div class="tour-card__body">
-            <span class="tour-card__details">
-              <span class="tour-card__duration">{duration}</span>
-              <span class="tour-card__price">{price}</span>
-            </span>
-            <h3>{tour[lang].title}</h3>
-            <p>{tour[lang].intro}</p>
-            <span class="tour-card__link">
-              {t("Explore tour", "Scopri il tour")} ↗
-            </span>
-          </div>
-        </a>
-      ))}
-    </div>
-    {!catalog && (
-      <a style="margin-top:2rem" class="btn btn--primary" href={url("/tours/")}>
+      <ul class="home-tours__grid" role="list">
+        {tours.map((tour) => (
+          <li>
+            <a class="home-tour" href={url(tourPath(tour))}>
+              <img
+                class="home-tour__img"
+                src={homeCardImage[tour.slug] ?? tour.cover.src}
+                width="500"
+                height="1000"
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="home-tour__body">
+                <span class="home-tour__pill">Tour</span>
+                <h3 class="home-tour__title">{tour[lang].title}</h3>
+                <span class="home-tour__text">{tour[lang].intro}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a class="btn btn--primary home-tours__cta" href={url("/tours/")}>
         {t("View all tours", "Tutti i tour")}
       </a>
-    )}
-  </div>
-</section>
+    </div>
+  </section>
+)}
+
+<style>
+  .home-tours {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    color: #fff;
+    background: #1d2a3a;
+  }
+  .home-tours__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+  }
+  /* Darken the sky behind the heading; keep the city visible lower down. */
+  .home-tours::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to bottom,
+      rgba(6, 18, 34, 0.62) 0%,
+      rgba(6, 18, 34, 0.5) 22%,
+      rgba(6, 18, 34, 0.18) 45%,
+      rgba(6, 18, 34, 0.15) 80%,
+      rgba(6, 18, 34, 0.45) 100%
+    );
+  }
+
+  .home-tours__intro {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .home-tours__intro h2 {
+    color: #fff;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+  }
+  .home-tours .home-tours__intro p,
+  .home-tours .home-tours__intro p.eyebrow {
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .home-tours__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gap-cards);
+  }
+
+  .home-tour {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 7 / 8;
+    min-height: 22rem;
+    overflow: hidden;
+    border-radius: 6px;
+    color: #fff;
+    text-decoration: none;
+    background: #111;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+  .home-tour__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Uniform dark wash (≥ 4.5:1 for white text even over white areas) */
+  .home-tour::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.62) 0%,
+      rgba(0, 0, 0, 0.56) 60%,
+      rgba(0, 0, 0, 0.45) 100%
+    );
+    transition: background-color 200ms;
+  }
+  .home-tour:hover::after {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+
+  .home-tour__body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 1.1rem 1.25rem 1.5rem;
+    height: 100%;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
+  }
+  .home-tour__pill {
+    display: inline-block;
+    padding: 0.1rem 0.7rem;
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    text-shadow: none;
+    margin-bottom: clamp(1.5rem, 6%, 3.5rem);
+  }
+  .home-tour__title {
+    font-family: "Oswald", sans-serif;
+    font-size: clamp(1.45rem, 2.2vw, 1.8rem);
+    line-height: 1.1;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    padding-inline: clamp(0rem, 2.5vw, 2.5rem);
+  }
+  .home-tour__text {
+    font-size: 0.98rem;
+    line-height: 1.75;
+    max-width: 34ch;
+    padding-inline: clamp(0rem, 2.5vw, 2.5rem);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+    overflow: hidden;
+  }
+
+  .home-tour:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 9px var(--accent);
+  }
+  .home-tour:is(:hover, :focus-visible) .home-tour__title {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .home-tour__img {
+      transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+    .home-tour:is(:hover, :focus-visible) .home-tour__img {
+      transform: scale(1.05);
+    }
+  }
+
+  .home-tours__cta {
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 960px) {
+    .home-tours__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 640px) {
+    .home-tours__grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .home-tour {
+      aspect-ratio: auto;
+      min-height: 20rem;
+    }
+    .home-tour__pill {
+      margin-bottom: 1.25rem;
+    }
+    .home-tour__title,
+    .home-tour__text {
+      padding-inline: 0.25rem;
+    }
+  }
+</style>

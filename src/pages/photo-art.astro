@@ -2,15 +2,20 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeaderNav from "../components/HeaderNav.astro";
 import FooterSection from "../components/FooterSection.astro";
+import CollaborationForm from "../components/CollaborationForm.astro";
+import sharp from "sharp";
 
 import { locale } from "../lib/site";
 const {lang,t} = locale(Astro.url.pathname);
-const albums = [
+
+// To add an album, append an object here and give it an Italian title in `italianTitles`.
+// `id` becomes the #anchor and the folder name under /images/photo-art/.
+// `date` (optional, "YYYY-MM") is shown as a small month/year label under the heading,
+// e.g. { id: "matrimonio", title: "Wedding Photography", date: "2026-06", images: [...] }.
+const albums: { id: string; title: string; date?: string; images: { src: string; alt: string }[] }[] = [
   {
     id: "football",
-    title: "Football",
-    subtitle: "Photography",
-    description: "The roar of the crowd, the tension before a penalty, the raw joy of a goal — football through an unfiltered lens.",
+    title: "Football Photography",
     images: [
       { src: "/images/photo-art/football/football-1.jpg", alt: "Buenos Aires 2024 - Football" },
       { src: "/images/photo-art/football/football-2.jpg", alt: "Buenos Aires 2024 - Match" },
@@ -20,9 +25,7 @@ const albums = [
   },
   {
     id: "tattoo",
-    title: "Tattoo",
-    subtitle: "Photography",
-    description: "Ink on skin as living art. Portraits that capture the permanence and intimacy of tattoo culture.",
+    title: "Tattoo Photography",
     images: [
       { src: "/images/photo-art/tattoo/tattoo-1.webp", alt: "La Plata 2024 - Tattoo" },
       { src: "/images/photo-art/tattoo/tattoo-2.jpg", alt: "October 2023 - Tattoo Portrait" },
@@ -32,9 +35,7 @@ const albums = [
   },
   {
     id: "street",
-    title: "Street",
-    subtitle: "Photography",
-    description: "Moments stolen from the chaos of the everyday. Honest, unposed, and deeply human street scenes.",
+    title: "Street Photography",
     images: [
       { src: "/images/photo-art/street/street-1.webp", alt: "Paris 2023 - Street" },
       { src: "/images/photo-art/street/street-2.webp", alt: "Tel Aviv - Street" },
@@ -44,9 +45,7 @@ const albums = [
   },
   {
     id: "scudetto-2025",
-    title: "Scudetto Napoli",
-    subtitle: "2025",
-    description: "The city explodes. Naples celebrates its Scudetto with fire, smoke, and pure unbridled passion.",
+    title: "Scudetto Napoli 2025",
     images: [
       { src: "/images/photo-art/scudetto-2025/scudetto25-1.jpg", alt: "Scudetto Napoli 2025" },
       { src: "/images/photo-art/scudetto-2025/scudetto25-2.jpg", alt: "Scudetto Napoli 2025 - Celebration" },
@@ -58,9 +57,7 @@ const albums = [
   },
   {
     id: "scudetto-2023",
-    title: "Scudetto Napoli",
-    subtitle: "2023",
-    description: "The first Scudetto in 33 years. A city reborn, united in tears of joy and streets painted blue.",
+    title: "Scudetto Napoli 2023",
     images: [
       { src: "/images/photo-art/scudetto-2023/scudetto23-1.jpg", alt: "Scudetto Napoli 2023" },
       { src: "/images/photo-art/scudetto-2023/scudetto23-2.jpg", alt: "Scudetto Napoli 2023 - Celebration" },
@@ -71,18 +68,40 @@ const albums = [
     ],
   },
 ];
-const italianAlbums = [
-  ['Calcio','Fotografia','La voce della curva, la tensione prima di un rigore e la gioia del gol, a bordo campo.'],
-  ['Tatuaggi','Fotografia','Ritratti di segni sulla pelle: storie personali, gesti e memoria.'],
-  ['Vita di strada','Fotografia','Scene di vita quotidiana, persone e incontri senza posa nelle strade di città diverse.'],
-  ['Scudetto Napoli','2025','Fumo, fuochi e passione. Napoli scende in strada per festeggiare lo scudetto.'],
-  ['Scudetto Napoli','2023','Il primo scudetto dopo trentatré anni. Una città unita, tra lacrime di gioia e strade dipinte d’azzurro.']
-];
+const italianTitles: Record<string, string> = {
+  football: "Fotografia di calcio",
+  tattoo: "Fotografia di tatuaggi",
+  street: "Fotografia di strada",
+  "scudetto-2025": "Scudetto Napoli 2025",
+  "scudetto-2023": "Scudetto Napoli 2023",
+  // matrimonio: "Fotografia di matrimonio",
+};
 const labels:Record<string,string> = {Football:'Calcio',Match:'Partita',Stadium:'Stadio',September:'Settembre',Tattoo:'Tatuaggio',October:'Ottobre',Portrait:'Ritratto',Photography:'Fotografia',Detail:'Dettaglio',Paris:'Parigi',Street:'Strada',Berlin:'Berlino',Celebration:'Festa',Fans:'Tifosi',Night:'Notte',Streets:'Strade',Party:'Festa',April:'Aprile',May:'Maggio'};
-const localized = albums.map((a,i) => lang === 'en' ? a : {...a,title:italianAlbums[i][0],subtitle:italianAlbums[i][1],description:italianAlbums[i][2],images:a.images.map(img=>({...img,alt:img.alt.replace(/\b[A-Za-z]+\b/g,word=>labels[word] ?? word)}))});
+
+const previewOf = (src: string) => src.replace('/photo-art/', '/previews/').replace(/\.[^.]+$/,'.webp');
+const dimensions = new Map<string, { width: number; height: number }>();
+for (const album of albums) for (const img of album.images) {
+  const meta = await sharp(`public${previewOf(img.src)}`).metadata();
+  dimensions.set(img.src, { width: meta.width ?? 3, height: meta.height ?? 2 });
+}
+const monthYear = (value?: string) => {
+  const match = value?.match(/^(\d{4})-(\d{2})$/);
+  return match ? new Intl.DateTimeFormat(lang === 'it' ? 'it-IT' : 'en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(+match[1], +match[2] - 1, 1))) : '';
+};
+const localized = albums.map((a) => ({
+  ...a,
+  title: lang === 'en' ? a.title : italianTitles[a.id] ?? a.title,
+  dateLabel: monthYear(a.date),
+  images: a.images.map(img => ({
+    ...img,
+    alt: lang === 'en' ? img.alt : img.alt.replace(/\b[A-Za-z]+\b/g,word=>labels[word] ?? word),
+    preview: previewOf(img.src),
+    ...dimensions.get(img.src)!,
+  })),
+}));
 ---
 
-<BaseLayout title={t("Naples photography portfolio — Alessandro Tione", "Portfolio fotografico di Napoli — Alessandro Tione")} description={t("Football, tattoos and street photography by Alessandro Tione.","Calcio, tatuaggi e fotografia di strada di Alessandro Tione.")}>
+<BaseLayout title={t("Portfolio — Alessandro Tione, Naples photographer", "Portfolio — Alessandro Tione, fotografo a Napoli")} description={t("Portfolio of football, tattoo and street photography by Alessandro Tione, with the Napoli Scudetto celebrations of 2023 and 2025.","Portfolio di fotografia di calcio, tatuaggi e strada di Alessandro Tione, con i festeggiamenti per gli scudetti del Napoli 2023 e 2025.")}>
   <div class="page-shell">
     <HeaderNav />
 
@@ -91,59 +110,51 @@ const localized = albums.map((a,i) => lang === 'en' ? a : {...a,title:italianAlb
       <section class="photo-lead">
         <img class="photo-lead__image" src="/images/photo-art/street/street-1.webp" alt="" fetchpriority="high" />
         <div class="photo-lead__copy pa-hero__content">
-          <span class="pa-hero__kicker">Portfolio</span>
-          <h1 class="pa-hero__title">
-            Photo<br /><span class="pa-hero__accent">Art</span>
-          </h1>
+          <span class="pa-hero__kicker">{t("Photography", "Fotografia")}</span>
+          <h1 class="pa-hero__title">Portfolio</h1>
           <p class="pa-hero__subtitle">{t('Football, tattoos and street photography','Calcio, tatuaggi e fotografia di strada')}</p>
           <nav class="pa-hero__nav" aria-label={t("Album navigation","Album fotografici")}>
             {localized.map((album, i) => (
-              <a href={`#${album.id}`} class="pa-hero__nav-link" style={`--delay: ${i * 0.08}s`}>
-                {album.title} {album.subtitle}
-              </a>
+              <a href={`#${album.id}`} class="pa-hero__nav-link" style={`--delay: ${i * 0.08}s`}>{album.title}</a>
             ))}
           </nav>
         </div>
       </section>
 
       <!-- ALBUMS -->
-      {localized.map((album, albumIndex) => (
-        <section class={`pa-album ${albumIndex % 2 !== 0 ? 'pa-album--dark' : ''}`} id={album.id}>
-          <div class="pa-album__header">
-            <div class="pa-album__titles">
-              <h2 class="pa-album__title">{album.title}</h2>
-              <span class="pa-album__subtitle">{album.subtitle}</span>
+      <div class="folio">
+        {localized.map((album) => (
+          <section class="folio-album" id={album.id} aria-labelledby={`${album.id}-title`}>
+            <div class="folio-wrap">
+              <h2 class="folio-title" id={`${album.id}-title`}>{album.title}</h2>
+              {album.dateLabel && <p class="folio-date">{album.dateLabel}</p>}
+              {album.id === "football" && (
+                <p class="folio-link">Portfolio: <a href="https://alextioneportfolio.my.canva.site/" rel="noopener">alextioneportfolio.my.canva.site</a></p>
+              )}
+              <div class="folio-grid">
+                {album.images.map((img, imgIndex) => (
+                  <button type="button" class="folio-item" data-lightbox-trigger data-album={album.id} data-index={imgIndex}>
+                    <img src={img.preview} alt={img.alt} width={img.width} height={img.height} data-full={img.src} loading={imgIndex < 2 && album.id === "football" ? "eager" : "lazy"} decoding="async" />
+                  </button>
+                ))}
+              </div>
             </div>
-            <p class="pa-album__desc">{album.description}</p>
-          </div>
+          </section>
+        ))}
+      </div>
 
-          <div class={`pa-gallery ${album.images.length > 4 ? 'pa-gallery--six' : 'pa-gallery--four'}`}>
-            {album.images.map((img, imgIndex) => (
-              <button type="button"
-                class="pa-gallery__item"
-                data-lightbox-trigger
-                data-album={album.id}
-                data-index={imgIndex}
-                style={`--stagger: ${imgIndex * 0.06}s`}
-              >
-                <img src={img.src.replace('/photo-art/', '/previews/').replace(/\.[^.]+$/,'.webp')} alt={img.alt} data-full={img.src} loading="lazy" />
-                <div class="pa-gallery__item-overlay">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-                </div>
-              </button>
-            ))}
+      <!-- COLLABORATE -->
+      <section class="folio-collab" aria-labelledby="collab-title">
+        <div class="folio-wrap folio-collab__grid">
+          <div class="folio-collab__intro">
+            <h2 id="collab-title">{t("Let's collaborate and make a good project together", "Collaboriamo e realizziamo insieme un bel progetto")}</h2>
+            <p class="folio-collab__connect">{t("Let's connect", "Restiamo in contatto")}</p>
+            <ul class="folio-collab__social">
+              <li><a href="https://www.instagram.com/alextione/" rel="noopener" target="_blank">{t("My Instagram", "Il mio Instagram")} <span aria-hidden="true">↗</span><span class="sr-only"> ({t("opens in a new tab", "si apre in una nuova scheda")})</span></a></li>
+              <li><a href="https://x.com/tionealessandro" rel="noopener" target="_blank">{t("My X (Twitter)", "Il mio X (Twitter)")} <span aria-hidden="true">↗</span><span class="sr-only"> ({t("opens in a new tab", "si apre in una nuova scheda")})</span></a></li>
+            </ul>
           </div>
-          {album.id === "football" && (
-            <p class="container pa-portfolio-link">
-              <a class="text-link" href="https://alextioneportfolio.my.canva.site/">{t("View my football portfolio", "Guarda il mio portfolio di calcio")} ↗</a>
-            </p>
-          )}
-        </section>
-      ))}
-      <section class="section section--dark">
-        <div class="container publication-contact">
-          <h2>{t("Have a shoot in mind?", "Hai in mente un servizio fotografico?")}</h2>
-          <button class="btn btn--outline-light" data-contact-open>{t("Tell me about it", "Parliamone")} ↗</button>
+          <CollaborationForm />
         </div>
       </section>
     </main>
@@ -239,3 +250,41 @@ const localized = albums.map((a,i) => lang === 'en' ? a : {...a,title:italianAlb
 
   </script>
 </BaseLayout>
+
+  <style>
+    .pa-hero__title { font-size: clamp(3rem, 9.5vw, 9rem); overflow-wrap: normal; word-break: normal; }
+    .folio { background: #fff; color: #0b0b0b; }
+    .folio-wrap { width: min(1280px, calc(100% - 2.5rem)); margin-inline: auto; }
+    .folio-album { padding-block: clamp(3rem, 7vw, 6rem) 0; scroll-margin-top: var(--mast-height); }
+    .folio-album:last-child { padding-bottom: clamp(3rem, 7vw, 6rem); }
+    .folio-title {
+      font-family: "Oswald", sans-serif; font-weight: 700; text-transform: uppercase;
+      font-size: clamp(2.6rem, 9vw, 8rem); line-height: .95; letter-spacing: -.01em;
+      color: var(--accent); text-wrap: balance; overflow-wrap: anywhere; margin: 0;
+    }
+    .folio-date { margin: .8rem 0 0; font-size: 1rem; letter-spacing: .08em; text-transform: uppercase; color: #4a4a4a; }
+    .folio-link { margin: 1rem 0 0; font-size: clamp(1rem, 1.6vw, 1.25rem); overflow-wrap: anywhere; }
+    .folio-link a { color: var(--accent); text-decoration: underline; text-underline-offset: .18em; }
+    .folio-grid { margin-top: clamp(1.5rem, 4vw, 3rem); columns: 2; column-gap: clamp(.75rem, 2vw, 1.5rem); }
+    .folio-item {
+      display: block; width: 100%; padding: 0; margin: 0 0 clamp(.75rem, 2vw, 1.5rem); border: 0;
+      background: #eee; cursor: zoom-in; break-inside: avoid; overflow: hidden;
+    }
+    .folio-item img { display: block; width: 100%; height: auto; }
+    .folio-item:hover img { opacity: .92; }
+    .folio-item:focus-visible, .folio-link a:focus-visible, .folio-collab a:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 3px; }
+    @media (max-width: 640px) { .folio-grid { columns: 1; } }
+
+    .folio-collab { background: #000; color: #fff; padding-block: clamp(3.5rem, 8vw, 7rem); scroll-margin-top: var(--mast-height); }
+    .folio-collab__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+    .folio-collab h2 {
+      font-family: "Oswald", sans-serif; font-weight: 700; text-transform: uppercase; color: #fff;
+      font-size: clamp(2.2rem, 5.5vw, 4.6rem); line-height: 1; text-wrap: balance; overflow-wrap: anywhere; margin: 0;
+    }
+    .folio-collab__connect { margin: clamp(1.5rem, 3vw, 2.5rem) 0 .6rem; font-size: 1.15rem; color: #d6d6d6; }
+    .folio-collab__social { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; }
+    .folio-collab__social a { color: #fff; font-size: 1.25rem; text-decoration: underline; text-underline-offset: .2em; display: inline-block; padding-block: .3rem; }
+    .folio-collab__social a:hover { color: var(--accent-soft); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    @media (max-width: 860px) { .folio-collab__grid { grid-template-columns: minmax(0, 1fr); } }
+  </style>
