@@ -1,0 +1,65 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeaderNav from "./HeaderNav.astro";
+import FooterSection from "./FooterSection.astro";
+import { locale } from "../lib/site";
+import { getPosts, postDate } from "../lib/ghost";
+const { lang, t, url } = locale(Astro.url.pathname);
+const posts = await getPosts();
+---
+
+<BaseLayout
+  title={t("Blog — Naples, football and photography · Alessandro Tione", "Blog — Napoli, calcio e fotografia · Alessandro Tione")}
+  description={t(
+    "Stories from the streets of Naples by guide and photographer Alessandro Tione: neighbourhoods, football, food and photography.",
+    "Storie dalle strade di Napoli di Alessandro Tione, guida e fotografo: quartieri, calcio, cibo e fotografia.",
+  )}
+>
+  <HeaderNav />
+  <main class="catalog blog">
+    <header class="catalog-head container">
+      <p class="eyebrow">Blog</p>
+      <h1>{t("Stories from", "Storie da")} <em>Napoli</em></h1>
+      <p>
+        {t(
+          "Notes on the neighbourhoods, football, food and photographs of my city.",
+          "Appunti sui quartieri, il calcio, il cibo e le fotografie della mia città.",
+        )}
+      </p>
+    </header>
+    <div class="container blog-list">
+      {posts.length === 0 && <p class="blog-empty">{t("The first stories are on their way.", "Le prime storie stanno arrivando.")}</p>}
+      {posts.map((post, index) => (
+        <a class="blog-card" href={url(post.path)}>
+          {post.image && (
+            <img src={post.image} alt="" width="640" height="427" loading={index < 2 ? "eager" : "lazy"} decoding="async" />
+          )}
+          <div>
+            <p class="eyebrow">
+              <time datetime={post.published}>{postDate(post.published, lang)}</time> · {post.minutes} min
+            </p>
+            <h2>{post[lang].title}</h2>
+            <p>{post[lang].excerpt}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </main>
+  <FooterSection />
+</BaseLayout>
+
+<style>
+  .blog-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
+    gap: clamp(2rem, 4vw, 3.5rem) var(--gap-cards);
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(4rem, 10vw, 8rem);
+  }
+  .blog-empty { color: var(--text-muted); }
+  .blog-card { color: inherit; text-decoration: none; display: grid; gap: 1rem; align-content: start; }
+  .blog-card img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--control-radius); background: var(--bg-muted); }
+  .blog-card h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.02; margin-block: 0.5rem 0.6rem; }
+  .blog-card p:last-child { margin: 0; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .blog-card:hover h2, .blog-card:focus-visible h2 { color: var(--accent); }
+  .blog-card .eyebrow { margin: 0; }
+</style>

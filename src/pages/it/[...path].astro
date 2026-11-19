@@ -10,11 +10,15 @@ import Legal from "../legal.astro";
 import Book from "../book.astro";
 import Project from "../religione-monoteistica.astro";
 import TourPage from "../../components/TourPage.astro";
+import BlogIndex from "../../components/BlogIndex.astro";
+import BlogPost from "../../components/BlogPost.astro";
+import { getPosts, type Post } from "../../lib/ghost";
 import { tours, type Tour } from "../../lib/site";
 interface Props {
   tour?: Tour;
+  post?: Post;
 }
-export function getStaticPaths() {
+export async function getStaticPaths() {
   return [
     ...[
       undefined,
@@ -27,10 +31,15 @@ export function getStaticPaths() {
       "legal",
       "about",
       "religione-monoteistica",
+      "blog",
     ].map((path) => ({ params: { path } })),
     ...tours.map((tour) => ({
       params: { path: "tour/" + tour.slug },
       props: { tour },
+    })),
+    ...(await getPosts()).map((post) => ({
+      params: { path: "blog/" + post.slug },
+      props: { post },
     })),
   ];
 }
@@ -45,8 +54,9 @@ const pages = {
   legal: Legal,
   about: About,
   "religione-monoteistica": Project,
+  blog: BlogIndex,
 };
 const Page = pages[(Astro.params.path || "home") as keyof typeof pages];
 ---
 
-{Astro.props.tour ? <TourPage tour={Astro.props.tour} /> : <Page />}
+{Astro.props.tour ? <TourPage tour={Astro.props.tour} /> : Astro.props.post ? <BlogPost post={Astro.props.post} /> : <Page />}
