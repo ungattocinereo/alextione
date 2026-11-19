@@ -9,14 +9,18 @@ import "../styles/walks.css";
 interface Props {
   title: string;
   description: string;
+  /** Sharing image for pages that have their own, such as blog articles. */
+  image?: string;
+  article?: boolean;
 }
 
 const siteUrl = Astro.site!;
-const { title, description } = Astro.props;
+const { title, description, image, article } = Astro.props;
 const path = Astro.url.pathname.replace(/\/?$/, "/");
 const canonicalUrl = new URL(path, siteUrl).href;
 const card = base.split("/").filter(Boolean).at(-1) || "home";
-const ogImageUrl = new URL(`/share/${lang}/${card}.jpg?v=alex-portrait`, siteUrl).href;
+const blog = base.startsWith("/blog/");
+const ogImageUrl = image || new URL(`/share/${lang}/${blog ? "home" : card}.jpg?v=alex-portrait`, siteUrl).href;
 const imageAlt = t("Portrait of Alessandro Tione among the balconies of Naples", "Ritratto di Alessandro Tione tra i balconi di Napoli");
 const shareTitles: Record<string, string> = {
   book: t("Naples and Maradona — Alessandro Tione", "Napoli e Maradona — Alessandro Tione"),
@@ -71,15 +75,15 @@ const shareDescription = shareDescriptions[card] ?? description;
     <meta name="theme-color" content="#0a0a0a" />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={article ? "article" : "website"} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={shareTitle} />
     <meta property="og:description" content={shareDescription} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={imageAlt} />
+    {!image && <meta property="og:image:type" content="image/jpeg" />}
+    {!image && <meta property="og:image:width" content="1200" />}
+    {!image && <meta property="og:image:height" content="630" />}
+    {!image && <meta property="og:image:alt" content={imageAlt} />}
     <meta property="og:locale" content={lang==="it"?"it_IT":"en_US"} />
     <meta property="og:locale:alternate" content={lang==="it"?"en_US":"it_IT"} />
     <meta property="og:site_name" content="AlexTione" />
@@ -92,7 +96,7 @@ const shareDescription = shareDescriptions[card] ?? description;
     <meta name="twitter:title" content={shareTitle} />
     <meta name="twitter:description" content={shareDescription} />
     <meta name="twitter:image" content={ogImageUrl} />
-    <meta name="twitter:image:alt" content={imageAlt} />
+    {!image && <meta name="twitter:image:alt" content={imageAlt} />}
 
     <!-- Google structured data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData(siteUrl, path, title, description, ogImageUrl)).replace(/</g, "\\u003c")} />

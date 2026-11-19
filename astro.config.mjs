@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import { localBooking } from "./scripts/local-booking.mjs";
+import { localMcp } from "./scripts/local-mcp.mjs";
 import vercel from "./vercel.json" with { type: "json" };
 
 export default defineConfig({
@@ -15,6 +16,6 @@ export default defineConfig({
         deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**", "**/.local/**"],
       },
     },
-    plugins: [localBooking],
+    plugins: [localBooking, localMcp],
   },
 });

@@ -4,6 +4,10 @@
     {
       "source": "/api/booking/",
       "destination": "/api/booking"
+    },
+    {
+      "source": "/api/mcp/",
+      "destination": "/api/mcp"
     }
   ],
   "redirects": [
@@ -35,11 +39,6 @@
     {
       "source": "/street-art-tour/",
       "destination": "/tour/street-art-tour/",
-      "permanent": true
-    },
-    {
-      "source": "/blog/",
-      "destination": "/tours/",
       "permanent": true
     },
     {
