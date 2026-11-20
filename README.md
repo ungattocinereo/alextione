@@ -25,3 +25,20 @@ Development and local preview keep reviews in `.local/reviews/` and write the em
 ## Sharing and search
 
 The public Vercel release uses `https://alextione.it` for canonical URLs, language alternates, social previews, structured data and the sitemap. Override `SITE_URL` at build time if the primary domain changes. English and Italian sharing cards are 1200 × 630 JPEGs in `public/share/`.
+
+## Blog
+
+Articles live in a headless Ghost at `https://ghost.alextione.it` and are rendered by this site at `/blog/` and `/it/blog/` during the build. Set `GHOST_URL` and `GHOST_CONTENT_KEY` (the Content API key of the Ghost custom integration) for the build; without them the blog is empty and stays out of the menu.
+
+Every article is a pair of Ghost posts: the English one carries the internal tag `#en` and the slug `my-article`, the Italian one carries `#it` and the slug `my-article-it`. An article appears on the site only when both are published, because every page here exists in both languages. A Ghost webhook calls a Vercel deploy hook, so the site rebuilds a few minutes after an article is published, edited or unpublished.
+
+### Writing with language models
+
+`/api/mcp/` is an MCP server (Streamable HTTP) for models that write the blog. It needs `GHOST_URL`, `GHOST_ADMIN_KEY` (the Admin API key of the same integration) and `BLOG_MCP_TOKENS` in the Vercel environment. Models never receive the Ghost key. Each one gets its own bearer token:
+
+```bash
+node scripts/blog-token.mjs claude            # drafts only
+node scripts/blog-token.mjs editor --publish  # may also publish and edit live articles
+```
+
+The script prints the token once and the entry to merge into the `BLOG_MCP_TOKENS` JSON object, which stores only SHA-256 hashes. Remove an entry and redeploy to revoke a token. The tools are `list_posts`, `get_post`, `create_post`, `update_post`, `publish_post`, `unpublish_post` and `upload_image`; nothing can be deleted through the server. Connect a client with the URL `https://alextione.it/api/mcp/` and the header `Authorization: Bearer <token>`.

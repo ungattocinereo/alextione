@@ -3,6 +3,7 @@ import { locale, tours, tourPath } from "../lib/site";
 import LanguageLinks from "./LanguageLinks.astro";
 import { siteContent } from "../data/siteContent";
 import BookingDialog from "./BookingDialog.astro";
+import { getPosts } from "../lib/ghost";
 const { lang, url, t } = locale(Astro.url.pathname);
 const bookLabel = t("My new book", "Il mio nuovo libro");
 const photoLinks = [
@@ -19,6 +20,9 @@ const mobileLinks = [
   ["Shop", "/shop/"],
   [t("About me", "Chi sono"), "/about/"],
 ];
+// The blog joins the menu once the first article is published.
+const blog = (await getPosts()).length > 0;
+if (blog) mobileLinks.splice(-1, 0, ["Blog", "/blog/"]);
 const contactLabel = t("Contact me", "Contattami");
 ---
 
@@ -66,6 +70,7 @@ const contactLabel = t("Contact me", "Contattami");
         </div>
       </details>
       <a href={url("/shop/")}>{t("Shop", "Shop")}</a>
+      {blog && <a href={url("/blog/")}>Blog</a>}
       <a href={url("/about/")}>{t("About", "Chi sono")}</a>
       <button class="mast-contact" data-contact-open>
         {t("Contact", "Contatti")}

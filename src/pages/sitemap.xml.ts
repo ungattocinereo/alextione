@@ -1,6 +1,7 @@
 import { tours, tourPath } from "../lib/site";
+import { getPosts } from "../lib/ghost";
 import type { APIRoute } from "astro";
-export const GET: APIRoute = ({ site }) => {
+export const GET: APIRoute = async ({ site }) => {
   const paths = [
     "/",
     "/tours/",
@@ -13,6 +14,8 @@ export const GET: APIRoute = ({ site }) => {
     "/legal/",
     "/religione-monoteistica/",
     ...tours.map(tourPath),
+    "/blog/",
+    ...(await getPosts()).map((post) => post.path),
   ];
   const urls = ["", "/it"].flatMap((prefix) =>
     paths.map(
