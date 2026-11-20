@@ -1,0 +1,174 @@
+---
+import { locale, tours, type Tour } from "../lib/site";
+import PrivacyAcknowledgment from "./PrivacyAcknowledgment.astro";
+import "../styles/booking.css";
+const { tour } = Astro.props as { tour: Tour };
+const { t, lang } = locale(Astro.url.pathname);
+---
+
+<dialog class="booking review-dialog" id="review-dialog" aria-labelledby="review-title">
+  <div class="booking-page">
+    <button class="booking-close" type="button" data-dismiss aria-label={t("Close", "Chiudi")}>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m3 3 10 10M13 3 3 13"/></svg>
+    </button>
+    <section data-compose>
+      <h2 id="review-title" tabindex="-1" autofocus>{t("Leave a review", "Lascia una recensione")}<span aria-hidden="true">.</span></h2>
+      <form action="/api/reviews/" method="post" class="request"
+        data-error={t("Your review didn’t go through. Please try again.", "La recensione non è partita. Riprova.")}
+        data-busy-error={t("Too many attempts. Please try again in an hour.", "Troppi tentativi. Riprova tra un’ora.")}>
+        <input type="hidden" name="language" value={lang} />
+        <fieldset>
+          <label>{t("Which tour did you take?", "Quale tour hai fatto?")}
+            <span class="booking-select"><select name="tour" required>
+              {tours.map((item) => <option value={item.slug} selected={item.slug === tour.slug}>{item[lang].title}</option>)}
+            </select></span>
+          </label>
+          <div class="request-row request-contact">
+            <label>{t("Your name", "Il tuo nome")}<input name="name" autocomplete="name" required maxlength="100" /></label>
+            <label>Email<input type="email" name="email" autocomplete="email" required maxlength="254" aria-describedby="review-email-note" /></label>
+          </div>
+          <div class="review-stars" role="radiogroup" aria-labelledby="review-stars-label">
+            <span id="review-stars-label">{t("Your rating", "Il tuo voto")} <em>{t("(optional)", "(facoltativo)")}</em></span>
+            <span class="review-stars-row">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <label>
+                  <input type="radio" name="rating" value={n} aria-label={n + t(n === 1 ? " star" : " stars", n === 1 ? " stella" : " stelle")} />
+                  <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.6 2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.2-5.9 3.2 1.2-6.5L2.5 9.5l6.6-.9z" /></svg>
+                </label>
+              ))}
+            </span>
+          </div>
+          <label>{t("Your review", "La tua recensione")}
+            <textarea name="review" rows="5" required minlength="20" maxlength="2000"></textarea>
+          </label>
+          <div class="review-trap" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+          <p class="review-note" id="review-email-note">{t(
+            "I’ll email you a link to confirm the review is yours. Your name and review appear on this site once I approve them. Your email is never shown.",
+            "Ti mando via email un link per confermare che la recensione è tua. Nome e recensione compaiono sul sito dopo la mia approvazione. La tua email non viene mai mostrata.",
+          )}</p>
+          <PrivacyAcknowledgment className="request-consent" />
+        </fieldset>
+        <p class="booking-error" role="alert" tabindex="-1"></p>
+        <button class="booking-send" type="submit">
+          <span data-ready>{t("Send review", "Invia recensione")}</span>
+          <span data-busy hidden>{t("Sending…", "Invio…")}</span>
+          <span class="booking-send-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 16 16 4M4.5 4H16v11.5"/></svg></span>
+        </button>
+      </form>
+    </section>
+    <section class="booking-receipt" data-receipt hidden aria-labelledby="review-thanks">
+      <svg class="booking-stamp" viewBox="0 0 82 82" aria-hidden="true" focusable="false">
+        <defs>
+          <path id="review-stamp-top" d="M 17,41 A 24,24 0 0,1 65,41" />
+          <path id="review-stamp-bottom" d="M 8,41 A 33,33 0 0,0 74,41" />
+        </defs>
+        <text text-anchor="middle"><textPath href="#review-stamp-top" startOffset="50%">FORZA</textPath></text>
+        <text text-anchor="middle"><textPath href="#review-stamp-bottom" startOffset="50%">NAPOLI</textPath></text>
+        <path class="booking-check" d="m27 41 9 9 20-20" pathLength="1" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <h2 id="review-thanks" tabindex="-1" aria-describedby="review-next">{t("One last step", "Manca un passo")}<span>!</span></h2>
+      <p id="review-next">
+        <span data-delivered>{t("I’ve sent a link to", "Ho mandato un link a")} <strong data-address></strong>. {t("Open it to confirm your review. Check your spam folder if you don’t see it.", "Aprilo per confermare la recensione. Se non lo trovi, controlla nello spam.")}</span>
+        <span data-preview hidden>{t("Your review was saved in this preview. The confirmation email is in .local/mail/ and was not sent.", "La recensione è stata salvata in anteprima. L’email di conferma è in .local/mail/ e non è stata inviata.")}</span>
+      </p>
+      <button class="booking-done" type="button" data-dismiss>{t("Close", "Chiudi")}</button>
+    </section>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>("#review-dialog")!;
+  const find = <E extends HTMLElement = HTMLElement>(selector: string) => dialog.querySelector<E>(selector)!;
+  const form = find<HTMLFormElement>("form");
+  const submit = find<HTMLButtonElement>("[type=submit]");
+  const error = find(".booking-error");
+
+  function open() {
+    if (!submit.disabled) {
+      find("[data-compose]").hidden = false;
+      find("[data-receipt]").hidden = true;
+      dialog.setAttribute("aria-labelledby", "review-title");
+      error.textContent = "";
+    }
+    if (!dialog.open) dialog.showModal();
+    dialog.scrollTop = 0;
+  }
+  document.querySelectorAll("[data-review-open]").forEach(trigger => trigger.addEventListener("click", open));
+  // Alex can send guests a tour link ending in #review: it opens the form straight away.
+  const openFromLink = () => { if (location.hash === "#review") open(); };
+  addEventListener("hashchange", openFromLink);
+  openFromLink();
+  dialog.addEventListener("close", () => {
+    if (location.hash === "#review") history.replaceState(null, "", location.pathname + location.search);
+  });
+  dialog.querySelectorAll("[data-dismiss]").forEach(button => button.addEventListener("click", () => dialog.close()));
+  dialog.addEventListener("click", event => {
+    if (event.target !== dialog) return;
+    const {left, right, top, bottom} = dialog.getBoundingClientRect();
+    if (event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom) dialog.close();
+  });
+  // The rating is optional: a second click on the chosen star clears it.
+  dialog.querySelectorAll<HTMLInputElement>("[name=rating]").forEach(star => {
+    let wasChecked = false;
+    star.addEventListener("pointerdown", () => { wasChecked = star.checked; });
+    star.addEventListener("click", () => {
+      if (wasChecked) star.checked = false;
+      wasChecked = false;
+    });
+  });
+
+  function setBusy(busy: boolean) {
+    submit.disabled = find<HTMLFieldSetElement>("fieldset").disabled = busy;
+    find("[data-ready]").hidden = busy;
+    find("[data-busy]").hidden = !busy;
+    form.setAttribute("aria-busy", String(busy));
+  }
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (submit.disabled) return;
+    const payload = Object.fromEntries(new FormData(form));
+    setBusy(true);
+    error.textContent = "";
+    try {
+      const res = await fetch(form.action, {
+        method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(payload),
+      });
+      if (res.status === 429) throw new Error(form.dataset.busyError);
+      if (!res.ok) throw new Error();
+      const result = await res.json();
+      if (result.ok !== true) throw new Error();
+      find("[data-address]").textContent = String(payload.email).trim();
+      find("[data-preview]").hidden = !result.preview;
+      find("[data-delivered]").hidden = Boolean(result.preview);
+      find("[data-compose]").hidden = true;
+      find("[data-receipt]").hidden = false;
+      dialog.setAttribute("aria-labelledby", "review-thanks");
+      form.reset();
+      dialog.scrollTop = 0;
+      find("#review-thanks").focus({preventScroll: true});
+    } catch (failure) {
+      error.textContent = (failure as Error).message || form.dataset.error!;
+      error.focus();
+    } finally {
+      setBusy(false);
+    }
+  });
+</script>
+
+<style>
+  .review-dialog { width: min(560px, calc(100% - 2rem)); overflow-y: auto; }
+  .review-stars { display: grid; gap: .35rem; font-size: .84rem; line-height: 1.4; font-weight: 600; }
+  .review-stars em { color: var(--text-muted); font-weight: 400; font-style: normal; }
+  .review-stars-row { display: flex; gap: .1rem; }
+  .review-stars label { position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 5px; cursor: pointer; }
+  .review-stars input { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; margin: 0; opacity: 0; cursor: pointer; }
+  .review-stars svg { fill: none; stroke: #7d97aa; stroke-width: 1.5; stroke-linejoin: round; }
+  .review-stars label:has(input:checked) svg,
+  .review-stars label:has(~ label input:checked) svg { fill: #e0a100; stroke: #b98500; }
+  .review-stars label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .review-note { margin: 0; color: var(--text-muted); font-size: .82rem; line-height: 1.5; }
+  .review-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  @media (max-width: 669px) {
+    .review-dialog { width: min(480px, calc(100% - 1rem)); }
+  }
+</style>

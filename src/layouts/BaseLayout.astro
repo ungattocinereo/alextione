@@ -2,6 +2,7 @@
 import AnalyticsChoice from "../components/AnalyticsChoice.astro";
 import { structuredData } from "../lib/structuredData";
 import { locale } from "../lib/site";
+import { approvedReviews } from "../lib/reviews";
 const {lang,base,t} = locale(Astro.url.pathname);
 import "../styles/global.css";
 import "../styles/walks.css";
@@ -95,7 +96,7 @@ const shareDescription = shareDescriptions[card] ?? description;
     <meta name="twitter:image:alt" content={imageAlt} />
 
     <!-- Google structured data -->
-    <script type="application/ld+json" set:html={JSON.stringify(structuredData(siteUrl, path, title, description, ogImageUrl)).replace(/</g, "\\u003c")} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData(siteUrl, path, title, description, ogImageUrl, await approvedReviews())).replace(/</g, "\\u003c")} />
   </head>
   <body>
     <slot />

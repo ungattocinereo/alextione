@@ -4,6 +4,10 @@
     {
       "source": "/api/booking/",
       "destination": "/api/booking"
+    },
+    {
+      "source": "/api/reviews/",
+      "destination": "/api/reviews"
     }
   ],
   "redirects": [

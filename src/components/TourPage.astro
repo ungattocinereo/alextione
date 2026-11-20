@@ -2,13 +2,34 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeaderNav from "./HeaderNav.astro";
 import FooterSection from "./FooterSection.astro";
+import ReviewDialog from "./ReviewDialog.astro";
+import { approvedReviews } from "../lib/reviews";
 import catalog from "../data/tours.json";
 import { locale, conditions, type Tour, tourPath, tours } from "../lib/site";
 const { tour } = Astro.props as { tour: Tour };
 const { lang, t, url, price, duration } = locale(Astro.url.pathname);
 const { title, intro, story } = tour[lang];
 const closing = (tour[lang] as { closing?: string }).closing;
-const testimonials = catalog.testimonials.map((r) => {
+// Reviews approved by Alex come first, starting with those for this walk; the earlier testimonials follow.
+const approved = await approvedReviews();
+const testimonials = [
+  ...[...approved.filter((r) => r.tour === tour.slug), ...approved.filter((r) => r.tour !== tour.slug)].map((r) => ({
+    quote: r.text,
+    name: r.name,
+    date: r.date,
+    label: tours.find((item) => item.slug === r.tour)?.[lang].title ?? "",
+    rating: r.rating,
+    language: r.language as string,
+  })),
+  ...catalog.testimonials.map((r) => ({
+    quote: r.quote,
+    name: r.name,
+    date: r.date,
+    label: r.tour[lang],
+    rating: null,
+    language: "en",
+  })),
+].map((r) => {
   const [y, m, d] = r.date.split("-").map(Number);
   const date = new Date(Date.UTC(y, m - 1, d || 1));
   return {
@@ -150,18 +171,33 @@ const facts = [
       class="walk-reviews container"
       aria-labelledby="walk-reviews-title"
     >
-      <h2 id="walk-reviews-title">
-        {t("What guests say", "Cosa dicono gli ospiti")}
-      </h2>
+      <div class="walk-reviews__head">
+        <h2 id="walk-reviews-title">
+          {t("What guests say", "Cosa dicono gli ospiti")}
+        </h2>
+        <button class="btn" type="button" data-review-open>
+          {t("Leave a review", "Lascia una recensione")} ↗
+        </button>
+      </div>
       <ul>
         {testimonials.map((r) => (
           <li>
             <figure>
-              <blockquote lang="en">
+              <blockquote lang={r.language}>
+                {r.rating && (
+                  <span
+                    class="walk-reviews__stars"
+                    role="img"
+                    aria-label={r.rating + t(" out of 5", " su 5")}
+                  >
+                    {"★".repeat(r.rating)}
+                    <span>{"★".repeat(5 - r.rating)}</span>
+                  </span>
+                )}
                 <p>{r.quote}</p>
               </blockquote>
               <figcaption>
-                <strong>{r.name}</strong> · {r.tour[lang]} ·
+                <strong>{r.name}</strong> · {r.label} ·
                 <time datetime={r.date}>{r.when}</time>
               </figcaption>
             </figure>
@@ -188,6 +224,7 @@ const facts = [
     </div>
   </main>
   <FooterSection />
+  <ReviewDialog tour={tour} />
 </BaseLayout>
 
 <style>
@@ -202,9 +239,26 @@ const facts = [
   .walk-reviews {
     padding-block: clamp(2.5rem, 6vw, 4.5rem);
   }
+  .walk-reviews__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
   .walk-reviews h2 {
     font-size: clamp(2rem, 4.5vw, 3.2rem);
-    margin-bottom: 1.5rem;
+    margin: 0;
+  }
+  .walk-reviews__stars {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #b98500;
+    letter-spacing: 0.1em;
+  }
+  .walk-reviews__stars span {
+    color: #c9c7c0;
   }
   .walk-reviews ul {
     list-style: none;
@@ -226,6 +280,8 @@ const facts = [
   }
   .walk-reviews blockquote p {
     margin: 0;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
   }
   .walk-reviews figcaption {
     margin-top: 1rem;
