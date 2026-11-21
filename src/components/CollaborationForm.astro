@@ -1,0 +1,122 @@
+---
+import { locale } from "../lib/site";
+import PrivacyAcknowledgment from "./PrivacyAcknowledgment.astro";
+import { siteContent } from "../data/siteContent";
+const phonePattern = /(?=(?:\D*\d){6,15}\D*$)\+?[\d \(\)\-]+/.source;
+const { lang, t } = locale(Astro.url.pathname);
+---
+<form class="collab-form" action="/api/booking/" method="post" novalidate
+  data-sending={t("Sending…", "Invio…")}
+  data-error={t("Your message couldn’t be sent. Please try again.", "Il messaggio non è partito. Riprova.")}
+  data-need-contact={t("Please add an email or a phone number so I can reply.", "Aggiungi un’email o un numero di telefono per poterti rispondere.")}
+  data-invalid={t("Please check the highlighted fields.", "Controlla i campi evidenziati.")}
+  data-preview={t("Message saved in the local preview. No email was sent.", "Messaggio salvato nell’anteprima locale. Nessuna email inviata.")}
+  data-success={t("Thank you, I’ve received your message and will get back to you soon.", "Grazie, ho ricevuto il tuo messaggio e ti risponderò presto.")}>
+  <input type="hidden" name="kind" value="collaboration" />
+  <input type="hidden" name="language" value={lang} />
+  <fieldset>
+    <legend class="collab-legend">{t("Brands and people: tell me about your project", "Brand e persone: raccontami il tuo progetto")}</legend>
+    <label>{t("Your name", "Il tuo nome")}<input name="name" maxlength="100" autocomplete="name" required /></label>
+    <p class="collab-hint" id="collab-contact-hint">{t("Leave an email or a phone number (at least one).", "Lascia un’email o un numero di telefono (almeno uno).")}</p>
+    <div class="collab-pair">
+      <label>Email<input type="email" spellcheck="false" name="email" autocomplete="email" maxlength="254" aria-describedby="collab-contact-hint" /></label>
+      <label>{t("Phone", "Telefono")}<input type="tel" name="phone" autocomplete="tel" placeholder="+39 …" pattern={phonePattern} maxlength="30" aria-describedby="collab-contact-hint" /></label>
+    </div>
+    <label>{t("Message", "Messaggio")}<textarea name="message" rows="5" maxlength="3000" required></textarea></label>
+    <div class="collab-trap" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+    <PrivacyAcknowledgment className="collab-consent" />
+  </fieldset>
+  <button type="submit" class="collab-submit"><span data-submit-label>{t("Send message", "Invia messaggio")}</span><span class="send-arrow" aria-hidden="true">→</span></button>
+  <p class="collab-status" role="status" tabindex="-1"></p>
+  <p class="collab-fallback" hidden>{t("Or email Alex at", "Puoi anche scrivere ad Alex a")} <a href={'mailto:'+siteContent.footer.email}>{siteContent.footer.email}</a>.</p>
+  <noscript><p>{t("To get in touch by email, write to", "Per contattarmi via email, scrivi a")} <a href={'mailto:'+siteContent.footer.email}>{siteContent.footer.email}</a>.</p></noscript>
+</form>
+<script>
+  import { trackLead } from "../lib/analytics";
+  import { formContext } from "../lib/formContext";
+
+  const form = document.querySelector<HTMLFormElement>(".collab-form")!;
+  const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement;
+  const status = form.querySelector<HTMLElement>(".collab-status")!;
+  const fields = form.querySelector("fieldset")!;
+  const submit = form.querySelector<HTMLButtonElement>("[type=submit]")!;
+  const submitLabel = submit.querySelector<HTMLElement>("[data-submit-label]")!;
+  const readyLabel = submitLabel.textContent;
+  const fallback = form.querySelector<HTMLElement>(".collab-fallback")!;
+
+  // Email or phone: at least one of the two is required.
+  function checkContact() {
+    const missing = !field("email").value.trim() && !field("phone").value.trim();
+    field("email").setCustomValidity(missing ? form.dataset.needContact! : "");
+  }
+  form.addEventListener("input", checkContact);
+  checkContact();
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (submit.disabled) return;
+    checkContact();
+    if (!form.checkValidity()) {
+      status.textContent = field("email").validationMessage || form.dataset.invalid!;
+      form.reportValidity();
+      return;
+    }
+    const payload = Object.fromEntries(new FormData(form));
+    Object.assign(payload, formContext());
+    fields.disabled = submit.disabled = true;
+    form.setAttribute("aria-busy", "true");
+    status.textContent = "";
+    fallback.hidden = true;
+    submitLabel.textContent = form.dataset.sending!;
+    try {
+      const response = await fetch(form.action, {
+        method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error();
+      const result = await response.json();
+      if (!result.ok) throw new Error();
+      if (result.preview === false) trackLead("general");
+      status.textContent = result.preview ? form.dataset.preview! : form.dataset.success!;
+      fields.hidden = submit.hidden = true;
+    } catch {
+      status.textContent = form.dataset.error!;
+      fallback.hidden = false;
+    } finally {
+      submitLabel.textContent = readyLabel;
+      form.removeAttribute("aria-busy");
+      fields.disabled = submit.disabled = false;
+      status.focus();
+    }
+  });
+</script>
+<style>
+  .collab-form { background: #fff; color: var(--text); padding: clamp(1.1rem, 3vw, 2.25rem); min-width: 0; }
+  .collab-form fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 1rem; }
+  .collab-legend { padding: 0; margin: 0 0 .25rem; font: 500 1.35rem/1.2 "Oswald", sans-serif; text-transform: uppercase; }
+  .collab-form label { display: grid; row-gap: .375rem; font-size: .88rem; line-height: 1.4; font-weight: 650; }
+  .collab-hint { margin: 0; font-size: .85rem; color: var(--text-muted); }
+  .collab-form input:not([type=checkbox]), .collab-form textarea {
+    box-sizing: border-box; display: block; min-width: 0; width: 100%; margin: 0; padding: 0 .75rem;
+    font: inherit; font-size: 1rem; font-weight: 450; border: 1px solid #98a5aa; border-radius: 3px; background: #fff; color: var(--text);
+  }
+  .collab-form input:not([type=checkbox]) { height: 48px; min-height: 48px; }
+  .collab-form textarea { padding: .7rem .75rem; resize: vertical; line-height: 1.5; }
+  .collab-form :is(input,textarea,button):focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 2px; }
+  .collab-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; }
+  .collab-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  .collab-submit {
+    margin-top: 1.2rem; width: 100%; padding: .85rem 1.1rem; border: 0; background: var(--accent);
+    font: inherit; font-weight: 650; color: white; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+  }
+  .collab-submit:hover { background: var(--accent-hover); }
+  .collab-submit:disabled { opacity: .65; cursor: progress; }
+  .collab-form [hidden] { display: none; }
+  .collab-status:not(:empty) { margin-top: 1rem; }
+  .collab-status:focus { outline: none; }
+  .collab-fallback { font-size: .9rem; }
+  .collab-fallback a { text-decoration: underline; overflow-wrap: anywhere; }
+  .collab-submit:disabled .send-arrow { font-size: 0; width: 1rem; height: 1rem; border: 2px solid #ffffff65; border-top-color: white; border-radius: 50%; animation: collab-sending .8s linear infinite; }
+  @keyframes collab-sending { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .collab-submit:disabled .send-arrow { animation: none; } }
+  @media (max-width: 480px) { .collab-pair { grid-template-columns: 1fr; } }
+</style>

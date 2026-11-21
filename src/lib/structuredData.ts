@@ -1,9 +1,10 @@
 import { conditions, locale, tours, tourPath } from "./site";
 import { siteContent } from "../data/siteContent";
+import type { GuestReview } from "./reviews";
 
 export const bookLaunch = "2026-12-12T18:00:00+01:00";
 
-export function structuredData(site: URL, path: string, title: string, description: string, image: string) {
+export function structuredData(site: URL, path: string, title: string, description: string, image: string, reviews: GuestReview[] = []) {
   const { base, lang, t, url } = locale(path);
   const absolute = (p: string) => new URL(p, site).href;
   const page = absolute(path);
@@ -24,6 +25,15 @@ export function structuredData(site: URL, path: string, title: string, descripti
       serviceType: t("Guided walking tour", "Visita guidata a piedi"), description: tour[lang].intro,
       provider: author, areaServed: { "@type": "City", name: "Napoli" },
       offers: { "@type": "Offer", price: conditions.price, priceCurrency: "EUR", url: page } };
+    // Only reviews that guests submitted for this walk and Alex approved are marked up.
+    const own = reviews.filter(review => review.tour === tour.slug);
+    const rated = own.filter(review => review.rating);
+    if (own.length) primary.review = own.map(review => ({ "@type": "Review",
+      author: { "@type": "Person", name: review.name }, datePublished: review.date,
+      reviewBody: review.text,
+      reviewRating: review.rating ? { "@type": "Rating", ratingValue: review.rating, bestRating: 5, worstRating: 1 } : undefined }));
+    if (rated.length) primary.aggregateRating = { "@type": "AggregateRating", bestRating: 5, worstRating: 1, ratingCount: rated.length,
+      ratingValue: Math.round(rated.reduce((sum, review) => sum + review.rating!, 0) / rated.length * 10) / 10 };
   } else if (base === "/book/") {
     primary = { "@id": absolute("/book/#photobook"), "@type": "Book", name: "Religione Monoteistica",
       author, numberOfPages: 216, image: absolute("/book/cover.webp"), url: page };

@@ -92,7 +92,7 @@ const toursSecondColumn = links.slice(3);
             const isExternal = link.href.startsWith('http');
             return (
               <li>
-                <a href={url(link.href+"/")} {...(isExternal ? { target: "_blank", rel: "noreferrer" } : {})}>{lang === 'it' ? ({'Photo Portfolio':'Portfolio','Maradona Project':'Progetto Maradona','Merch Shop':'Shop'}[link.label]) : link.label}</a>
+                <a href={url(link.href+"/")} {...(isExternal ? { target: "_blank", rel: "noreferrer" } : {})}>{lang === 'it' ? ({'Portfolio':'Portfolio','Maradona Project':'Progetto Maradona','Shop':'Shop'}[link.label]) : link.label}</a>
               </li>
             );
           })

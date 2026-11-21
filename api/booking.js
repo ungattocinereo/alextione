@@ -47,9 +47,37 @@ function readBook(body) {
   return data;
 }
 
+// Brands and people inviting Alex to collaborate: needs a name, a message and an email or a phone number.
+function readCollaboration(body) {
+  // Hidden honeypot field: real visitors leave it empty. Bots get a fake success and nothing is sent.
+  if (body.website) return { kind: "spam" };
+  const { language } = body;
+  const name = clean(body.name, 100);
+  const message = clean(body.message, 3000);
+  const email = clean(body.email, 254);
+  const phone = clean(body.phone, 30);
+  if (
+    body.consent !== "yes" || !["en", "it"].includes(language) ||
+    !name || /[\r\n]/.test(name) || !message ||
+    typeof body.message !== "string" || body.message.length > 3000
+  ) return null;
+  if (!email && !phone) return null;
+  const data = { kind: "collaboration", language, name, message };
+  if (email) {
+    if (!singleAddress.test(email)) return null;
+    data.email = email;
+  }
+  if (phone) {
+    if (!/^\+?[\d ()-]+$/.test(phone) || !/^\d{6,15}$/.test(phone.replace(/\D/g, ""))) return null;
+    data.phone = phone;
+  }
+  return data;
+}
+
 function readRequest(body) {
   if (!body || typeof body !== "object") return null;
   if (body.kind === "book") return readBook(body);
+  if (body.kind === "collaboration") return readCollaboration(body);
   const name = clean(body.name, 100);
   const email = clean(body.email, 254);
   const message = clean(body.message, 3000);
@@ -90,8 +118,9 @@ async function deliver(data, body, headers) {
     BOOKING_COPY_EMAIL,
   } = process.env;
   if (!MAILGUN_API_KEY || !BOOKING_TO_EMAIL) throw new Error("Booking email configuration required");
-  const isBook = data.kind === "book";
-  const title = isBook ? "Richiesta del libro · Religione Monoteistica" : tours.get(data.tour)?.it.title || "Richiesta di informazioni";
+  const title = data.kind === "book" ? "Richiesta del libro · Religione Monoteistica"
+    : data.kind === "collaboration" ? "Richiesta di collaborazione"
+    : tours.get(data.tour)?.it.title || "Richiesta di informazioni";
   const email = bookingEmail(data, title, body, headers);
   const form = new FormData();
   const senderAddress = (BOOKING_FROM_EMAIL.match(/<([^<>]+)>\s*$/)?.[1] || BOOKING_FROM_EMAIL).trim();
@@ -161,6 +190,7 @@ export async function handleBooking(req, res, localInbox) {
   }
   const data = readRequest(body);
   if (!data) return reply(422, { ok: false });
+  if (data.kind === "spam") return reply(200, { ok: true, preview: Boolean(localInbox) });
   try {
     if (localInbox) await localInbox(data);
     else await deliver(data, body, req.headers);

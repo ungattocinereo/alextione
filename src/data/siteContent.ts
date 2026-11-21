@@ -206,9 +206,9 @@ export const siteContent = {
     email: "alessandrotione@escapevision.it",
     phone: "+39 380 1476310",
     projectLinks: [
-      { label: "Photo Portfolio", href: "/photo-art" },
+      { label: "Portfolio", href: "/photo-art" },
       { label: "Maradona Project", href: "/religione-monoteistica" },
-      { label: "Merch Shop", href: "/shop" }
+      { label: "Shop", href: "/shop" }
     ],
     socialLinks: [
       { label: "Instagram", href: "https://www.instagram.com/alextione/" },
